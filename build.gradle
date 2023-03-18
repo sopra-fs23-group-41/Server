@@ -7,6 +7,18 @@ plugins {
     id "org.sonarqube" version "3.5.0.2730"
 }
 
+plugins {
+  id "org.sonarqube" version "3.5.0.2730"
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "sopra-fs23-group-41_Client"
+    property "sonar.organization", "sopra-fs23-group-41"
+    property "sonar.host.url", "https://sonarcloud.io"
+  }
+}
+
 group 'ch.uzh.ifi.hasel'
 version '1.0.0'
 
@@ -53,13 +65,6 @@ bootJar {
     archiveFileName = "${archiveBaseName.get()}.${archiveExtension.get()}"
 }
 
-sonarqube {
-  properties {
-    property "sonar.projectKey", "TODO"
-    property "sonar.organization", "TODO"
-    property "sonar.host.url", "TODO"
-  }
-}
 
 jacocoTestReport {
     reports {
