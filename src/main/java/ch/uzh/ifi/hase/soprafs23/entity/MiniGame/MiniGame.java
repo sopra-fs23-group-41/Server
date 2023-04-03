@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
@@ -9,17 +10,15 @@ import java.util.List;
 
 public abstract class MiniGame {
 
-    private int roundPoints;
     private int rounds;
-    private int currentRound = 0;
+    protected int currentRound = 0;
     private GameJudge judge = new GameJudge();
     private List<Player> activePlayers = new ArrayList<>();
+    private final List<Article> allArticles;
 
-    abstract Question showNextQuestion();
-
-    public MiniGame(int roundPoints, int rounds){
+    public MiniGame(int rounds, List<Article> articles){
         this.rounds = rounds;
-        this.roundPoints = roundPoints;
+        this.allArticles = articles;
     }
 
     public void setCurrentRound(int currentRound){
@@ -38,14 +37,6 @@ public abstract class MiniGame {
         return this.rounds;
     }
 
-    public void setRoundPoints(int roundPoints){
-        this.roundPoints = roundPoints;
-    }
-
-    public int getRoundPoints(){
-        return this.roundPoints;
-    };
-
     public void setActivePlayers(List<Player> activePlayers){
         this.activePlayers = activePlayers;
     }
@@ -54,5 +45,22 @@ public abstract class MiniGame {
         return this.activePlayers;
     }
 
-    private void updatePlayerPoints() {}
+    public List<Article> getAllArticles() {
+        return this.allArticles;
+    }
+
+    abstract Question showNextQuestion();
+
+    abstract void updatePlayerPoints();
+
+    public boolean checkIfAllPlayersAnswered(){
+        List<Player> players = this.activePlayers;
+        for (int i=0; i< players.size();i++){
+            if(players.get(i).getAnswers().size() == currentRound){
+                continue;
+            }
+            else return false;
+        }
+        return true;
+    }
 }
