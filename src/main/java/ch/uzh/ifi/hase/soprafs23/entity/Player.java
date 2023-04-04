@@ -5,7 +5,7 @@ import java.util.List;
 public class Player {
 
     private String playerName;
-    private String token;
+    // private String token;
     private long userId;
     private long playerId;
     private long gameId;
@@ -18,9 +18,14 @@ public class Player {
         this.playerName = playerName;
     }
 
-    public void setToken(String token) {
+    /*public void setToken(String token) {
         this.token = token;
     }
+
+    public String getToken() {
+        return this.token;
+    }
+    */
 
     public void setUserId(long userId) {
         this.userId = userId;
@@ -46,16 +51,12 @@ public class Player {
         this.roundScore = roundScore;
     }
 
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    public void setAnswers(Answer answer) {
+        this.answers.add(answer);
     }
 
     public String getPlayerName() {
         return this.playerName;
-    }
-
-    public String getToken() {
-        return this.token;
     }
 
     public long getUserId() {
