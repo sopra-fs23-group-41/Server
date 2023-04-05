@@ -9,24 +9,35 @@ import java.util.List;
 public class GuessThePriceQuestion extends Question{
 
     private List<String> falseAnswers;
-    private final int timeToAnswer = 40;
+    private int timeToAnswer = 40;
 
-
+    // constructor
     public GuessThePriceQuestion(Article article){
-        super(article);
+        articles.add(article);
+    }
+
+    @Override
+    protected void setPicUrl(){
+        picUrls.add(getArticles().get(0).getPicUrl());
+    }
+
+    @Override
+    protected void setTrueAnswer() {
+        this.trueAnswer =getArticles().get(0).getPrice();
+
     }
 
     @Override
     public void generateFalseAnswers() {
-        float price = super.getTrueAnswer();
+        String num = super.getTrueAnswer();
+        int price = Integer.parseInt(num);
         List<String> falseAnswers = new ArrayList<>();
         for (float i = -1; i < 3; i++){
             if(i==0){
                 continue;
             }
             else {
-            float num = (float) (price*(1+i*0.1));
-            String wrong = String.valueOf(num);
+            String wrong = String.valueOf(price*(1+i*0.1));
             falseAnswers.add(wrong);
             }
         }
@@ -34,8 +45,13 @@ public class GuessThePriceQuestion extends Question{
         this.falseAnswers = falseAnswers;
     }
 
+    //getters
     public List<String> getFalseAnswers(){
         return this.falseAnswers;
+    }
+
+    public int getTimeToAnswer(){
+        return timeToAnswer;
     }
 
 }

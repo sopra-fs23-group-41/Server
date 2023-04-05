@@ -3,54 +3,45 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Question {
 
-    protected final Article aArticle;
-    private float trueAnswer;
-    private String picUrl;
+    protected final List<Article> articles = new ArrayList<>();
+    protected String trueAnswer;
+    protected List<String> picUrls;
     private boolean isUsed = false;
 
-    public Question(Article article){
-        this.aArticle = article;
-    }
+    abstract void generateFalseAnswers();
+    abstract protected void setPicUrl();
+    abstract protected void setTrueAnswer();
 
-    public Article getArticle(){
-        return this.aArticle;
-    }
-
-    private void setPicUrl(){
-        this.picUrl = this.aArticle.getPicUrl();
-    }
-
-    public String getPicUrl(){
-        return this.picUrl;
-    }
-
-    private void setTrueAnswer() {
-        String price = this.aArticle.getPrice();
-        float num = Float.parseFloat(price);
-        this.trueAnswer = num;
-    }
-
-    public boolean isUsed() {
-        return isUsed;
-    }
-
-    public void setUsed(boolean used) {
-        isUsed = used;
-    }
-
-    public float getTrueAnswer(){
-        return this.trueAnswer;
-    };
-
+    // methods
     public void initializeQuestion(){
         setPicUrl();
         setTrueAnswer();
+    } // will it recognize which realization to use?
+
+    // getters and setters
+    public List<Article> getArticles(){
+        return this.articles;
     }
 
-    abstract void generateFalseAnswers();
+    public List<String> getPicUrls(){
+        return this.picUrls;
+    }
+
+    public boolean isUsed() {
+        return this.isUsed;
+    }
+
+    public void setUsed(boolean used) {
+        this.isUsed = used;
+    }
+
+    public String getTrueAnswer(){
+        return this.trueAnswer;
+    };
 
 }
