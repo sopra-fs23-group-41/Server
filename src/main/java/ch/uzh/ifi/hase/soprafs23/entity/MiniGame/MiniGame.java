@@ -1,8 +1,10 @@
 package ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 
 import java.util.ArrayList;
@@ -15,6 +17,8 @@ public abstract class MiniGame {
     private GameJudge judge = new GameJudge();
     private List<Player> activePlayers = new ArrayList<>();
     private final List<Article> allArticles;
+    private GameMode gameMode;
+    private List<Question> gameQuestions = new ArrayList<>();
 
     public MiniGame(int rounds, List<Article> articles){
         this.rounds = rounds;
@@ -49,6 +53,20 @@ public abstract class MiniGame {
         return this.allArticles;
     }
 
+    public void setGameQuestions(){
+        List<Question> questions = new ArrayList<>();
+        if (this.gameMode == GameMode.GuessThePrice){
+            for (int i=0; i< this.rounds; i++){
+                GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
+                questions.add(question);
+            }
+            this.gameQuestions = questions;
+        }
+        else if(this.gameMode == GameMode.HighOrLow){
+
+        }
+    }
+
     abstract Question showNextQuestion();
 
     abstract void updatePlayerPoints();
@@ -63,4 +81,9 @@ public abstract class MiniGame {
         }
         return true;
     }
+
+    public List<Question> getGameQuestions() {
+        return gameQuestions;
+    }
+
 }

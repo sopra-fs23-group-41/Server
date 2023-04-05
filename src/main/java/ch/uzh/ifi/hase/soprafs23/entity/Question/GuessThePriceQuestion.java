@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
 import java.util.ArrayList;

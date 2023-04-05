@@ -25,12 +25,6 @@ public class Game {
 
 
 
-    public void setGameId(){
-        Random rand = new Random();
-        int num = rand.nextInt(900000) + 100000;
-        this.gameId = (long) num;
-    }
-
     public void setGamePIN(){
         UUID uuid = UUID.randomUUID();
 

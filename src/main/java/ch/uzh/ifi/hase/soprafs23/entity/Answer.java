@@ -1,12 +1,14 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+
 public class Answer {
 
     private long playerId;
     private int numOfRound = 0;
     private String playerAnswer;
-    private String correctAnswer;
     private double timeUsed;
+    private Question question;
 
     public long getPlayerId() {
         return playerId;
@@ -32,14 +34,6 @@ public class Answer {
         this.playerAnswer = playerAnswer;
     }
 
-    public String getCorrectAnswer() {
-        return correctAnswer;
-    }
-
-    public void setCorrectAnswer(String correctAnswer) {
-        this.correctAnswer = correctAnswer;
-    }
-
     public double getTimeUsed() {
         return timeUsed;
     }
@@ -48,12 +42,5 @@ public class Answer {
         this.timeUsed = timeUsed;
     }
 
-    public boolean isCorrect(){
-        if (this.playerAnswer == this.correctAnswer){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
+
 }
