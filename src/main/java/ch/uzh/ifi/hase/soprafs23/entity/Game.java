@@ -98,8 +98,20 @@ public class Game {
 
     public void endGame(){}
 
-    public Player declareWinner(List<Player> players){
-        return  null;
+    public Player declareWinner(){
+        Player winner = null;
+        int highestScore = Integer.MIN_VALUE;
+
+        for (Player player : players) {
+            int score = player.getTotalScore();
+
+            if (score > highestScore) {
+                highestScore = score;
+                winner = player;
+            }
+        }
+
+        return winner;
     }
 
 
