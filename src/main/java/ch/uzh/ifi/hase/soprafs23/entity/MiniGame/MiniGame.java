@@ -15,16 +15,12 @@ public abstract class MiniGame {
 
     private int rounds;
     protected int currentRound = 0;
-    private GameJudge judge = new GameJudge();
+    protected GameJudge judge;
     private List<Player> activePlayers = new ArrayList<>();
     private final List<Article> allArticles;
     private GameMode gameMode;
     private List<Question> gameQuestions = new ArrayList<>();
 
-    // abstract methods
-    abstract Question showNextQuestion();
-
-    abstract void updatePlayerPoints();
 
     // constructor
     public MiniGame(int rounds, List<Article> articles){
@@ -52,7 +48,7 @@ public abstract class MiniGame {
             }
             this.gameQuestions = questions;
         }
-    }
+    } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
     public boolean checkIfAllPlayersAnswered(){
         List<Player> players = this.activePlayers;
@@ -63,6 +59,24 @@ public abstract class MiniGame {
             else return false;
         }
         return true;
+    } //frontend need to provide with a wrong answer if the player haven't answered when time was up.
+
+    public Question showNextQuestion() {
+            Question question = getGameQuestions().get(currentRound);
+            currentRound++;
+            if (!question.isUsed()){
+                question.setUsed(true);
+            }
+            return question;
+    }
+
+    public void updatePlayerPoints() {
+        for (Player player : getActivePlayers()){
+            judge = new GameJudge(getGameQuestions(), player, currentRound);
+            int point = judge.calculatePoints();
+            player.setRoundScore(point);
+            player.setTotalScore(player.getTotalScore()+point);
+        }
     }
 
     // getters and setters

@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
 public class HigherLowerQuestion extends Question{
 
+    private final int bonus = 10;
     private String falseAnswer;
     private int timeToAnswer = 30;
 
@@ -46,5 +47,9 @@ public class HigherLowerQuestion extends Question{
 
     public int getTimeToAnswer(){
         return  this.timeToAnswer;
+    }
+
+    public int getBonus(){
+        return this.bonus;
     }
 }

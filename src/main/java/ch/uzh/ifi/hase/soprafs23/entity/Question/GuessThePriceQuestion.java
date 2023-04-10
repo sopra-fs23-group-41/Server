@@ -8,6 +8,7 @@ import java.util.List;
 
 public class GuessThePriceQuestion extends Question{
 
+    private final int bonus = 20;
     private List<String> falseAnswers;
     private int timeToAnswer = 40;
 
@@ -52,6 +53,10 @@ public class GuessThePriceQuestion extends Question{
 
     public int getTimeToAnswer(){
         return timeToAnswer;
+    }
+
+    public int getBonus(){
+        return  this.bonus;
     }
 
 }
