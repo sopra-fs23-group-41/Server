@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Article;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Article;
 
 public class HigherLowerQuestion extends Question{
 
@@ -16,8 +16,8 @@ public class HigherLowerQuestion extends Question{
 
     @Override
     void generateFalseAnswers() {
-        int price1 = Integer.parseInt(articles.get(0).getPrice());
-        int price2 = Integer.parseInt(articles.get(1).getPrice());
+        double price1 = articles.get(0).getPrice().getCurrent().getValue();
+        double price2 = articles.get(1).getPrice().getCurrent().getValue();
         if (price1 < price2){
             this.falseAnswer = "Higher";
         }
@@ -29,15 +29,15 @@ public class HigherLowerQuestion extends Question{
 
     @Override
     protected void setPicUrl() {
-        picUrls.add(getArticles().get(0).getPicUrl());
-        picUrls.add(getArticles().get(1).getPicUrl());
+        picUrls.add(getArticles().get(0).getMedia().getImages().get(0).getUrl());
+        picUrls.add(getArticles().get(1).getMedia().getImages().get(0).getUrl());
     }
 
     @Override
     // true answer in this case indicate two prices of the two articles
     protected void setTrueAnswer() {
-        this.trueAnswer =getArticles().get(0).getPrice();
-        this.trueAnswer =getArticles().get(1).getPrice();
+        this.trueAnswer =Double.toString(getArticles().get(0).getPrice().getCurrent().getValue());
+        this.trueAnswer =Double.toString(getArticles().get(1).getPrice().getCurrent().getValue());
     }
 
     //getters

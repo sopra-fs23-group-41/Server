@@ -45,4 +45,36 @@ public class Article {
                 ", price=" + price +
                 '}';
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public int getProductCode() {
+        return productCode;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public Media getMedia() {
+        return media;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public int getId() {
+        return id;
+    }
 }

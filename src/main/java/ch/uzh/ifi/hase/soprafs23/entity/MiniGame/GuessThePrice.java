@@ -1,13 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
-import ch.uzh.ifi.hase.soprafs23.entity.Article;
-import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GuessThePrice extends MiniGame{
