@@ -1,12 +1,15 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.AsosApi.Article;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.AsosApiUtility;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.HigherOrLower;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,7 @@ public class Game {
 
 
     //methods
-    public void startGame(GameMode gameMode){
+    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
         createArticles();
         if (gameMode == GameMode.GuessThePrice){
             miniGame = new GuessThePrice(this.rounds,this.articleList);
@@ -46,8 +49,8 @@ public class Game {
         this.numOfPlayer = numOfPlayer;
     }
 
-    public void createArticles(){
-
+    public void createArticles() throws UnirestException, JsonProcessingException {
+        this.articleList = AsosApiUtility.getArticles(5, Category.JEANS);
     }
 
     public void endGame(){}

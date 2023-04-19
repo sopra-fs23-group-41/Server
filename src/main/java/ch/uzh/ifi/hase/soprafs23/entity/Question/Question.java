@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
-import ch.uzh.ifi.hase.soprafs23.AsosApi.Article;
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
 import java.util.ArrayList;
 import java.util.List;

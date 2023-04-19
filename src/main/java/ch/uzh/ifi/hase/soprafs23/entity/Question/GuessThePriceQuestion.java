@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
-import ch.uzh.ifi.hase.soprafs23.AsosApi.Article;
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +18,12 @@ public class GuessThePriceQuestion extends Question{
 
     @Override
     protected void setPicUrl(){
-        picUrls.add(getArticles().get(0).getMedia().getImages().get(0).getUrl());
+        picUrls.add(getArticles().get(0).getImageUrl());
     }
 
     @Override
     protected void setTrueAnswer() {
-        this.trueAnswer =Double.toString(getArticles().get(0).getPrice().getCurrent().getValue());
+        this.trueAnswer =Double.toString(getArticles().get(0).getPrice());
 
     }
 
