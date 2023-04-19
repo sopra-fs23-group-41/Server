@@ -1,4 +1,16 @@
 package ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
 
-public class HigherOrLower {
+
+
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
+
+import java.util.List;
+
+public class HigherOrLower extends MiniGame{
+
+    private final int roundPoints = 10;
+
+    public HigherOrLower(int rounds, List<Article> articles) {
+        super(rounds, articles);
+    }
 }

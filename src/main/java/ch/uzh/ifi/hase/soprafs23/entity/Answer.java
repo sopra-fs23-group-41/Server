@@ -8,7 +8,7 @@ public class Answer {
     private int numOfRound = 0;
     private String playerAnswer;
     private double timeUsed;
-    private Question question;
+    //private Question question;
 
     public long getPlayerId() {
         return playerId;

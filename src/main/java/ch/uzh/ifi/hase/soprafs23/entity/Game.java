@@ -1,10 +1,15 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import ch.uzh.ifi.hase.soprafs23.AsosApi.AsosApiUtility;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
+import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.HigherOrLower;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,59 +29,17 @@ public class Game {
     private MiniGame miniGame;
 
 
-
-    public void setGamePIN(){
-        UUID uuid = UUID.randomUUID();
-
-        // Extract the first 6 characters of the UUID's hexadecimal representation
-        String uuidStr = uuid.toString().replace("-", "");
-        String pin = uuidStr.substring(0, 6);
-
-        this.gamePIN = pin;
-    }
-
-
-    public String getGamePIN(){
-        return this.gamePIN;
-    }
-
-    public long getGameId(){
-        return this.gameId;
-    }
-
-    public void startGame(GameMode gameMode){
+    //methods
+    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
+        createArticles();
         if (gameMode == GameMode.GuessThePrice){
             miniGame = new GuessThePrice(this.rounds,this.articleList);
-            miniGame.setActivePlayers(this.players);
         }
-
-        if (miniGame != null) {
-            miniGame.setCurrentRound(miniGame.getCurrentRound()+1);
+        else{
+            miniGame = new HigherOrLower(this.rounds,this.articleList);
         }
-    }
-
-
-    public Player getPlayers(List<Player> players){
-        return null;
-    }
-
-    public List<Player> getAllPlayers(){
-        return this.players;
-    }
-
-    public MiniGame getMiniGame(){
-        return this.miniGame;
-    }
-
-    public void setPlayers(List<User> users){
-        for (int i=0; i<numOfPlayer; i++){
-            Player player = new Player();
-            User user = users.get(i);
-            player.setPlayerName(user.getUsername());
-            player.setUserId(user.getId());
-            player.setGameId(this.gameId);
-            this.players.add(player);
-        }
+        miniGame.setActivePlayers(this.players);
+        miniGame.setGameQuestions();
     }
 
     public void updateGameSetting(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer){
@@ -86,8 +49,8 @@ public class Game {
         this.numOfPlayer = numOfPlayer;
     }
 
-    public void createArticles(){
-
+    public void createArticles() throws UnirestException, JsonProcessingException {
+        this.articleList = AsosApiUtility.getArticles(5, Category.JEANS);
     }
 
     public void endGame(){}
@@ -108,6 +71,48 @@ public class Game {
         return winner;
     }
 
+
+
+    //getters and setters
+    public void setGamePIN(){
+        UUID uuid = UUID.randomUUID();
+
+        // Extract the first 6 characters of the UUID's hexadecimal representation
+        String uuidStr = uuid.toString().replace("-", "");
+
+        this.gamePIN = uuidStr.substring(0, 6);
+    }
+
+    public void setPlayers(List<User> users){
+        for (int i=0; i<numOfPlayer; i++){
+            Player player = new Player();
+            User user = users.get(i);
+            player.setPlayerName(user.getUsername());
+            player.setUserId(user.getId());
+            player.setGameId(this.gameId);
+            this.players.add(player);
+        }
+    }
+
+    public String getGamePIN(){
+        return this.gamePIN;
+    }
+
+    public long getGameId(){
+        return this.gameId;
+    }
+
+    public Player getPlayers(List<Player> players){
+        return null;
+    }
+
+    public List<Player> getAllPlayers(){
+        return this.players;
+    }
+
+    public MiniGame getMiniGame(){
+        return this.miniGame;
+    }
 
     public GameMode getGameMode() {
         return gameMode;
