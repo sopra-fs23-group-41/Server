@@ -21,7 +21,7 @@ public abstract class Question {
     }
 
     private void setPicUrl(){
-        this.picUrl = this.aArticle.getPicUrl();
+        this.picUrl = this.aArticle.getImageUrl();
     }
 
     public String getPicUrl(){
@@ -29,9 +29,7 @@ public abstract class Question {
     }
 
     private void setTrueAnswer() {
-        String price = this.aArticle.getPrice();
-        float num = Float.parseFloat(price);
-        this.trueAnswer = num;
+        this.trueAnswer = this.aArticle.getPrice();
     }
 
     public boolean isUsed() {
