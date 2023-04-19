@@ -11,7 +11,7 @@ Laurent Le Febve:
 
 Tiago Ferreiro Matos:
 
-Timo Tietje: #102 #103
+Timo Tietje: #110 #111
 
 ##Week 2 (19.04.2023):
 -------------------------
@@ -23,4 +23,4 @@ Laurent Le Febve:
 
 Tiago Ferreiro Matos:
 
-Timo Tietje:
+Timo Tietje: #102 #103
