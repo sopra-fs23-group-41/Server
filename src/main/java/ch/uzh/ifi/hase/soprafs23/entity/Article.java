@@ -1,11 +1,23 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-public class Article {
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import java.io.Serializable;
+
+
+public class Article implements Serializable {
+
     private int productId;
+
     private String name;
+
     private float price;
+
     private String brandName;
+
     private String url;
+
     private String imageUrl;
 
     public Article() {

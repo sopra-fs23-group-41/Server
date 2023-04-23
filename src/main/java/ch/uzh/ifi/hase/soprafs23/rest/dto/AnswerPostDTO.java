@@ -1,13 +1,10 @@
-package ch.uzh.ifi.hase.soprafs23.entity;
+package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-import java.io.Serializable;
 
-
-public class Answer implements Serializable {
-
+public class AnswerPostDTO {
     private long playerId;
-    private int numOfRound = 0;
+    private int numOfRound;
     private String playerAnswer;
     private double timeUsed;
     private Question question;
@@ -20,12 +17,12 @@ public class Answer implements Serializable {
         this.playerId = playerId;
     }
 
-    public int getNumOfRound() {
-        return this.numOfRound;
-    }
-
     public void setNumOfRound(int numOfRound) {
         this.numOfRound = numOfRound;
+    }
+
+    public int getNumOfRound() {
+        return numOfRound;
     }
 
     public String getPlayerAnswer() {
@@ -51,5 +48,4 @@ public class Answer implements Serializable {
     public void setQuestion(Question question) {
         this.question = question;
     }
-
 }

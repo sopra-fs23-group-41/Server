@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 public class HigherLowerQuestion extends Question{
 
     private final int bonus = 10;
-    private String falseAnswer;
     private int timeToAnswer = 30;
 
     //constructor
@@ -19,10 +18,10 @@ public class HigherLowerQuestion extends Question{
         float price1 = articles.get(0).getPrice();
         float price2 = articles.get(1).getPrice();
         if (price1 < price2){
-            this.falseAnswer = "Higher";
+            this.falseAnswers.add("Higher");
         }
         else if (price1 > price2){
-            this.falseAnswer = "Lower";
+            this.falseAnswers.add("Lower");
         }
         // TODO: prices equals
     }
@@ -38,11 +37,6 @@ public class HigherLowerQuestion extends Question{
     protected void setTrueAnswer() {
         this.trueAnswer =Float.toString(getArticles().get(0).getPrice());
         this.trueAnswer =Float.toString(getArticles().get(1).getPrice());
-    }
-
-    //getters
-    public String getFalseAnswer(){
-        return this.falseAnswer;
     }
 
     public int getTimeToAnswer(){

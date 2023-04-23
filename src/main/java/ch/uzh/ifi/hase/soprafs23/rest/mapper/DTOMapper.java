@@ -1,10 +1,19 @@
 package ch.uzh.ifi.hase.soprafs23.rest.mapper;
 
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
+import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
+import ch.uzh.ifi.hase.soprafs23.constant.GameType;
+import ch.uzh.ifi.hase.soprafs23.entity.Answer;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import org.mapstruct.*;
 import org.mapstruct.factory.Mappers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * DTOMapper
@@ -31,4 +40,31 @@ public interface DTOMapper {
   @Mapping(source = "username", target = "username")
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
+
+  @Mapping(source = "gameType", target = "gameType")
+  @Mapping(source = "rounds", target = "rounds")
+  @Mapping(source = "gameMode", target = "gameMode")
+  @Mapping(source = "category", target = "category")
+  @Mapping(source = "numOfPlayer", target = "numOfPlayer")
+  Game convertGamePostDTOtoEntity(GamePostDTO gamePostDTO);
+
+
+  @Mapping(source = "gameId" , target = "gameId")
+  @Mapping(source = "numOfPlayer" , target = "numOfPlayer")
+  @Mapping(source = "gameType" , target = "gameType")
+  @Mapping(source = "rounds" , target = "rounds")
+  @Mapping(source = "gamePIN" , target = "gamePIN")
+  @Mapping(source = "gameMode" , target = "gameMode")
+  @Mapping(source = "players" , target = "players")
+  GameGetDTO convertEntityToGameGetDTO(Game game);
+
+  Answer convertAnswerPostDTOtoEntity(AnswerPostDTO answerPostDTO);
+
+  @Mapping(source = "articles", target = "articles")
+  @Mapping(source = "trueAnswer", target = "trueAnswer")
+  @Mapping(source = "picUrls", target = "picUrls")
+  @Mapping(source = "falseAnswers", target = "falseAnswers")
+  QuestionGetDTO convertQuestionToQuestionGetDTO(Question nextQuestion);
+
+  PlayerGetDTO convertEntityToPlayerGetDTO(Player player);
 }

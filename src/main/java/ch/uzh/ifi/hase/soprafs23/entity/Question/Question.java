@@ -2,14 +2,19 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Question {
+
+public abstract class Question implements Serializable {
 
     protected final List<Article> articles = new ArrayList<>();
+
     protected String trueAnswer;
-    protected List<String> picUrls;
+    protected List<String> falseAnswers = new ArrayList<>();
+    protected List<String> picUrls = new ArrayList<>();
     private boolean isUsed = false;
 
     abstract void generateFalseAnswers();
@@ -43,4 +48,11 @@ public abstract class Question {
         return this.trueAnswer;
     };
 
+    public List<String> getFalseAnswers() {
+        return falseAnswers;
+    }
+
+    public void setFalseAnswers(List<String> falseAnswers) {
+        this.falseAnswers = falseAnswers;
+    }
 }

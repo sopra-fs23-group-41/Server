@@ -1,7 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +33,13 @@ public class UserService {
   private final Logger log = LoggerFactory.getLogger(UserService.class);
 
   private final UserRepository userRepository;
+  private final PlayerRepository playerRepository;
 
   @Autowired
-  public UserService(@Qualifier("userRepository") UserRepository userRepository) {
+  public UserService(@Qualifier("userRepository") UserRepository userRepository,
+                     @Qualifier("playerRepository") PlayerRepository playerRepository) {
     this.userRepository = userRepository;
+    this.playerRepository = playerRepository;
   }
 
   public List<User> getUsers() {
@@ -50,6 +57,39 @@ public class UserService {
 
     log.debug("Created Information for User: {}", newUser);
     return newUser;
+  }
+
+  //add user to game with gamepin
+  public Player addUserToLobby(long userId, String gamePin){
+      //check if game to gamepin exists
+      Game game = GameRepository.findByGamePin(gamePin); //should throw ResponseStatusException Lobby not found
+
+      //check if user exists
+      User userToConvert = userRepository.findById(userId);
+
+      //check if user is already in player repository
+      Player player = playerRepository.findByUserId(userId);
+      if(player != null){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with Id:" + userId + "is already in a lobby!");
+      }
+
+      //ceck if user is already in the game
+
+      //add user to game with gamePin
+      Player convertedUser = new Player();
+
+      //set player
+      convertedUser.setPlayerName(userToConvert.getUsername());
+      convertedUser.setUserId(userId);
+      convertedUser.setGameId(game.getGameId());
+
+      Player addedPlayer = playerRepository.save(convertedUser);
+      playerRepository.flush();
+
+      //update add Player to game instance
+      game.addPlayer(convertedUser);
+
+      return addedPlayer;
   }
 
   /**

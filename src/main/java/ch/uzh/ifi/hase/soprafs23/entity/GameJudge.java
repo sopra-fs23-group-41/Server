@@ -25,7 +25,7 @@ public class GameJudge {
         }
         else {
             HigherLowerQuestion que = (HigherLowerQuestion) questionList.get(round);
-            return (!Objects.equals(player.getAnswers().get(round).getPlayerAnswer(), que.getFalseAnswer()));
+            return (!Objects.equals(player.getAnswers().get(round).getPlayerAnswer(), que.getTrueAnswer()));
         }
     }
 

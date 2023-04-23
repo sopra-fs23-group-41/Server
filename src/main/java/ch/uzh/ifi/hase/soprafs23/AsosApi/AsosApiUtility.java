@@ -11,11 +11,14 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AsosApiUtility {
+    static Logger logger = LoggerFactory.getLogger(AsosApiUtility.class);
 
     private static List<Article> GenerateArticleList(Products products){
         List<Product> productsList = new ArrayList<>();
@@ -56,6 +59,7 @@ public class AsosApiUtility {
 
     private static HttpResponse<JsonNode> createRequest(int limit, Category category) throws UnirestException {
         String secret = System.getenv("secret");
+        logger.info("secret with value: " + secret + " retrieved!");
         String BaseUrl = "https://asos2.p.rapidapi.com/";
         HttpResponse<JsonNode> response = Unirest.get(BaseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.categoryId() +"&limit=" + limit + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
                 .header("X-RapidAPI-Key", secret)

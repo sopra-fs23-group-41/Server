@@ -1,18 +1,32 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
-
+@Entity
+@Table(name="PLAYER")
 public class Player {
+    @Id
+    @GeneratedValue
+    private long playerId;
 
+    @Column(nullable = false)
     private String playerName;
     // private String token;
+
+    @Column(nullable = false)
     private long userId;
-    private long playerId;
+    @Column(nullable = false)
     private long gameId;
+    @Column
     private int points;
+    @Column
     private int totalScore;
+    @Column
     private int roundScore;
-    private List<Answer> answers;
+    @Column
+    @ElementCollection
+    private List<Answer> answers = new ArrayList<>();
 
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
@@ -85,5 +99,9 @@ public class Player {
 
     public List<Answer> getAnswers() {
         return this.answers;
+    }
+
+    public void updateScore(){
+
     }
 }
