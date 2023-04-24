@@ -78,8 +78,7 @@ public class Game {
         }
     }
 
-    public void updateGameSetting(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category) throws UnirestException, JsonProcessingException {
-        this.gameType = gameType;
+    public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) throws UnirestException, JsonProcessingException {
         this.gameMode = gameMode;
         this.rounds = rounds;
         this.numOfPlayer = numOfPlayer;
@@ -153,7 +152,7 @@ public class Game {
 
     public List<Player> getGameLeaderBoard(){
         return players.stream()
-                .sorted(Comparator.comparingInt(Player::getTotalScore))
+                .sorted(Comparator.comparingInt(Player::getTotalScore).reversed())
                 .collect(Collectors.toList());
     }
 

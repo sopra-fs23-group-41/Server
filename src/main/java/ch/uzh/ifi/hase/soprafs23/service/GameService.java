@@ -6,8 +6,12 @@ import ch.uzh.ifi.hase.soprafs23.entity.Answer;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +31,17 @@ public class GameService {
 
     private final PlayerRepository playerRepository;
 
+    private final UserRepository userRepository;
+
+    Logger logger = LoggerFactory.getLogger(GameRepository.class);
+
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
-                       @Qualifier("playerRepository")PlayerRepository playerRepository){
+                       @Qualifier("playerRepository")PlayerRepository playerRepository,
+                       @Qualifier("userRepository")UserRepository userRepository){
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Game> getGame(){
@@ -43,11 +53,21 @@ public class GameService {
         newGame.setGameMode(GameMode.GuessThePrice);
         newGame.setCategory(Category.SHOES);
 
+        removePlayersFromLobby(newGame.getGameId());
+
         newGame = gameRepository.save(newGame);
         gameRepository.flush();
 
         log.debug("A new Lobby has started: {}", newGame);
         return newGame;
+    }
+
+    public void updateGameSetting(Game currentGame) throws UnirestException, JsonProcessingException {
+        Game game = gameRepository.findByLobbyId(currentGame.getGameId());
+        game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
+
+        gameRepository.save(game);
+        gameRepository.flush();
     }
 
     public Game getGameById(long lobbyId) {
@@ -62,6 +82,14 @@ public class GameService {
         gameRepository.flush();
 
         log.debug("A new game has initialized and ready to start");
+    }
+
+    private void removePlayersFromLobby(long gameId){
+        List<Player> playerList = playerRepository.findByGameId(gameId);
+        for (Player player : playerList){
+            logger.info("Player with Id : " + player.getPlayerName() + "deleted!");
+            playerRepository.deleteById(player.getPlayerId());
+        }
     }
 
     public Boolean didAllPlayersJoin(long lobbyId) {
@@ -103,6 +131,8 @@ public class GameService {
 
     public List<Player> endGame(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
+        playerRepository.deleteByGameId(lobbyId);
+        gameRepository.deleteByLobbyId(lobbyId);
         return currentGame.endGame();
     }
 }

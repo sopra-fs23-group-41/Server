@@ -51,6 +51,17 @@ public class GameController {
         return  DTOMapper.INSTANCE.convertEntityToGameGetDTO(createdGame);
     }
 
+    @PutMapping("/lobbies/{lobbyId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
+    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GameGetDTO gameGetDTO) throws UnirestException, JsonProcessingException {
+        Game currentGame = DTOMapper.INSTANCE.convertGameGetDTOToEntity(gameGetDTO);
+        gameService.updateGameSetting(currentGame);
+
+
+        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(currentGame);
+    }
+
     //what does a player need? authorization?
     //add a player to the lobby with id
     @PostMapping("/lobbies/joinGame/{gamePin}")
