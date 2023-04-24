@@ -27,5 +27,7 @@ public interface GameRepository extends JpaRepository <Game, Long>{
         }
     };
 
-    Game findByLobbyId(Long id);
+    Game findByLobbyId(Long lobbyId);
+
+    void deleteByLobbyId(long lobbyId);
 }

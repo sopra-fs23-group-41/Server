@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
@@ -18,8 +19,14 @@ public class PlayerService {
 
     private final PlayerRepository playerRepository;
 
+    private final GameService gameService;
+
+    Logger logger = LoggerFactory.getLogger(Player.class);
+
     @Autowired
-    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository){
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository,
+                         GameService gameService){
         this.playerRepository = playerRepository;
+        this.gameService = gameService;
     }
 }
