@@ -41,6 +41,12 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "name", target = "name")
+  @Mapping(source = "username", target = "username")
+  @Mapping(source = "status", target = "status")
+  User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
+
   @Mapping(source = "gameType", target = "gameType")
   @Mapping(source = "rounds", target = "rounds")
   @Mapping(source = "gameMode", target = "gameMode")
@@ -57,6 +63,15 @@ public interface DTOMapper {
   @Mapping(source = "gameMode" , target = "gameMode")
   @Mapping(source = "players" , target = "players")
   GameGetDTO convertEntityToGameGetDTO(Game game);
+
+  @Mapping(source = "gameId" , target = "gameId")
+  @Mapping(source = "numOfPlayer" , target = "numOfPlayer")
+  @Mapping(source = "gameType" , target = "gameType")
+  @Mapping(source = "rounds" , target = "rounds")
+  @Mapping(source = "gamePIN" , target = "gamePIN")
+  @Mapping(source = "gameMode" , target = "gameMode")
+  @Mapping(source = "players" , target = "players")
+  Game convertGameGetDTOToEntity(GameGetDTO gameGetDTO);
 
   Answer convertAnswerPostDTOtoEntity(AnswerPostDTO answerPostDTO);
 

@@ -156,4 +156,21 @@ public class UserService {
       }
       return user.get();
     }
+
+    public void updateUserProfile(User currentUser) {
+      Optional<User> userOp = userRepository.findById(currentUser.getId());
+        if (userOp.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    String.format("Could not find user with id %d.", currentUser.getId()));
+        }
+        String message = "This user name is taken. Please use another one";
+
+        User user = userOp.get();
+        if (userRepository.findByUsername(currentUser.getUsername()) != null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
+        }
+        user.setUsername(currentUser.getUsername());
+        user.setPassword(currentUser.getPassword());
+        user.setBirthdate(currentUser.getBirthdate());
+    }
 }

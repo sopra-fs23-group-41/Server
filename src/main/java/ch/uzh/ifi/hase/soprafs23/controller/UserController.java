@@ -1,6 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
@@ -83,7 +85,11 @@ public class UserController {
   @PutMapping("/users/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public void updateUserProfile(){
+  public UserGetDTO updateUserProfile(@PathVariable Long id, @RequestBody UserGetDTO userGetDTO){
+      User currentUser = DTOMapper.INSTANCE.convertUserGetDTOToEntity(userGetDTO);
+      userService.updateUserProfile(currentUser);
+
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(currentUser);
 
   }
 

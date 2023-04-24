@@ -57,14 +57,6 @@ public class User implements Serializable {
     this.id = id;
   }
 
-  public String getName() {
-    return password;
-  }
-
-  public void setName(String password) {
-    this.password = password;
-  }
-
   public String getUsername() {
     return username;
   }
