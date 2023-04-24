@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -49,7 +52,13 @@ public class UserService {
   public User createUser(User newUser) {
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.OFFLINE);
+    newUser.setCreationDate(new Date());
     checkIfUserExists(newUser);
+
+    // hash the password using BCrypt
+    String hashedPassword = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt(12));
+    newUser.setPassword(hashedPassword);
+
     // saves the given entity but data is only persisted in the database once
     // flush() is called
     newUser = userRepository.save(newUser);
@@ -73,7 +82,10 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with Id:" + userId + "is already in a lobby!");
       }
 
-      //ceck if user is already in the game
+      //check if user is already in the game
+      if(game.checkIfUserIsAPlayer(userId)){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with Id:" + userId + "is already in a lobby!");
+      }
 
       //add user to game with gamePin
       Player convertedUser = new Player();
@@ -104,16 +116,44 @@ public class UserService {
    */
   private void checkIfUserExists(User userToBeCreated) {
     User userByUsername = userRepository.findByUsername(userToBeCreated.getUsername());
-    User userByName = userRepository.findByName(userToBeCreated.getName());
 
     String baseErrorMessage = "The %s provided %s not unique. Therefore, the user could not be created!";
-    if (userByUsername != null && userByName != null) {
+    if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
           String.format(baseErrorMessage, "username and the name", "are"));
     } else if (userByUsername != null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "username", "is"));
-    } else if (userByName != null) {
-      throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(baseErrorMessage, "name", "is"));
     }
   }
+
+    public User loginUser(String loginUsername, String password) {
+        User userToLogin = userRepository.findByUsername(loginUsername);
+        if (userToLogin == null || !BCrypt.checkpw(password, userToLogin.getPassword()))  {
+            throw new RuntimeException("Invalid login credentials, make sure that username and password are correct.");
+        }
+        if (userToLogin.getStatus() == UserStatus.ONLINE) {
+            throw new RuntimeException("User is already logged in.");
+        }
+
+        userToLogin.setStatus(UserStatus.ONLINE);
+        userRepository.save(userToLogin);
+        userRepository.flush();
+        return userToLogin;
+    }
+
+    public void logoutUser(long id) {
+      User user = getUserById(id);
+      user.setStatus(UserStatus.OFFLINE);
+      userRepository.save(user);
+      userRepository.flush();
+    }
+
+    public User getUserById(Long id) {
+      Optional<User> user = userRepository.findById(id);
+      if (user.isEmpty()){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                  String.format("Could not find user with id %d.", id));
+      }
+      return user.get();
+    }
 }

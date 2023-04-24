@@ -1,18 +1,13 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameType;
+import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
+import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.Answer;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,102 +15,94 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
 public class GameService {
 
+    private final Logger log = LoggerFactory.getLogger(GameRepository.class);
+
+    private final GameRepository gameRepository;
+
     private final PlayerRepository playerRepository;
-    private final UserRepository userRepository;
-    //private final GameRepository gameRepository;
-
-    private int lobbyId = 0;
-
-    Logger logger = LoggerFactory.getLogger(GameService.class);
 
     @Autowired
-    public GameService(@Qualifier("playerRepository") PlayerRepository playerRepository,
-                       @Qualifier("userRepository") UserRepository userRepository
-                       //@Qualifier("gameRepository") GameRepository gameRepository
-                        ){
+    public GameService(@Qualifier("gameRepository") GameRepository gameRepository,
+                       @Qualifier("playerRepository")PlayerRepository playerRepository){
+        this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
-        this.userRepository = userRepository;
-        //this.gameRepository = gameRepository;
     }
 
-    public Game createGame(Game gameToCreate){
-        //GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category
-        logger.info("max number of player in lobby = " + gameToCreate.getNumOfPlayer());
-        Game game = new Game(gameToCreate.getGameType(),
-                gameToCreate.getGameMode(),
-                gameToCreate.getRounds(),
-                gameToCreate.getNumOfPlayer(),
-                gameToCreate.getCategory());
-        //remove players from the game id if an earlier game took place
-        removePlayersFromLobby(game.getGameId());
-        //save game in repository
-        //Game newGame = gameRepository.save(game);
-        //gameRepository.flush();
-        game.setGameId(this.lobbyId);
-        GameRepository.addGame(this.lobbyId, game);
-        this.lobbyId++;
-        //GameRepository.addGame((int)game.getGameId(), game);
-        return game;
-        //return newGame;
+    public List<Game> getGame(){
+        return this.gameRepository.findAll();
     }
 
-    public void beginGame(long gameId) throws UnirestException, JsonProcessingException {
-        Game game = GameRepository.findByLobbyId((int)gameId);
-        game.startGame(game.getGameMode());
+    public Game createGame(Game newGame) {
+        newGame.setGamePIN();
+        newGame.setGameMode(GameMode.GuessThePrice);
+        newGame.setCategory(Category.SHOES);
+
+        newGame = gameRepository.save(newGame);
+        gameRepository.flush();
+
+        log.debug("A new Lobby has started: {}", newGame);
+        return newGame;
     }
 
-    public Game getGameById(long gameId){
-        return GameRepository.findByLobbyId((int)gameId);
+    public Game getGameById(long lobbyId) {
+        return gameRepository.findByLobbyId(lobbyId);
     }
 
-    private void removePlayersFromLobby(long gameId){
-        List<Player> playerList = playerRepository.findByGameId(gameId);
-        for(Player player : playerList){
-            logger.info("Player with Id : " + player.getPlayerName() + " deleted!");
-            playerRepository.deleteById(player.getPlayerId());
-        }
+    public void beginGame(long lobbyId) {
+        Game currentGame = getGameById(lobbyId);
+        currentGame.startGame(currentGame.getGameMode());
+
+        gameRepository.save(currentGame);
+        gameRepository.flush();
+
+        log.debug("A new game has initialized and ready to start");
     }
 
-    public Boolean didAllPlayersJoin(long lobbyId){
-        //Game game = gameRepository.findById(lobbyId);
-        Game game = GameRepository.findByLobbyId((int) lobbyId);
-        return game.getPlayers().size() == game.getNumOfPlayer();
+    public Boolean didAllPlayersJoin(long lobbyId) {
+        Game currentGame = getGameById(lobbyId);
+        return currentGame.checkIfAllPlayerExist();
     }
 
-    public Question getNextQuestion(long lobbyId){
-        //Game game = gameRepository.findById(lobbyId);
-        Game game = GameRepository.findByLobbyId((int) lobbyId);
-        return game.getMiniGame().showNextQuestion();
+    public Question getNextQuestion(long lobbyId) {
+        Game currenteGame = getGameById(lobbyId);
+        Question nextQuestion = currenteGame.getNextRound();
+
+        //keep the information updated in the repository
+        gameRepository.save(currenteGame);
+        gameRepository.flush();
+
+        return  nextQuestion;
     }
 
-    public void savePlayerAnswer(long playerId, Answer answer){
-        Player player = playerRepository.findByPlayerId(playerId);
-        player.setAnswers(answer);
-        logger.info("Answer added to Player with Id: " + playerId);
-        //Game game = gameRepository.findByGameId(player.getGameId());
-        Game game = GameRepository.findByLobbyId((int) player.getGameId());
-        game.getPlayer(playerId).setAnswers(answer);
-        game.updatePlayerPoints();
+    public void savePlayerAnswer(long playerId, Answer answer) {
+        Player currentPlayer = playerRepository.findByPlayerId(playerId);
+        currentPlayer.setAnswers(answer);
+        playerRepository.save(currentPlayer);
+        playerRepository.flush();
+        long currentLobbyId = currentPlayer.getGameId();
+        Game currentGame = getGameById(currentLobbyId);
+        currentGame.syncPlayerInformation(currentPlayer);
+        currentGame.updatePlayerPoints(); //make player as arg, return a player
+        //TODO: keep playerRepo points updated
+        gameRepository.save(currentGame);
+        gameRepository.flush();
+
+        log.debug("The answer of player with ID: {} has been saved!",playerId);
     }
 
-    public boolean didAllPlayersAnswer(long lobbyId){
-        //Game game = gameRepository.findById(lobbyId);
-        Game game = GameRepository.findByLobbyId((int) lobbyId);
-        return game.checkIfAllPlayersAnswered();
+    public boolean didAllPlayersAnswer(long lobbyId) {
+        Game currentGame = getGameById(lobbyId);
+        return currentGame.checkIfAllPlayersAnswered();
     }
 
-    //public Player addUserToLobby(Player player, String gamePin){throw new RuntimeException("not implemented error");}
-
-    public List<Player> endGame(long lobbyId){
-        List<Player> players = playerRepository.findByGameId(lobbyId);
-        playerRepository.deleteByGameId(lobbyId);
-        GameRepository.removeGame((int) lobbyId);
-        return players;
+    public List<Player> endGame(long lobbyId) {
+        Game currentGame = getGameById(lobbyId);
+        return currentGame.endGame();
     }
-
 }

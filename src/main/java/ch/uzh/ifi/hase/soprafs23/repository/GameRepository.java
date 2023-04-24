@@ -1,53 +1,31 @@
 package ch.uzh.ifi.hase.soprafs23.repository;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
-import java.util.Objects;
-
-/*
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.User;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 @Repository("gameRepository")
-public interface GameRepository extends JpaRepository<Game, Long> {
-    Game findById(long Id);
+public interface GameRepository extends JpaRepository <Game, Long>{
 
-    Game findByGamePIN(String GamePIN);
-}
-*/
+    @PersistenceContext
+    EntityManager entityManager = null;
 
-public class GameRepository {
-    private static final HashMap<Integer, Game> gameRepo = new HashMap<>();
-
-    private GameRepository() {
-    }
-
-    public static void addGame(int lobbyId, Game game) {
-        gameRepo.put(lobbyId, game);
-    }
-
-    public static void removeGame(int lobbyId) {
-        gameRepo.remove(lobbyId);
-    }
-
-    public static Game findByLobbyId(int lobbyId) {
-        Game game = gameRepo.get(lobbyId);
-        if (game == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This lobby does not exist!");
+    static Game findByGamePin(String gamePIN){
+        Query query = entityManager.createQuery("SELECT g FROM Game g WHERE g.gamePIN = :gamePIN");
+        query.setParameter("gamePIN", gamePIN);
+        try {
+            return (Game) query.getSingleResult();
+        } catch (NoResultException ex) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lobby not found");
         }
-        return game;
-    }
-    public static Game findByGamePin(String gamePin){
-        for(Game game: gameRepo.values()){
-            if(Objects.equals(game.getGamePIN(), gamePin)){
-                return game;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This lobby does not exist!");
-    }
+    };
+
+    Game findByLobbyId(Long id);
 }

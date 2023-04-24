@@ -57,4 +57,43 @@ public class UserController {
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
+
+
+  @PostMapping("/users/login")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO loginUser(@RequestBody UserPostDTO userPostDTO){
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+        String loginUsername = userInput.getUsername();
+        String password = userInput.getPassword();
+
+        User login = userService.loginUser(loginUsername, password);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(login);
+  }
+
+  @GetMapping("/users/{id}/logout")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void logoutUser(@PathVariable long id){
+        userService.logoutUser(id);
+  }
+
+  @PutMapping("/users/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public void updateUserProfile(){
+
+  }
+
+  @GetMapping("/users/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO getAUser(@PathVariable Long id){
+        User user = userService.getUserById(id);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+  }
+
 }

@@ -1,9 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +13,13 @@ import javax.transaction.Transactional;
 @Service
 @Transactional
 public class PlayerService {
-    private final PlayerRepository playerRepository;
-    private final GameService gameService;
 
-    Logger logger = LoggerFactory.getLogger(Player.class);
+    private final Logger log = LoggerFactory.getLogger(GameRepository.class);
+
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository,
-                         GameService gameService){
+    public PlayerService(@Qualifier("playerRepository") PlayerRepository playerRepository){
         this.playerRepository = playerRepository;
-        this.gameService = gameService;
     }
-
 }

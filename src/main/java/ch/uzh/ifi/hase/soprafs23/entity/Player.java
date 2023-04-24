@@ -101,6 +101,11 @@ public class Player {
         return this.answers;
     }
 
+    public void copyFrom(Player other) {
+        this.answers = other.getAnswers();
+        this.totalScore = other.getTotalScore();
+    }
+
     public void updateScore(){
 
     }

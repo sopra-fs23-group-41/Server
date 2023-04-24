@@ -15,24 +15,24 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.stream.Collectors;
 
 public class Game {
     private long gameId;
 
-    private int numOfPlayer;
+    private int numOfPlayer = 1;
 
     private GameType gameType;
 
-    private int rounds;
+    private int rounds = 1;
 
     private String gamePIN;
 
     private GameMode gameMode;
+
+    private final User lobbyOwner;
 
     private List<Player> players = new ArrayList<>();
 
@@ -44,54 +44,73 @@ public class Game {
 
     Logger logger = LoggerFactory.getLogger(Game.class);
 
-    public Game() {
-            setGamePIN();
-    }
 
-    public Game(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category){
+    public Game(GameType gameType, User owner){
         this.gameType = gameType;
-        this.gameMode = gameMode;
-        this.rounds = rounds;
-        this.category = category;
-        this.numOfPlayer = numOfPlayer;
+        this.lobbyOwner = owner;
         setGamePIN();
     }
 
     public boolean checkIfAllPlayersAnswered() {
-        return this.miniGame.checkIfAllPlayersAnswered();
+        if (!miniGame.checkIfAllPlayersAnswered()) {
+            return false;
+        }
+        int currentRound = miniGame.getCurrentRound();
+        return players.stream()
+                .allMatch(player -> player.getAnswers().size() == currentRound);
     }
 
 
     //methods
-    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
-        createArticles();
-        if (gameMode == GameMode.GuessThePrice){
-            miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+    public void startGame(GameMode gameMode)  {
+        while(checkIfAllPlayerExist()){
+            if (gameMode == GameMode.GuessThePrice){
+                miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+            }
+            else{
+                miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
+            }
+            logger.info("Game with Id: " + this.gameId + " wants to set players and questions to miniGame");
+            miniGame.setActivePlayers(this.players);
+            logger.info("Game with Id: " + this.gameId + " set players to miniGame");
+            miniGame.setGameQuestions();
+            logger.info("Game with Id: " + this.gameId + " set questions to miniGame");
         }
-        else{
-            miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
-        }
-        logger.info("Game with Id: " + this.gameId + " wants to set players and questions to minigame");
-        miniGame.setActivePlayers(this.players);
-        logger.info("Game with Id: " + this.gameId + " set players to miniGame");
-        miniGame.setGameQuestions();
-        logger.info("Game with Id: " + this.gameId + " set questions to miniGame");
     }
 
-    public void updateGameSetting(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category){
+    public void updateGameSetting(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category) throws UnirestException, JsonProcessingException {
         this.gameType = gameType;
         this.gameMode = gameMode;
         this.rounds = rounds;
         this.numOfPlayer = numOfPlayer;
         this.category = category;
+
+        createArticles();
+        //can we put creatArticle() here?
     }
 
     public void createArticles() throws UnirestException, JsonProcessingException {
         this.articleList = AsosApiUtility.getArticles(this.rounds, this.category);
     }
 
-    public void endGame(){}
+    public Question getNextRound(){
+        if (!checkIfAllPlayersAnswered()) {
+            throw new IllegalStateException("Not all players have answered the current question");
+        }
+        return miniGame.showNextQuestion();
+    }
 
+    public List<Player> endGame(){
+        long count = miniGame.getGameQuestions().stream()
+                .filter(Question::isUsed)
+                .count();
+        if (count < rounds) {
+            throw new IllegalStateException("The game is not ended yet.");
+        }
+        return getGameLeaderBoard();
+    }
+
+    /*
     public Player declareWinner(){
         Player winner = null;
         int highestScore = Integer.MIN_VALUE;
@@ -106,7 +125,38 @@ public class Game {
         }
 
         return winner;
+    }  */
+
+    public boolean checkIfAllPlayerExist(){
+        return (this.players.size() == this.numOfPlayer);
     }
+
+    public boolean checkIfUserIsAPlayer(Long userId) {
+        for (Player player : players) {
+            if (player.getUserId() == userId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void syncPlayerInformation(Player currentPlayer){
+        Optional<Player> foundPlayer = players.stream()
+                .filter(player -> player.getPlayerId() == currentPlayer.getPlayerId())
+                .findFirst();
+
+        foundPlayer.ifPresent(player -> {
+            player.copyFrom(currentPlayer);
+            miniGame.syncPlayerInfo(player);
+        });
+    }
+
+    public List<Player> getGameLeaderBoard(){
+        return players.stream()
+                .sorted(Comparator.comparingInt(Player::getTotalScore))
+                .collect(Collectors.toList());
+    }
+
 
 
 
@@ -117,19 +167,19 @@ public class Game {
         // Extract the first 6 characters of the UUID's hexadecimal representation
         String uuidStr = uuid.toString().replace("-", "");
 
-        this.gamePIN = uuidStr.substring(0, 6);
+        this.gamePIN = uuidStr.substring(0, 4);
     }
 
+    /*
     public void setPlayers(List<User> users){
-        for (int i=0; i<numOfPlayer; i++){
+        for (User user : users){
             Player player = new Player();
-            User user = users.get(i);
             player.setPlayerName(user.getUsername());
             player.setUserId(user.getId());
             player.setGameId(this.gameId);
             this.players.add(player);
         }
-    }
+    } */
 
     public void addPlayer(Player player){
         if(this.players.size() < this.numOfPlayer) {

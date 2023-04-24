@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Internal User Representation
@@ -26,7 +27,7 @@ public class User implements Serializable {
   private Long id;
 
   @Column(nullable = false)
-  private String name;
+  private String password;
 
   @Column(nullable = false, unique = true)
   private String username;
@@ -35,6 +36,18 @@ public class User implements Serializable {
 
   @Column(nullable = false)
   private UserStatus status;
+
+  @Column(nullable = false)
+  private Date creationDate;
+
+  @Column
+  private Date birthdate;
+
+  @Column(nullable = false)
+  private boolean gameStatus=false;
+
+  @Column(nullable = false)
+  private int numOfGameWon = 0;
 
   public Long getId() {
     return id;
@@ -45,11 +58,11 @@ public class User implements Serializable {
   }
 
   public String getName() {
-    return name;
+    return password;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setName(String password) {
+    this.password = password;
   }
 
   public String getUsername() {
@@ -75,4 +88,44 @@ public class User implements Serializable {
   public void setStatus(UserStatus status) {
     this.status = status;
   }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public Date getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(Date birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public boolean getGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(boolean gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public int getNumOfGameWon() {
+        return numOfGameWon;
+    }
+
+    public void setNumOfGameWon(int numOfGameWon) {
+        this.numOfGameWon = numOfGameWon;
+    }
 }

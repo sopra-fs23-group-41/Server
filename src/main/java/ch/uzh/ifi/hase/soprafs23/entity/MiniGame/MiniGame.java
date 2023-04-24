@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public abstract class MiniGame {
@@ -40,7 +41,7 @@ public abstract class MiniGame {
         List<Question> questions = new ArrayList<>();
         logger.info("Questions are set for gameMode: " + this.gameMode);
         if (this.gameMode == GameMode.GuessThePrice){
-            logger.info("In Minigame are GuessThePriceQuestions initialized!");
+            logger.info("In MiniGame are GuessThePriceQuestions initialized!");
             for (int i=0; i< this.rounds; i++){
                 GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
                 question.initializeQuestion();
@@ -60,14 +61,8 @@ public abstract class MiniGame {
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
     public boolean checkIfAllPlayersAnswered(){
-        List<Player> players = this.activePlayers;
-        for (int i=0; i< players.size();i++){
-            if(players.get(i).getAnswers().size() == currentRound){
-                continue;
-            }
-            else return false;
-        }
-        return true;
+        return activePlayers.stream()
+                .allMatch(player -> player.getAnswers().size() == currentRound);
     } //frontend need to provide with a wrong answer if the player haven't answered when time was up.
 
     public Question showNextQuestion() {
@@ -88,6 +83,17 @@ public abstract class MiniGame {
             player.setTotalScore(player.getTotalScore()+point);
         }
     }
+
+    public void syncPlayerInfo(Player currentPlayer) {
+        Optional<Player> foundPlayer = activePlayers.stream()
+                .filter(player -> player.getPlayerId() == currentPlayer.getPlayerId())
+                .findFirst();
+
+        foundPlayer.ifPresent(player -> {
+                    player.copyFrom(currentPlayer);
+        });
+    }
+
 
     // getters and setters
     public void setCurrentRound(int currentRound){
@@ -121,5 +127,4 @@ public abstract class MiniGame {
     public List<Question> getGameQuestions() {
         return gameQuestions;
     }
-
 }
