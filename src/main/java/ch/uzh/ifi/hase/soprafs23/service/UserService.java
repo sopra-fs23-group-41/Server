@@ -172,7 +172,8 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
         }
         user.setUsername(currentUser.getUsername());
-        user.setPassword(currentUser.getPassword());
+        String hashedPassword = BCrypt.hashpw(currentUser.getPassword(), BCrypt.gensalt(12));
+        user.setPassword(hashedPassword);
         user.setBirthdate(currentUser.getBirthdate());
     }
 }
