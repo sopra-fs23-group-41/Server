@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Answer;
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
@@ -190,6 +191,13 @@ public class GameController {
     public List<Player> endGame(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "ended the game!");
         return gameService.endGame(lobbyId);
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/articles")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Article> getAllArticlesInGame(@PathVariable long lobbyId){
+        return gameService.getAllArticles(lobbyId);
     }
 
     public GameGetDTO addPlayersToGameGetDTO(Game game){

@@ -217,4 +217,12 @@ public class Game {
     public int getCurrentRound(){
         return miniGame.getCurrentRound();
     }
+
+    public List<Article> getArticleList() {
+        return articleList;
+    }
+
+    public void setArticleList(List<Article> articleList) {
+        this.articleList = articleList;
+    }
 }

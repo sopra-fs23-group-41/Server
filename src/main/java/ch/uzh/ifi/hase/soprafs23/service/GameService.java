@@ -2,10 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
-import ch.uzh.ifi.hase.soprafs23.entity.Answer;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
 //import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -158,5 +155,10 @@ public class GameService {
     public boolean isTheGameStarted(long lobbyId) {
         Game currentGame = GameRepo.findByLobbyId((int)lobbyId);
         return (currentGame.getMiniGame().getGameQuestions().size() > 0);
+    }
+
+    public List<Article> getAllArticles(long lobbyId){
+        Game currentGame = GameRepo.findByLobbyId((int) lobbyId);
+        return currentGame.getArticleList();
     }
 }
