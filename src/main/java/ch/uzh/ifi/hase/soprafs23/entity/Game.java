@@ -15,35 +15,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.*;
 import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 public class Game {
     private long gameId;
-
     private int numOfPlayer = 1;
-
     private GameType gameType;
-
     private int rounds = 1;
-
     private String gamePIN;
-
     private GameMode gameMode;
-
     //private final User lobbyOwner;
-
-    private List<Player> players = new ArrayList<>();
-
+    @ElementCollection
     private List<Article> articleList = new ArrayList<>();
-
     private MiniGame miniGame;
-
     private Category category;
-
-    Logger logger = LoggerFactory.getLogger(Game.class);
-
 
     /*
     public Game(GameType gameType){
@@ -55,8 +43,8 @@ public class Game {
 
     public Game(){}
 
-    public boolean checkIfAllPlayersAnswered() {
-        if (!miniGame.checkIfAllPlayersAnswered()) {
+    public boolean checkIfAllPlayersAnswered(List<Player> players) {
+        if (!miniGame.checkIfAllPlayersAnswered(players)) {
             return false;
         }
         int currentRound = miniGame.getCurrentRound();
@@ -66,8 +54,8 @@ public class Game {
 
 
     //methods
-    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
-        if(checkIfAllPlayerExist()){
+    public void startGame(GameMode gameMode, List<Player> players) throws UnirestException, JsonProcessingException {
+        if(checkIfAllPlayerExist(players)){
             if (gameMode == GameMode.GuessThePrice){
                 createArticles(this.rounds);
                 miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
@@ -76,11 +64,8 @@ public class Game {
                 createArticles(this.rounds * 2);
                 miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
             }
-            logger.info("Game with Id: " + this.gameId + " wants to set players and questions to miniGame");
-            miniGame.setActivePlayers(this.players);
-            logger.info("Game with Id: " + this.gameId + " set players to miniGame");
             miniGame.setGameQuestions();
-            logger.info("Game with Id: " + this.gameId + " set questions to miniGame");
+
         }
         else throw new IllegalStateException("The number of player doesn't match");
     }
@@ -99,8 +84,8 @@ public class Game {
         this.articleList = AsosApiUtility.getArticles(numOfArticles, this.category);
     }
 
-    public Question getNextRound(){
-        if (!checkIfAllPlayersAnswered()) {
+    public Question getNextRound(List<Player> players){
+        if (!checkIfAllPlayersAnswered(players)) {
             throw new IllegalStateException("Not all players have answered the current question");
         }
         return miniGame.showNextQuestion();
@@ -111,14 +96,14 @@ public class Game {
         return miniGame.getGameQuestions().get(miniGame.getCurrentRound()-1);
     }
 
-    public List<Player> endGame(){
+    public List<Player> endGame(List<Player> players){
         long count = miniGame.getGameQuestions().stream()
                 .filter(Question::isUsed)
                 .count();
         if (count < rounds) {
             throw new IllegalStateException("The game is not ended yet.");
         }
-        return getGameLeaderBoard();
+        return getGameLeaderBoard(players);
     }
 
     /*
@@ -138,31 +123,10 @@ public class Game {
         return winner;
     }  */
 
-    public boolean checkIfAllPlayerExist(){
-        return (this.players.size() == this.numOfPlayer);
+    public boolean checkIfAllPlayerExist(List<Player> players){
+        return (players.size() == this.numOfPlayer);
     }
-
-    public boolean checkIfUserIsAPlayer(Long userId) {
-        for (Player player : players) {
-            if (player.getUserId() == userId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public void syncPlayerInformation(Player currentPlayer){
-        Optional<Player> foundPlayer = players.stream()
-                .filter(player -> player.getPlayerId() == currentPlayer.getPlayerId())
-                .findFirst();
-
-        foundPlayer.ifPresent(player -> {
-            player.copyFrom(currentPlayer);
-            miniGame.syncPlayerInfo(player);
-        });
-    }
-
-    public List<Player> getGameLeaderBoard(){
+    public List<Player> getGameLeaderBoard(List<Player> players){
         return players.stream()
                 .sorted(Comparator.comparingInt(Player::getTotalScore).reversed())
                 .collect(Collectors.toList());
@@ -196,18 +160,6 @@ public class Game {
         }
     } */
 
-    public void addPlayer(Player player){
-        if(this.players.size() < this.numOfPlayer) {
-            this.players.add(player);
-        }
-        else throw new RejectedExecutionException("Lobby already full");
-    }
-
-    public void updatePlayerPoints(){
-        this.miniGame.updatePlayerPoints();
-        this.players = miniGame.getActivePlayers();
-    }
-
     public String getGamePIN(){
         return this.gamePIN;
     }
@@ -215,15 +167,6 @@ public class Game {
     public long getGameId(){
         return this.gameId;
     }
-
-    public List<Player> getPlayers(){
-        return this.players;
-    }
-
-    public List<Player> getAllPlayers(){
-        return this.players;
-    }
-
     public MiniGame getMiniGame(){
         return this.miniGame;
     }
@@ -271,13 +214,7 @@ public class Game {
     public void setGameId(long gameId) {
         this.gameId = gameId;
     }
-
-    public Player getPlayer(long playerId) {
-        for(Player player: this.players){
-            if(player.getPlayerId() == playerId){
-                return player;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with Id: " + playerId + " is not in this game");
+    public int getCurrentRound(){
+        return miniGame.getCurrentRound();
     }
 }

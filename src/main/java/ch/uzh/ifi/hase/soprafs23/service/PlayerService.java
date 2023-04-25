@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,5 +29,9 @@ public class PlayerService {
                          GameService gameService){
         this.playerRepository = playerRepository;
         this.gameService = gameService;
+    }
+
+    public List<Player> getPlayersByLobbyId(long gameId) {
+        return playerRepository.findByGameId(gameId);
     }
 }

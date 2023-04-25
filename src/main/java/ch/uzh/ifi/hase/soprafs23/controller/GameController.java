@@ -46,9 +46,8 @@ public class GameController {
     public GameGetDTO createLobby(@RequestBody GamePostDTO gamePostDTO){
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
         Game createdGame = gameService.createGame(gameInput); //how do we solve this? with gameinput or updateSettings?
-
         logger.info("Lobby " + createdGame.getGameId() + " created!");
-        return  DTOMapper.INSTANCE.convertEntityToGameGetDTO(createdGame);
+        return addPlayersToGameGetDTO(createdGame);
     }
 
     @PutMapping("/lobbies/{lobbyId}")
@@ -58,8 +57,7 @@ public class GameController {
         Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
         Game currentGame = gameService.updateGameSetting(updateGame);
 
-
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(currentGame);
+        return addPlayersToGameGetDTO(currentGame);
     }
 
     //what does a player need? authorization?
@@ -68,9 +66,8 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public PlayerGetDTO addPlayerToGame(@RequestBody PlayerPostDTO playerPostDTO, @PathVariable String gamePin){
-
         long userId = playerPostDTO.getId();
-        Player player = userService.addUserToLobby(userId, gamePin);
+        Player player = userService.addUserToLobby(userId, gameService.getLobbyIdByGamePin(gamePin));
         logger.info("User with id: " + userId + " added to Lobby with id: " + player.getGameId() + " as Player with id: " + player.getPlayerId());
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }
@@ -81,7 +78,7 @@ public class GameController {
     @ResponseBody
     public GameGetDTO getGameById(@PathVariable long lobbyId){
         Game game = gameService.getGameById(lobbyId);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return addPlayersToGameGetDTO(game);
     }
 
     //TODO!!!
@@ -176,6 +173,13 @@ public class GameController {
         logger.info("Lobby with Id: " + lobbyId + "ended the game!");
         List<Player> players = gameService.endGame(lobbyId);
         return players;
+    }
+
+    public GameGetDTO addPlayersToGameGetDTO(Game game){
+        List<Player> players = playerService.getPlayersByLobbyId(game.getGameId());
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        gameGetDTO.setPlayers(players);
+        return gameGetDTO;
     }
 
 }

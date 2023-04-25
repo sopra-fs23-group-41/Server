@@ -11,17 +11,17 @@ import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 
-public abstract class MiniGame {
+public abstract class MiniGame implements Serializable {
 
     private int rounds;
     protected int currentRound = 0;
     protected GameJudge judge;
-    private List<Player> activePlayers = new ArrayList<>();
     private final List<Article> allArticles;
     private GameMode gameMode;
     private List<Question> gameQuestions = new ArrayList<>();
@@ -59,8 +59,8 @@ public abstract class MiniGame {
         }
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
-    public boolean checkIfAllPlayersAnswered(){
-        return activePlayers.stream()
+    public boolean checkIfAllPlayersAnswered(List<Player> players){
+        return players.stream()
                 .allMatch(player -> player.getAnswers().size() == currentRound);
     } //frontend need to provide with a wrong answer if the player haven't answered when time was up.
 
@@ -73,26 +73,6 @@ public abstract class MiniGame {
             }
             return question;
     }
-
-    public void updatePlayerPoints() {
-        for (Player player : this.getActivePlayers()){
-            judge = new GameJudge(this.getGameQuestions().get(currentRound-1), player, currentRound);
-            int point = judge.calculatePoints();
-            player.setRoundScore(point);
-            player.setTotalScore(player.getTotalScore()+point);
-        }
-    }
-
-    public void syncPlayerInfo(Player currentPlayer) {
-        Optional<Player> foundPlayer = activePlayers.stream()
-                .filter(player -> player.getPlayerId() == currentPlayer.getPlayerId())
-                .findFirst();
-
-        foundPlayer.ifPresent(player -> {
-                    player.copyFrom(currentPlayer);
-        });
-    }
-
 
     // getters and setters
     public void setCurrentRound(int currentRound){
@@ -109,14 +89,6 @@ public abstract class MiniGame {
 
     public int getRounds(){
         return this.rounds;
-    }
-
-    public void setActivePlayers(List<Player> activePlayers){
-        this.activePlayers = activePlayers;
-    }
-
-    public List<Player> getActivePlayers(){
-        return this.activePlayers;
     }
 
     public List<Article> getAllArticles() {

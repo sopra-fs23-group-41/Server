@@ -1,11 +1,8 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
-//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -19,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -71,10 +67,7 @@ public class UserService {
   }
 
   //add user to game with gamepin
-  public Player addUserToLobby(long userId, String gamePin){
-      //check if game to gamepin exists
-      Game game = GameRepo.findByGamePin(gamePin); //should throw ResponseStatusException Lobby not found
-
+  public Player addUserToLobby(long userId, long lobbyId){
       //check if user exists
       User userToConvert = userRepository.findById(userId);
 
@@ -84,24 +77,16 @@ public class UserService {
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with Id:" + userId + "is already in a lobby!");
       }
 
-      //check if user is already in the game
-      if(game.checkIfUserIsAPlayer(userId)){
-          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with Id:" + userId + "is already in a lobby!");
-      }
-
       //add user to game with gamePin
       Player convertedUser = new Player();
 
       //set player
       convertedUser.setPlayerName(userToConvert.getUsername());
       convertedUser.setUserId(userId);
-      convertedUser.setGameId(game.getGameId());
+      convertedUser.setGameId(lobbyId);
 
       Player addedPlayer = playerRepository.save(convertedUser);
       playerRepository.flush();
-
-      //update add Player to game instance
-      game.addPlayer(convertedUser);
 
       return addedPlayer;
   }
