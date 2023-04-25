@@ -77,7 +77,7 @@ public class GameController {
 
     //Get mapping for game by id
     @GetMapping("lobbies/{lobbyId}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO getGameById(@PathVariable long lobbyId){
         Game game = gameService.getGameById(lobbyId);
