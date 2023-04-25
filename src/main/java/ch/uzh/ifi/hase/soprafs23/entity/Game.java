@@ -32,7 +32,7 @@ public class Game {
 
     private GameMode gameMode;
 
-    private final User lobbyOwner;
+    //private final User lobbyOwner;
 
     private List<Player> players = new ArrayList<>();
 
@@ -45,11 +45,13 @@ public class Game {
     Logger logger = LoggerFactory.getLogger(Game.class);
 
 
-    public Game(GameType gameType, User owner){
+    public Game(GameType gameType){
         this.gameType = gameType;
-        this.lobbyOwner = owner;
-        setGamePIN();
+        //this.lobbyOwner = owner;
+        createGamePIN();
     }
+
+    public Game(){}
 
     public boolean checkIfAllPlayersAnswered() {
         if (!miniGame.checkIfAllPlayersAnswered()) {
@@ -62,12 +64,14 @@ public class Game {
 
 
     //methods
-    public void startGame(GameMode gameMode)  {
-        while(checkIfAllPlayerExist()){
+    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
+        if(checkIfAllPlayerExist()){
             if (gameMode == GameMode.GuessThePrice){
+                createArticles(this.rounds);
                 miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
             }
             else{
+                createArticles(this.rounds * 2);
                 miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
             }
             logger.info("Game with Id: " + this.gameId + " wants to set players and questions to miniGame");
@@ -76,6 +80,7 @@ public class Game {
             miniGame.setGameQuestions();
             logger.info("Game with Id: " + this.gameId + " set questions to miniGame");
         }
+        else throw new IllegalStateException("The number of player doesn't match");
     }
 
     public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) throws UnirestException, JsonProcessingException {
@@ -84,12 +89,12 @@ public class Game {
         this.numOfPlayer = numOfPlayer;
         this.category = category;
 
-        createArticles();
+        //createArticles();
         //can we put creatArticle() here?
     }
 
-    public void createArticles() throws UnirestException, JsonProcessingException {
-        this.articleList = AsosApiUtility.getArticles(this.rounds, this.category);
+    public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
+        this.articleList = AsosApiUtility.getArticles(numOfArticles, this.category);
     }
 
     public Question getNextRound(){
@@ -160,13 +165,17 @@ public class Game {
 
 
     //getters and setters
-    public void setGamePIN(){
+    public void createGamePIN(){
         UUID uuid = UUID.randomUUID();
 
         // Extract the first 6 characters of the UUID's hexadecimal representation
         String uuidStr = uuid.toString().replace("-", "");
 
         this.gamePIN = uuidStr.substring(0, 4);
+    }
+
+    public void setGamePIN(String gamePIN) {
+        this.gamePIN = gamePIN;
     }
 
     /*

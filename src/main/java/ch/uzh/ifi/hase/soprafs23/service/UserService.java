@@ -4,7 +4,8 @@ import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
+//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -71,7 +72,7 @@ public class UserService {
   //add user to game with gamepin
   public Player addUserToLobby(long userId, String gamePin){
       //check if game to gamepin exists
-      Game game = GameRepository.findByGamePin(gamePin); //should throw ResponseStatusException Lobby not found
+      Game game = GameRepo.findByGamePin(gamePin); //should throw ResponseStatusException Lobby not found
 
       //check if user exists
       User userToConvert = userRepository.findById(userId);

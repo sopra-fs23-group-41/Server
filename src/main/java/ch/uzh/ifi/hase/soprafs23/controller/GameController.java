@@ -4,7 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Answer;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -54,9 +54,9 @@ public class GameController {
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ResponseBody
-    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GameGetDTO gameGetDTO) throws UnirestException, JsonProcessingException {
-        Game currentGame = DTOMapper.INSTANCE.convertGameGetDTOToEntity(gameGetDTO);
-        gameService.updateGameSetting(currentGame);
+    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
+        Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
+        Game currentGame = gameService.updateGameSetting(updateGame);
 
 
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(currentGame);
@@ -84,7 +84,7 @@ public class GameController {
         return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
     }
 
-    //TO DO!!!
+    //TODO!!!
     //Get mapping for players in lobby
     //return All Players of lobby
 

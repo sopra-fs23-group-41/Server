@@ -25,6 +25,7 @@ public abstract class Question implements Serializable {
     public void initializeQuestion(){
         setPicUrl();
         setTrueAnswer();
+        generateFalseAnswers();
     } // will it recognize which realization to use?
 
     // getters and setters

@@ -50,11 +50,10 @@ public abstract class MiniGame {
             this.gameQuestions = questions;
         }
         else if(this.gameMode == GameMode.HighOrLow){
-            for (int i = 0; i<this.rounds;){
-                HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i+1));
+            for (int i = 0; i<this.rounds; i++){
+                HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i + this.rounds));
                 question.initializeQuestion();
                 questions.add(question);
-                i = i+2;
             }
             this.gameQuestions = questions;
         }

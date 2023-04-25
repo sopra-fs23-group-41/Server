@@ -31,18 +31,18 @@ public interface DTOMapper {
 
   DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
-  @Mapping(source = "name", target = "name")
+  @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
   User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
   @Mapping(source = "id", target = "id")
-  @Mapping(source = "name", target = "name")
+  @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
   @Mapping(source = "id", target = "id")
-  @Mapping(source = "name", target = "name")
+  @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "status", target = "status")
   User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
@@ -66,12 +66,10 @@ public interface DTOMapper {
 
   @Mapping(source = "gameId" , target = "gameId")
   @Mapping(source = "numOfPlayer" , target = "numOfPlayer")
-  @Mapping(source = "gameType" , target = "gameType")
   @Mapping(source = "rounds" , target = "rounds")
-  @Mapping(source = "gamePIN" , target = "gamePIN")
   @Mapping(source = "gameMode" , target = "gameMode")
-  @Mapping(source = "players" , target = "players")
-  Game convertGameGetDTOToEntity(GameGetDTO gameGetDTO);
+  @Mapping(source = "category", target = "category")
+  Game convertGamePutDTOToEntity(GamePutDTO gamePutDTO);
 
   Answer convertAnswerPostDTOtoEntity(AnswerPostDTO answerPostDTO);
 

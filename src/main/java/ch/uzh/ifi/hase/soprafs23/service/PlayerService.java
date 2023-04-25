@@ -1,7 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +15,7 @@ import javax.transaction.Transactional;
 @Transactional
 public class PlayerService {
 
-    private final Logger log = LoggerFactory.getLogger(GameRepository.class);
+    //private final Logger log = LoggerFactory.getLogger(GameRepository.class);
 
     private final PlayerRepository playerRepository;
 
