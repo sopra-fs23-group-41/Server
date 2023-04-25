@@ -90,7 +90,8 @@ public class GameController {
         return playerService.getPlayersByLobbyId(lobbyId);
     }
 
-    //TODO: combine begin and didAllPlayerJoin, make a new method for "If the game has start or not".
+    //TODO: combine begin and didAllPlayerJoin
+    //TODO: make a new method for "If the game has start or not".
 
 
     //Mapping to start a game (with new Settings?)
@@ -99,6 +100,11 @@ public class GameController {
     @ResponseBody
     public void beginGame(@PathVariable long lobbyId) throws UnirestException, JsonProcessingException {
         //should only start if all player joined
+        if (!gameService.didAllPlayersJoin(lobbyId)) {
+            throw new IllegalStateException("Cannot start the game until all players have joined the lobby.");
+        }
+
+        // Start the game
         logger.info("Lobby with Id: " + lobbyId + " started the game!");
         gameService.beginGame(lobbyId);
         //Question question = gameService.getNextQuestion(lobbyId);
@@ -106,13 +112,16 @@ public class GameController {
     }
 
     //did all player join the lobby?
+    /*
     @GetMapping("/lobbies/{lobbyId}/players")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public Boolean didAllPlayersJoin(@PathVariable long lobbyId){
-        logger.info("lobby with Id: " + lobbyId + " asked if all player joined");
+
         return gameService.didAllPlayersJoin(lobbyId);
     }
+
+     */
 
     //would it be better to get Int-th question of lobby with lobby id?
     //get next question of lobby
