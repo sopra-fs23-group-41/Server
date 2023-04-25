@@ -24,13 +24,12 @@ public class GameJudge {
             return Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer());
         }
         else {
-            HigherLowerQuestion que = (HigherLowerQuestion) question;
-            return (!Objects.equals(player.getAnswers().get(round-1).getPlayerAnswer(), que.getTrueAnswer()));
+            return (!Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer()));
         }
     }
 
     public int calculatePoints(){
-        String ans = player.getAnswers().get(round-1).getPlayerAnswer();
+        String ans = player.getAnswers().get(this.round-1).getPlayerAnswer();
         if (question instanceof GuessThePriceQuestion){
             GuessThePriceQuestion que = (GuessThePriceQuestion) question;
             int bonus = que.getBonus();
@@ -38,10 +37,10 @@ public class GameJudge {
                 return bonus;
             }
             else{
-                int answer = Integer.parseInt(ans);
+                float answer = Float.parseFloat(ans);
                 String cr = question.getTrueAnswer();
-                int price = Integer.parseInt(cr);
-                int dif = Math.abs(answer - price)/price;
+                float price = Float.parseFloat(cr);
+                float dif = Math.abs(answer - price)/price;
                 if(dif < 0.1){
                     return (int) (bonus*0.5);
                 }

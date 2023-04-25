@@ -45,11 +45,13 @@ public class Game {
     Logger logger = LoggerFactory.getLogger(Game.class);
 
 
+    /*
     public Game(GameType gameType){
         this.gameType = gameType;
         //this.lobbyOwner = owner;
         createGamePIN();
     }
+    */
 
     public Game(){}
 

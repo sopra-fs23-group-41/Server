@@ -125,6 +125,7 @@ public class GameService {
         playerRepository.flush();
         long currentLobbyId = currentPlayer.getGameId();
         Game currentGame = getGameById(currentLobbyId);
+        currentGame.syncPlayerInformation(currentPlayer);
 
         currentGame.updatePlayerPoints();
         currentGame.syncPlayerInformation(currentPlayer);
