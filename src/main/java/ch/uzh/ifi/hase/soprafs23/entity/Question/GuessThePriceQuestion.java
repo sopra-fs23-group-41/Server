@@ -22,14 +22,14 @@ public class GuessThePriceQuestion extends Question{
 
     @Override
     protected void setTrueAnswer() {
-        this.trueAnswer =Double.toString(getArticles().get(0).getPrice());
+        this.trueAnswer = Float.toString(getArticles().get(0).getPrice());
 
     }
 
     @Override
     public void generateFalseAnswers() {
         String num = super.getTrueAnswer();
-        int price = Integer.parseInt(num);
+        float price = Float.parseFloat(num);
         List<String> falseAnswers = new ArrayList<>();
         for (float i = -1; i < 3; i++){
             if(i==0){

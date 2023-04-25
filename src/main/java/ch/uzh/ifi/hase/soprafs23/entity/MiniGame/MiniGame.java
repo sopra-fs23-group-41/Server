@@ -76,7 +76,7 @@ public abstract class MiniGame {
 
     public void updatePlayerPoints() {
         for (Player player : this.getActivePlayers()){
-            judge = new GameJudge(this.getGameQuestions(), player, currentRound);
+            judge = new GameJudge(this.getGameQuestions().get(currentRound-1), player, currentRound);
             int point = judge.calculatePoints();
             player.setRoundScore(point);
             player.setTotalScore(player.getTotalScore()+point);

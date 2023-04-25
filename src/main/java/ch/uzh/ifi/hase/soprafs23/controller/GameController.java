@@ -119,7 +119,23 @@ public class GameController {
     @ResponseBody
     public QuestionGetDTO getQuestion(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "requested next question");
-        Question nextQuestion = gameService.getNextQuestion(lobbyId);
+        Question nextQuestion = gameService.getCurrentRoundQuestion(lobbyId);
+        return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
+    }
+
+    /*
+    use the getNextRound below first for whoever firstly go to the next round
+    (also for first round call getNextRound first)
+    and for others use the getQuestion above to fetch the same question
+    without accumulate the currentRound count
+     */
+
+    @GetMapping("/lobbies/{lobbyId}/nextRound")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public QuestionGetDTO getNextRound(@PathVariable long lobbyId){
+        logger.info("Lobby with Id: " + lobbyId + "requested next question");
+        Question nextQuestion = gameService.getNextRound(lobbyId);
         return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
     }
 

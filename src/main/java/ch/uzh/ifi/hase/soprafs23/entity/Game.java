@@ -104,6 +104,11 @@ public class Game {
         return miniGame.showNextQuestion();
     }
 
+    public Question getCurrentRoundQuestion(){
+        //currentRounds starts with 1, so the index should be -1;
+        return miniGame.getGameQuestions().get(miniGame.getCurrentRound()-1);
+    }
+
     public List<Player> endGame(){
         long count = miniGame.getGameQuestions().stream()
                 .filter(Question::isUsed)

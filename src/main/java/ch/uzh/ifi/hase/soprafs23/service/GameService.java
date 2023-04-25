@@ -100,7 +100,7 @@ public class GameService {
         return currentGame.checkIfAllPlayerExist();
     }
 
-    public Question getNextQuestion(long lobbyId) {
+    public Question getNextRound(long lobbyId) {
         Game currenteGame = getGameById(lobbyId);
         Question nextQuestion = currenteGame.getNextRound();
 
@@ -111,6 +111,13 @@ public class GameService {
         return  nextQuestion;
     }
 
+    public Question getCurrentRoundQuestion(long lobbyId){
+        Game currentGame = getGameById(lobbyId);
+
+        return currentGame.getCurrentRoundQuestion();
+    }
+
+
     public void savePlayerAnswer(long playerId, Answer answer) {
         Player currentPlayer = playerRepository.findByPlayerId(playerId);
         currentPlayer.setAnswers(answer);
@@ -118,8 +125,10 @@ public class GameService {
         playerRepository.flush();
         long currentLobbyId = currentPlayer.getGameId();
         Game currentGame = getGameById(currentLobbyId);
+
+        currentGame.updatePlayerPoints();
         currentGame.syncPlayerInformation(currentPlayer);
-        currentGame.updatePlayerPoints(); //make player as arg, return a player
+        GameRepo.addGame((int)currentLobbyId,currentGame);
         //TODO: keep playerRepo points updated
         //gameRepository.save(currentGame);
         //gameRepository.flush();

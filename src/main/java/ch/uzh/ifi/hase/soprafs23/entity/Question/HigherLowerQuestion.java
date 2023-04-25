@@ -18,10 +18,10 @@ public class HigherLowerQuestion extends Question{
         float price1 = articles.get(0).getPrice();
         float price2 = articles.get(1).getPrice();
         if (price1 < price2){
-            this.falseAnswers.add("Higher");
+            this.falseAnswers.add("Lower");
         }
         else if (price1 > price2){
-            this.falseAnswers.add("Lower");
+            this.falseAnswers.add("Higher");
         }
         // TODO: prices equals
     }
@@ -35,8 +35,14 @@ public class HigherLowerQuestion extends Question{
     @Override
     // true answer in this case indicate two prices of the two articles
     protected void setTrueAnswer() {
-        this.trueAnswer =Float.toString(getArticles().get(0).getPrice());
-        this.trueAnswer =Float.toString(getArticles().get(1).getPrice());
+        float price1 = getArticles().get(0).getPrice();
+        float price2 = getArticles().get(1).getPrice();
+        if (price1 > price2) {
+            this.trueAnswer = "Lower";
+        }
+        if (price1 < price2) {
+            this.trueAnswer = "Higher";
+        }
     }
 
     public int getTimeToAnswer(){
