@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class UserGetDTO {
@@ -10,8 +11,8 @@ public class UserGetDTO {
   private String password;
   private String username;
   private UserStatus status;
-  private Date creationDate;
-  private Date birthdate;
+  private LocalDate creationDate;
+  private LocalDate birthdate;
   private boolean gameStatus;
   private int numOfGameWon;
 
@@ -47,19 +48,19 @@ public class UserGetDTO {
     this.status = status;
   }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 

@@ -4,6 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -38,10 +39,10 @@ public class User implements Serializable {
   private UserStatus status;
 
   @Column(nullable = false)
-  private Date creationDate;
+  private LocalDate creationDate;
 
   @Column
-  private Date birthdate;
+  private LocalDate birthdate;
 
   @Column(nullable = false)
   private boolean gameStatus=false;
@@ -89,19 +90,19 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Date getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 
-    public Date getBirthdate() {
+    public LocalDate getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(Date birthdate) {
+    public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
     }
 

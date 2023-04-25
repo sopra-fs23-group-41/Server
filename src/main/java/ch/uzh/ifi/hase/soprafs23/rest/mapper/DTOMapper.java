@@ -41,11 +41,13 @@ public interface DTOMapper {
   @Mapping(source = "status", target = "status")
   UserGetDTO convertEntityToUserGetDTO(User user);
 
+
   @Mapping(source = "id", target = "id")
   @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
-  @Mapping(source = "status", target = "status")
-  User convertUserGetDTOToEntity(UserGetDTO userGetDTO);
+  @Mapping(source = "birthdate", target = "birthdate")
+  User convertUserPutDTOToEntity(UserPutDTO userPutDTO);
+
 
   @Mapping(source = "gameType", target = "gameType")
   @Mapping(source = "rounds", target = "rounds")

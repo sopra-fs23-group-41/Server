@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -85,8 +86,8 @@ public class UserController {
   @PutMapping("/users/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public UserGetDTO updateUserProfile(@PathVariable Long id, @RequestBody UserGetDTO userGetDTO){
-      User currentUser = DTOMapper.INSTANCE.convertUserGetDTOToEntity(userGetDTO);
+  public UserGetDTO updateUserProfile(@RequestBody UserPutDTO userPutDTO, @PathVariable String id){
+      User currentUser = DTOMapper.INSTANCE.convertUserPutDTOToEntity(userPutDTO);
       userService.updateUserProfile(currentUser);
 
       return DTOMapper.INSTANCE.convertEntityToUserGetDTO(currentUser);
