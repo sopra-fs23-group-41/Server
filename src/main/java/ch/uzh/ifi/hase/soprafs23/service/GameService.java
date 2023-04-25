@@ -154,4 +154,9 @@ public class GameService {
 
         return player;
     }
+
+    public boolean isTheGameStarted(long lobbyId) {
+        Game currentGame = GameRepo.findByLobbyId((int)lobbyId);
+        return (currentGame.getMiniGame().getGameQuestions().size() > 0);
+    }
 }

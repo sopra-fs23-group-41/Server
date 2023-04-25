@@ -90,9 +90,6 @@ public class GameController {
         return playerService.getPlayersByLobbyId(lobbyId);
     }
 
-    //TODO: combine begin and didAllPlayerJoin
-    //TODO: make a new method for "If the game has start or not".
-
 
     //Mapping to start a game (with new Settings?)
     @PostMapping("/lobbies/{lobbyId}/begin")
@@ -109,6 +106,13 @@ public class GameController {
         gameService.beginGame(lobbyId);
         //Question question = gameService.getNextQuestion(lobbyId);
         //return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(question);
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/beginStatus")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean isTheGameStarted(@PathVariable long lobbyId){
+        return gameService.isTheGameStarted(lobbyId);
     }
 
     //did all player join the lobby?
