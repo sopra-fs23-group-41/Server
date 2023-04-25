@@ -88,6 +88,8 @@ public class GameController {
     //Get mapping for players in lobby
     //return All Players of lobby
 
+    //TODO: combine begin and didAllPlayerJoin, make a new method for "If the game has start or not".
+
 
     //Mapping to start a game (with new Settings?)
     @PostMapping("/lobbies/{lobbyId}/begin")
