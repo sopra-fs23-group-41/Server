@@ -12,7 +12,7 @@ import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.mapstruct.Mapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -55,7 +55,7 @@ public class GameController {
     @ResponseBody
     public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
         Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
-        Game currentGame = gameService.updateGameSetting(updateGame);
+        Game currentGame = gameService.updateGameSetting(updateGame, lobbyId);
 
         return addPlayersToGameGetDTO(currentGame);
     }
@@ -81,9 +81,14 @@ public class GameController {
         return addPlayersToGameGetDTO(game);
     }
 
-    //TODO!!!
     //Get mapping for players in lobby
     //return All Players of lobby
+    @GetMapping("lobbies/{lobbyId}/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Player> getPlayersByLobbyId(@PathVariable long lobbyId){
+        return playerService.getPlayersByLobbyId(lobbyId);
+    }
 
     //TODO: combine begin and didAllPlayerJoin, make a new method for "If the game has start or not".
 
@@ -171,8 +176,7 @@ public class GameController {
     @ResponseBody
     public List<Player> endGame(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "ended the game!");
-        List<Player> players = gameService.endGame(lobbyId);
-        return players;
+        return gameService.endGame(lobbyId);
     }
 
     public GameGetDTO addPlayersToGameGetDTO(Game game){

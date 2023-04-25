@@ -60,8 +60,8 @@ public class GameService {
         return newGame;
     }
 
-    public Game updateGameSetting(Game currentGame) throws UnirestException, JsonProcessingException {
-        Game game = GameRepo.findByLobbyId((int) currentGame.getGameId());
+    public Game updateGameSetting(Game currentGame, long lobbyId) throws UnirestException, JsonProcessingException {
+        Game game = GameRepo.findByLobbyId((int) lobbyId);
         game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
         //gameRepository.save(game);
         //gameRepository.flush();
