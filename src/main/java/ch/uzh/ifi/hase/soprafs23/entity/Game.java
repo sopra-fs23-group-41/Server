@@ -171,7 +171,7 @@ public class Game {
         // Extract the first 6 characters of the UUID's hexadecimal representation
         String uuidStr = uuid.toString().replace("-", "");
 
-        this.gamePIN = uuidStr.substring(0, 4);
+        this.gamePIN = uuidStr.substring(0, 6);
     }
 
     public void setGamePIN(String gamePIN) {
