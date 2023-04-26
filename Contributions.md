@@ -7,7 +7,7 @@ Yuqing Huang: [#106](https://github.com/sopra-fs23-group-41/Server/issues/106) [
 
 Eunji Lee:
 
-Laurent Le Febve:
+Laurent Le Febve: [#60]
 
 Tiago Ferreiro Matos: [#68](https://github.com/sopra-fs23-group-41/Client/issues/68) [#47](https://github.com/sopra-fs23-group-41/Client/issues/47)
 
@@ -31,7 +31,7 @@ Yuqing Huang: [#86](https://github.com/sopra-fs23-group-41/Server/issues/86) [#8
 
 Eunji Lee: 
 
-Laurent Le Febve:
+Laurent Le Febve: 
 
 Tiago Ferreiro Matos: #72 #67 #31
 
