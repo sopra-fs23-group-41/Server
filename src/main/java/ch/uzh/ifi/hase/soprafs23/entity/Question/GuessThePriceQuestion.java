@@ -36,8 +36,9 @@ public class GuessThePriceQuestion extends Question{
                 continue;
             }
             else {
-            String wrong = String.valueOf(price*(1+i*0.1));
-            falseAnswers.add(wrong);
+                float ans = (float) (price*(1+i*0.1));
+                String wrong = String.format("%.1f", ans);
+                falseAnswers.add(wrong);
             }
         }
 

@@ -30,7 +30,7 @@ public class Game {
     //private final User lobbyOwner;
     @ElementCollection
     private List<Article> articleList = new ArrayList<>();
-    private MiniGame miniGame;
+    private MiniGame miniGame = null;
     private Category category;
 
     /*

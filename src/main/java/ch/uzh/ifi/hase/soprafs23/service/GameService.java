@@ -154,7 +154,12 @@ public class GameService {
 
     public boolean isTheGameStarted(long lobbyId) {
         Game currentGame = GameRepo.findByLobbyId((int)lobbyId);
-        return (currentGame.getMiniGame().getGameQuestions().size() > 0);
+        if(currentGame.getMiniGame() == null){
+            return false;
+        }
+        else {
+            return (currentGame.getMiniGame().getGameQuestions().size() > 0);
+        }
     }
 
     public List<Article> getAllArticles(long lobbyId){
