@@ -149,12 +149,30 @@ public class GameTest {
     }
 
     @Test
-    public void cannotGetNextRound(){
+    public void cannotGetNextRoundBecauseMiniGameNotExist(){
         List<Player> players1 = new ArrayList<>();
         players1.add(new Player());
         players1.add(new Player());
 
         assertThrows(NullPointerException.class, () -> this.game.getNextRound(players1));
+    }
+
+    @Test
+    public void cannotGetNextRoundBecauseNotAllPlayersAnswered() throws UnirestException, JsonProcessingException {
+        List<Player> players2 = new ArrayList<>();
+        Player alice = new Player();
+        alice.setAnswers(new Answer());
+        players2.add(alice);
+        Player bob = new Player();
+        bob.setAnswers(new Answer());
+        players2.add(bob);
+
+        this.game.setGameType(GameType.MULTI);
+        this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.SHOES);
+        this.game.startGame(GameMode.HighOrLow, players2);
+        this.game.getMiniGame().setCurrentRound(2);
+
+        assertThrows(IllegalStateException.class, () -> this.game.getNextRound(players2));
     }
 
     @Test
@@ -169,5 +187,36 @@ public class GameTest {
 
         assertNotNull(this.game.getNextRound(players));
     }
+
+    @Test
+    public void getCurrentRoundQuestionTest() throws UnirestException, JsonProcessingException {
+        List<Player> players = new ArrayList<>();
+        Player alice = new Player();
+        alice.setAnswers(new Answer());
+        players.add(alice);
+        this.game.setGameType(GameType.SINGLE);
+        this.game.updateGameSetting(GameMode.GuessThePrice, 2, 1, Category.SHOES);
+        this.game.startGame(GameMode.GuessThePrice, players);
+        this.game.getMiniGame().setCurrentRound(1);
+
+        assertNotNull(this.game.getCurrentRoundQuestion());
+    }
+
+    @Test
+    public void endGameTest() throws UnirestException, JsonProcessingException {
+        List<Player> players = new ArrayList<>();
+        Player alice = new Player();
+        alice.setAnswers(new Answer());
+        players.add(alice);
+        this.game.setGameType(GameType.SINGLE);
+        this.game.updateGameSetting(GameMode.GuessThePrice, 1, 1, Category.SHOES);
+        this.game.startGame(GameMode.GuessThePrice, players);
+        this.game.getMiniGame().setCurrentRound(1);
+        this.game.getMiniGame().getGameQuestions().get(0).setUsed(true);
+
+        assertNotNull(this.game.endGame(players));
+
+    }
+
 
 }
