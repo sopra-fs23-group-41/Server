@@ -10,6 +10,8 @@ import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import java.util.*;
@@ -123,7 +125,7 @@ public class Game {
 
     public boolean checkIfAllPlayerExist(List<Player> players){
         if(players.size() == 0){
-            throw new IllegalStateException("There is no player exists!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No players in the Lobby!");
         }
         return (players.size() == this.numOfPlayer);
     }
