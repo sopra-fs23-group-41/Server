@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class GameController {
     public void beginGame(@PathVariable long lobbyId) throws UnirestException, JsonProcessingException {
         //should only start if all player joined
         if (!gameService.didAllPlayersJoin(lobbyId)) {
-            throw new IllegalStateException("Cannot start the game until all players have joined the lobby.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot start the game until all players have joined the lobby.");
         }
 
         // Start the game
