@@ -80,6 +80,9 @@ public class Game {
     }
 
     public Question getNextRound(List<Player> players){
+        if(this.miniGame == null){
+            throw new NullPointerException("The game has not started yet!");
+        }
         if (!checkIfAllPlayersAnswered(players)) {
             throw new IllegalStateException("Not all players have answered the current question");
         }
@@ -119,6 +122,9 @@ public class Game {
     }  */
 
     public boolean checkIfAllPlayerExist(List<Player> players){
+        if(players.size() == 0){
+            throw new IllegalStateException("There is no player exists!");
+        }
         return (players.size() == this.numOfPlayer);
     }
 
