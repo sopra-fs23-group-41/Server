@@ -33,6 +33,6 @@ Eunji Lee:
 
 Laurent Le Febve:
 
-Tiago Ferreiro Matos:
+Tiago Ferreiro Matos: #72 #67 #31
 
 Timo Tietje: 
