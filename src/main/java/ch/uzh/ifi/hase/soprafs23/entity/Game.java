@@ -10,14 +10,9 @@ import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
 import java.util.*;
-import java.util.concurrent.RejectedExecutionException;
 import java.util.stream.Collectors;
 
 public class Game {
@@ -70,7 +65,7 @@ public class Game {
         else throw new IllegalStateException("The number of player doesn't match");
     }
 
-    public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) throws UnirestException, JsonProcessingException {
+    public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) {
         this.gameMode = gameMode;
         this.rounds = rounds;
         this.numOfPlayer = numOfPlayer;
@@ -126,6 +121,7 @@ public class Game {
     public boolean checkIfAllPlayerExist(List<Player> players){
         return (players.size() == this.numOfPlayer);
     }
+
     public List<Player> getGameLeaderBoard(List<Player> players){
         return players.stream()
                 .sorted(Comparator.comparingInt(Player::getTotalScore).reversed())
@@ -224,5 +220,9 @@ public class Game {
 
     public void setArticleList(List<Article> articleList) {
         this.articleList = articleList;
+    }
+
+    public void setMiniGame(MiniGame miniGame) {
+        this.miniGame = miniGame;
     }
 }
