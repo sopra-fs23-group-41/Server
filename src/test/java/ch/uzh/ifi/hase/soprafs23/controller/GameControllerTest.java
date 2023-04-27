@@ -48,9 +48,6 @@ public class GameControllerTest {
     @MockBean
     private UserService userService;
 
-    @BeforeEach
-
-
     @Test
     public void createLobbyTest() throws Exception {
         //what do i have to mock:

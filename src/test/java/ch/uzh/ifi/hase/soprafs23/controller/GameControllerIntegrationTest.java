@@ -10,19 +10,12 @@ import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
-import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
-import ch.uzh.ifi.hase.soprafs23.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -34,13 +27,9 @@ public class GameControllerIntegrationTest {
     private PlayerRepository playerRepository;
     @Autowired
     private GameService gameService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private PlayerService playerService;
 
     @Test
-    public void beginGameTest() throws UnirestException, JsonProcessingException {
+    public void beginGameTest() {
         //given users as players in a lobby with id 0 and where all players joined
 
         Game game = new Game();
@@ -58,12 +47,17 @@ public class GameControllerIntegrationTest {
         player.setPlayerName("Name");
         player.setGameId(0);
 
+        //when
+        //try to begin the game before all players joined
+        ResponseEntity<Void> postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
+        assertEquals(HttpStatus.NOT_FOUND, postResponse.getStatusCode());
+
         //add Game to database
         GameRepo.addGame((int) game.getGameId(),game);
 
         //when
-        //begin the game before all players joined
-        ResponseEntity<Void> postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
+        //try to begin the game before all players joined
+        postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
         assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
 
         //add missing player to game
