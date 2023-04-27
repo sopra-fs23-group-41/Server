@@ -22,22 +22,23 @@ public class GuessThePriceQuestion extends Question{
 
     @Override
     protected void setTrueAnswer() {
-        this.trueAnswer =Double.toString(getArticles().get(0).getPrice());
+        this.trueAnswer = Float.toString(getArticles().get(0).getPrice());
 
     }
 
     @Override
     public void generateFalseAnswers() {
         String num = super.getTrueAnswer();
-        int price = Integer.parseInt(num);
+        float price = Float.parseFloat(num);
         List<String> falseAnswers = new ArrayList<>();
         for (float i = -1; i < 3; i++){
             if(i==0){
                 continue;
             }
             else {
-            String wrong = String.valueOf(price*(1+i*0.1));
-            falseAnswers.add(wrong);
+                float ans = (float) (price*(1+i*0.1));
+                String wrong = String.format("%.1f", ans);
+                falseAnswers.add(wrong);
             }
         }
 
@@ -45,10 +46,6 @@ public class GuessThePriceQuestion extends Question{
     }
 
     //getters
-    public List<String> getFalseAnswers(){
-        return this.falseAnswers;
-    }
-
     public int getTimeToAnswer(){
         return timeToAnswer;
     }

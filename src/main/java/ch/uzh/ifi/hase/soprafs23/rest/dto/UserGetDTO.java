@@ -2,12 +2,19 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 public class UserGetDTO {
 
   private Long id;
-  private String name;
+  private String password;
   private String username;
   private UserStatus status;
+  private LocalDate creationDate;
+  private LocalDate birthdate;
+  private boolean gameStatus;
+  private int numOfGameWon;
 
   public Long getId() {
     return id;
@@ -17,12 +24,12 @@ public class UserGetDTO {
     this.id = id;
   }
 
-  public String getName() {
-    return name;
+  public String getPassword() {
+    return password;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setPassword(String password) {
+    this.password = password;
   }
 
   public String getUsername() {
@@ -40,4 +47,36 @@ public class UserGetDTO {
   public void setStatus(UserStatus status) {
     this.status = status;
   }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public boolean isGameStatus() {
+        return gameStatus;
+    }
+
+    public void setGameStatus(boolean gameStatus) {
+        this.gameStatus = gameStatus;
+    }
+
+    public int getNumOfGameWon() {
+        return numOfGameWon;
+    }
+
+    public void setNumOfGameWon(int numOfGameWon) {
+        this.numOfGameWon = numOfGameWon;
+    }
 }

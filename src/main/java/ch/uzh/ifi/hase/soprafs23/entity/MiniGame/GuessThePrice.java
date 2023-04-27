@@ -13,9 +13,4 @@ public class GuessThePrice extends MiniGame{
     public GuessThePrice(int rounds, List<Article> articles, GameMode gameMode){
         super(rounds,articles, gameMode);
     }
-
-    @Override
-    public void updatePlayerPoints(){
-
-    }
 }

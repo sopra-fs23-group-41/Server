@@ -10,88 +10,104 @@ import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
-import java.util.concurrent.RejectedExecutionException;
+import javax.persistence.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Game {
     private long gameId;
-
-    private int numOfPlayer;
-
+    private int numOfPlayer = 1;
     private GameType gameType;
-
-    private int rounds;
-
+    private int rounds = 1;
     private String gamePIN;
-
     private GameMode gameMode;
-
-    private List<Player> players = new ArrayList<>();
-
+    //private final User lobbyOwner;
+    @ElementCollection
     private List<Article> articleList = new ArrayList<>();
-
-    private MiniGame miniGame;
-
+    private MiniGame miniGame = null;
     private Category category;
 
-    Logger logger = LoggerFactory.getLogger(Game.class);
-
-    public Game() {
-            setGamePIN();
-    }
-
-    public Game(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category){
+    /*
+    public Game(GameType gameType){
         this.gameType = gameType;
-        this.gameMode = gameMode;
-        this.rounds = rounds;
-        this.category = category;
-        this.numOfPlayer = numOfPlayer;
-        setGamePIN();
+        //this.lobbyOwner = owner;
+        createGamePIN();
     }
+    */
 
-    public boolean checkIfAllPlayersAnswered() {
-        return this.miniGame.checkIfAllPlayersAnswered();
+    public Game(){}
+
+    public boolean checkIfAllPlayersAnswered(List<Player> players) {
+        if (!miniGame.checkIfAllPlayersAnswered(players)) {
+            return false;
+        }
+        int currentRound = miniGame.getCurrentRound();
+        return players.stream()
+                .allMatch(player -> player.getAnswers().size() == currentRound);
     }
 
 
     //methods
-    public void startGame(GameMode gameMode) throws UnirestException, JsonProcessingException {
-        createArticles();
-        if (gameMode == GameMode.GuessThePrice){
-            miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+    public void startGame(GameMode gameMode, List<Player> players) throws UnirestException, JsonProcessingException {
+        if(checkIfAllPlayerExist(players)){
+            if (gameMode == GameMode.GuessThePrice){
+                createArticles(this.rounds);
+                miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+            }
+            else{
+                createArticles(this.rounds * 2);
+                miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
+            }
+            miniGame.setGameQuestions();
+
         }
-        else{
-            miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
-        }
-        logger.info("Game with Id: " + this.gameId + " wants to set players and questions to minigame");
-        miniGame.setActivePlayers(this.players);
-        logger.info("Game with Id: " + this.gameId + " set players to miniGame");
-        miniGame.setGameQuestions();
-        logger.info("Game with Id: " + this.gameId + " set questions to miniGame");
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The number of player doesn't match to game setting!");
     }
 
-    public void updateGameSetting(GameType gameType, GameMode gameMode, int rounds, int numOfPlayer, Category category){
-        this.gameType = gameType;
+    public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) {
         this.gameMode = gameMode;
         this.rounds = rounds;
         this.numOfPlayer = numOfPlayer;
         this.category = category;
+
+        //createArticles();
+        //can we put creatArticle() here?
     }
 
-    public void createArticles() throws UnirestException, JsonProcessingException {
-        this.articleList = AsosApiUtility.getArticles(this.rounds, this.category);
+    public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
+        this.articleList = AsosApiUtility.getArticles(numOfArticles, this.category);
     }
 
-    public void endGame(){}
+    public Question getNextRound(List<Player> players){
+        if(this.miniGame == null){
+            throw new NullPointerException("The game has not started yet!");
+        }
+        if (!checkIfAllPlayersAnswered(players)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all players have answered the current question");
+        }
+        return miniGame.showNextQuestion();
+    }
 
+    public Question getCurrentRoundQuestion(){
+        //currentRounds starts with 1, so the index should be -1;
+        return miniGame.getGameQuestions().get(miniGame.getCurrentRound()-1);
+    }
+
+    public List<Player> endGame(List<Player> players){
+        long count = miniGame.getGameQuestions().stream()
+                .filter(Question::isUsed)
+                .count();
+        if (count < rounds) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The game is not ended yet.");
+        }
+        return getGameLeaderBoard(players);
+    }
+
+    /*
     public Player declareWinner(){
         Player winner = null;
         int highestScore = Integer.MIN_VALUE;
@@ -106,12 +122,26 @@ public class Game {
         }
 
         return winner;
+    }  */
+
+    public boolean checkIfAllPlayerExist(List<Player> players){
+        if(players.size() == 0){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No players in the Lobby!");
+        }
+        return (players.size() == this.numOfPlayer);
+    }
+
+    public List<Player> getGameLeaderBoard(List<Player> players){
+        return players.stream()
+                .sorted(Comparator.comparingInt(Player::getTotalScore).reversed())
+                .collect(Collectors.toList());
     }
 
 
 
+
     //getters and setters
-    public void setGamePIN(){
+    public void createGamePIN(){
         UUID uuid = UUID.randomUUID();
 
         // Extract the first 6 characters of the UUID's hexadecimal representation
@@ -120,28 +150,20 @@ public class Game {
         this.gamePIN = uuidStr.substring(0, 6);
     }
 
+    public void setGamePIN(String gamePIN) {
+        this.gamePIN = gamePIN;
+    }
+
+    /*
     public void setPlayers(List<User> users){
-        for (int i=0; i<numOfPlayer; i++){
+        for (User user : users){
             Player player = new Player();
-            User user = users.get(i);
             player.setPlayerName(user.getUsername());
             player.setUserId(user.getId());
             player.setGameId(this.gameId);
             this.players.add(player);
         }
-    }
-
-    public void addPlayer(Player player){
-        if(this.players.size() < this.numOfPlayer) {
-            this.players.add(player);
-        }
-        else throw new RejectedExecutionException("Lobby already full");
-    }
-
-    public void updatePlayerPoints(){
-        this.miniGame.updatePlayerPoints();
-        this.players = miniGame.getActivePlayers();
-    }
+    } */
 
     public String getGamePIN(){
         return this.gamePIN;
@@ -150,15 +172,6 @@ public class Game {
     public long getGameId(){
         return this.gameId;
     }
-
-    public List<Player> getPlayers(){
-        return this.players;
-    }
-
-    public List<Player> getAllPlayers(){
-        return this.players;
-    }
-
     public MiniGame getMiniGame(){
         return this.miniGame;
     }
@@ -206,13 +219,19 @@ public class Game {
     public void setGameId(long gameId) {
         this.gameId = gameId;
     }
+    public int getCurrentRound(){
+        return miniGame.getCurrentRound();
+    }
 
-    public Player getPlayer(long playerId) {
-        for(Player player: this.players){
-            if(player.getPlayerId() == playerId){
-                return player;
-            }
-        }
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Player with Id: " + playerId + " is not in this game");
+    public List<Article> getArticleList() {
+        return articleList;
+    }
+
+    public void setArticleList(List<Article> articleList) {
+        this.articleList = articleList;
+    }
+
+    public void setMiniGame(MiniGame miniGame) {
+        this.miniGame = miniGame;
     }
 }

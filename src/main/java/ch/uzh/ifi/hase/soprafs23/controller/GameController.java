@@ -1,10 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Answer;
+import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
+//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -12,11 +13,12 @@ import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import org.mapstruct.Mapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -46,9 +48,18 @@ public class GameController {
     public GameGetDTO createLobby(@RequestBody GamePostDTO gamePostDTO){
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
         Game createdGame = gameService.createGame(gameInput); //how do we solve this? with gameinput or updateSettings?
-
         logger.info("Lobby " + createdGame.getGameId() + " created!");
-        return  DTOMapper.INSTANCE.convertEntityToGameGetDTO(createdGame);
+        return addPlayersToGameGetDTO(createdGame);
+    }
+
+    @PutMapping("/lobbies/{lobbyId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
+        Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
+        Game currentGame = gameService.updateGameSetting(updateGame, lobbyId);
+
+        return addPlayersToGameGetDTO(currentGame);
     }
 
     //what does a player need? authorization?
@@ -57,25 +68,29 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public PlayerGetDTO addPlayerToGame(@RequestBody PlayerPostDTO playerPostDTO, @PathVariable String gamePin){
-
         long userId = playerPostDTO.getId();
-        Player player = userService.addUserToLobby(userId, gamePin);
+        Player player = userService.addUserToLobby(userId, gameService.getLobbyIdByGamePin(gamePin));
         logger.info("User with id: " + userId + " added to Lobby with id: " + player.getGameId() + " as Player with id: " + player.getPlayerId());
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }
 
     //Get mapping for game by id
     @GetMapping("lobbies/{lobbyId}")
-    @ResponseStatus(HttpStatus.FOUND)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO getGameById(@PathVariable long lobbyId){
         Game game = gameService.getGameById(lobbyId);
-        return DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        return addPlayersToGameGetDTO(game);
     }
 
-    //TO DO!!!
     //Get mapping for players in lobby
     //return All Players of lobby
+    @GetMapping("lobbies/{lobbyId}/players")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Player> getPlayersByLobbyId(@PathVariable long lobbyId){
+        return playerService.getPlayersByLobbyId(lobbyId);
+    }
 
 
     //Mapping to start a game (with new Settings?)
@@ -84,20 +99,35 @@ public class GameController {
     @ResponseBody
     public void beginGame(@PathVariable long lobbyId) throws UnirestException, JsonProcessingException {
         //should only start if all player joined
+        if (!gameService.didAllPlayersJoin(lobbyId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot start the game until all players have joined the lobby.");
+        }
+
+        // Start the game
         logger.info("Lobby with Id: " + lobbyId + " started the game!");
         gameService.beginGame(lobbyId);
         //Question question = gameService.getNextQuestion(lobbyId);
         //return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(question);
     }
 
+    @GetMapping("/lobbies/{lobbyId}/beginStatus")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean isTheGameStarted(@PathVariable long lobbyId){
+        return gameService.isTheGameStarted(lobbyId);
+    }
+
     //did all player join the lobby?
+    /*
     @GetMapping("/lobbies/{lobbyId}/players")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public Boolean didAllPlayersJoin(@PathVariable long lobbyId){
-        logger.info("lobby with Id: " + lobbyId + " asked if all player joined");
+
         return gameService.didAllPlayersJoin(lobbyId);
     }
+
+     */
 
     //would it be better to get Int-th question of lobby with lobby id?
     //get next question of lobby
@@ -106,7 +136,23 @@ public class GameController {
     @ResponseBody
     public QuestionGetDTO getQuestion(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "requested next question");
-        Question nextQuestion = gameService.getNextQuestion(lobbyId);
+        Question nextQuestion = gameService.getCurrentRoundQuestion(lobbyId);
+        return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
+    }
+
+    /*
+    use the getNextRound below first for whoever firstly go to the next round
+    (also for first round call getNextRound first)
+    and for others use the getQuestion above to fetch the same question
+    without accumulate the currentRound count
+     */
+
+    @GetMapping("/lobbies/{lobbyId}/nextRound")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public QuestionGetDTO getNextRound(@PathVariable long lobbyId){
+        logger.info("Lobby with Id: " + lobbyId + "requested next question");
+        Question nextQuestion = gameService.getNextRound(lobbyId);
         return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
     }
 
@@ -145,8 +191,21 @@ public class GameController {
     @ResponseBody
     public List<Player> endGame(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "ended the game!");
-        List<Player> players = gameService.endGame(lobbyId);
-        return players;
+        return gameService.endGame(lobbyId);
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/articles")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public List<Article> getAllArticlesInGame(@PathVariable long lobbyId){
+        return gameService.getAllArticles(lobbyId);
+    }
+
+    public GameGetDTO addPlayersToGameGetDTO(Game game){
+        List<Player> players = playerService.getPlayersByLobbyId(game.getGameId());
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        gameGetDTO.setPlayers(players);
+        return gameGetDTO;
     }
 
 }

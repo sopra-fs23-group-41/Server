@@ -19,8 +19,6 @@ public class Player {
     @Column(nullable = false)
     private long gameId;
     @Column
-    private int points;
-    @Column
     private int totalScore;
     @Column
     private int roundScore;
@@ -53,10 +51,6 @@ public class Player {
         this.gameId = gameId;
     }
 
-    public void setPoints(int points) {
-        this.points = points;
-    }
-
     public void setTotalScore(int totalScore) {
         this.totalScore = totalScore;
     }
@@ -85,10 +79,6 @@ public class Player {
         return this.gameId;
     }
 
-    public int getPoints() {
-        return this.points;
-    }
-
     public int getTotalScore() {
         return this.totalScore;
     }
@@ -99,6 +89,11 @@ public class Player {
 
     public List<Answer> getAnswers() {
         return this.answers;
+    }
+
+    public void copyFrom(Player other) {
+        this.answers = other.getAnswers();
+        this.totalScore = other.getTotalScore();
     }
 
     public void updateScore(){

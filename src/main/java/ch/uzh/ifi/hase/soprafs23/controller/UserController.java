@@ -1,8 +1,11 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
+import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -57,4 +60,47 @@ public class UserController {
     // convert internal representation of user back to API
     return DTOMapper.INSTANCE.convertEntityToUserGetDTO(createdUser);
   }
+
+
+  @PostMapping("/users/login")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO loginUser(@RequestBody UserPostDTO userPostDTO){
+        User userInput = DTOMapper.INSTANCE.convertUserPostDTOtoEntity(userPostDTO);
+
+        String loginUsername = userInput.getUsername();
+        String password = userInput.getPassword();
+
+        User login = userService.loginUser(loginUsername, password);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(login);
+  }
+
+  @GetMapping("/users/{id}/logout")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public void logoutUser(@PathVariable long id){
+        userService.logoutUser(id);
+  }
+
+  @PutMapping("/users/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  @ResponseBody
+  public UserGetDTO updateUserProfile(@RequestBody UserPutDTO userPutDTO, @PathVariable String id){
+      User currentUser = DTOMapper.INSTANCE.convertUserPutDTOToEntity(userPutDTO);
+      userService.updateUserProfile(currentUser);
+
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(currentUser);
+
+  }
+
+  @GetMapping("/users/{id}")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public UserGetDTO getAUser(@PathVariable Long id){
+        User user = userService.getUserById(id);
+
+        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+  }
+
 }

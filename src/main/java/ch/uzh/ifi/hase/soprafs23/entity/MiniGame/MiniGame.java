@@ -11,16 +11,17 @@ import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
-public abstract class MiniGame {
+public abstract class MiniGame implements Serializable {
 
     private int rounds;
     protected int currentRound = 0;
     protected GameJudge judge;
-    private List<Player> activePlayers = new ArrayList<>();
     private final List<Article> allArticles;
     private GameMode gameMode;
     private List<Question> gameQuestions = new ArrayList<>();
@@ -40,7 +41,7 @@ public abstract class MiniGame {
         List<Question> questions = new ArrayList<>();
         logger.info("Questions are set for gameMode: " + this.gameMode);
         if (this.gameMode == GameMode.GuessThePrice){
-            logger.info("In Minigame are GuessThePriceQuestions initialized!");
+            logger.info("In MiniGame are GuessThePriceQuestions initialized!");
             for (int i=0; i< this.rounds; i++){
                 GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
                 question.initializeQuestion();
@@ -49,25 +50,18 @@ public abstract class MiniGame {
             this.gameQuestions = questions;
         }
         else if(this.gameMode == GameMode.HighOrLow){
-            for (int i = 0; i<this.rounds;){
-                HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i+1));
+            for (int i = 0; i<this.rounds; i++){
+                HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i + this.rounds));
                 question.initializeQuestion();
                 questions.add(question);
-                i = i+2;
             }
             this.gameQuestions = questions;
         }
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
-    public boolean checkIfAllPlayersAnswered(){
-        List<Player> players = this.activePlayers;
-        for (int i=0; i< players.size();i++){
-            if(players.get(i).getAnswers().size() == currentRound){
-                continue;
-            }
-            else return false;
-        }
-        return true;
+    public boolean checkIfAllPlayersAnswered(List<Player> players){
+        return players.stream()
+                .allMatch(player -> player.getAnswers().size() == currentRound);
     } //frontend need to provide with a wrong answer if the player haven't answered when time was up.
 
     public Question showNextQuestion() {
@@ -78,15 +72,6 @@ public abstract class MiniGame {
                 question.setUsed(true);
             }
             return question;
-    }
-
-    public void updatePlayerPoints() {
-        for (Player player : this.getActivePlayers()){
-            judge = new GameJudge(this.getGameQuestions(), player, currentRound);
-            int point = judge.calculatePoints();
-            player.setRoundScore(point);
-            player.setTotalScore(player.getTotalScore()+point);
-        }
     }
 
     // getters and setters
@@ -106,14 +91,6 @@ public abstract class MiniGame {
         return this.rounds;
     }
 
-    public void setActivePlayers(List<Player> activePlayers){
-        this.activePlayers = activePlayers;
-    }
-
-    public List<Player> getActivePlayers(){
-        return this.activePlayers;
-    }
-
     public List<Article> getAllArticles() {
         return this.allArticles;
     }
@@ -121,5 +98,4 @@ public abstract class MiniGame {
     public List<Question> getGameQuestions() {
         return gameQuestions;
     }
-
 }

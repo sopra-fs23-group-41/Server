@@ -31,15 +31,26 @@ public interface DTOMapper {
 
   DTOMapper INSTANCE = Mappers.getMapper(DTOMapper.class);
 
-  @Mapping(source = "name", target = "name")
+  @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
   User convertUserPostDTOtoEntity(UserPostDTO userPostDTO);
 
   @Mapping(source = "id", target = "id")
-  @Mapping(source = "name", target = "name")
+  @Mapping(source = "password", target = "password")
   @Mapping(source = "username", target = "username")
   @Mapping(source = "status", target = "status")
+  @Mapping(source = "birthdate",target = "birthdate")
+  @Mapping(source = "creationDate",target = "creationDate")
+  @Mapping(source = "numOfGameWon", target = "numOfGameWon")
   UserGetDTO convertEntityToUserGetDTO(User user);
+
+
+  @Mapping(source = "id", target = "id")
+  @Mapping(source = "password", target = "password")
+  @Mapping(source = "username", target = "username")
+  @Mapping(source = "birthdate", target = "birthdate")
+  User convertUserPutDTOToEntity(UserPutDTO userPutDTO);
+
 
   @Mapping(source = "gameType", target = "gameType")
   @Mapping(source = "rounds", target = "rounds")
@@ -55,9 +66,19 @@ public interface DTOMapper {
   @Mapping(source = "rounds" , target = "rounds")
   @Mapping(source = "gamePIN" , target = "gamePIN")
   @Mapping(source = "gameMode" , target = "gameMode")
-  @Mapping(source = "players" , target = "players")
   GameGetDTO convertEntityToGameGetDTO(Game game);
 
+  @Mapping(source = "gameId" , target = "gameId")
+  @Mapping(source = "numOfPlayer" , target = "numOfPlayer")
+  @Mapping(source = "rounds" , target = "rounds")
+  @Mapping(source = "gameMode" , target = "gameMode")
+  @Mapping(source = "category", target = "category")
+  Game convertGamePutDTOToEntity(GamePutDTO gamePutDTO);
+
+  @Mapping(source="playerAnswer", target="playerAnswer")
+  @Mapping(source="playerId", target="playerId")
+  @Mapping(source="numOfRound", target="numOfRound")
+  @Mapping(source="timeUsed", target="timeUsed")
   Answer convertAnswerPostDTOtoEntity(AnswerPostDTO answerPostDTO);
 
   @Mapping(source = "articles", target = "articles")

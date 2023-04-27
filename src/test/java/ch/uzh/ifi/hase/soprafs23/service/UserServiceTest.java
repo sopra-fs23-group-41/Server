@@ -11,6 +11,9 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
@@ -25,13 +28,15 @@ public class UserServiceTest {
 
   @BeforeEach
   public void setup() {
-    MockitoAnnotations.openMocks(this);
+      MockitoAnnotations.openMocks(this);
 
-    // given
-    testUser = new User();
-    testUser.setId(1L);
-    testUser.setName("testName");
-    testUser.setUsername("testUsername");
+      // given
+      testUser = new User();
+      testUser.setUsername("firstname@lastname");
+      testUser.setPassword("password");
+      testUser.setStatus(UserStatus.OFFLINE);
+      testUser.setBirthdate(LocalDate.of(2002,4,24));
+      testUser.setCreationDate(LocalDate.of(2002, 4 ,23));
 
     // when -> any object is being save in the userRepository -> return the dummy
     // testUser
@@ -46,12 +51,13 @@ public class UserServiceTest {
 
     // then
     Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
-
     assertEquals(testUser.getId(), createdUser.getId());
-    assertEquals(testUser.getName(), createdUser.getName());
+    assertEquals(testUser.getPassword(), createdUser.getPassword());
     assertEquals(testUser.getUsername(), createdUser.getUsername());
+    assertEquals(testUser.getCreationDate(), createdUser.getCreationDate());
+    assertEquals(testUser.getBirthdate(), createdUser.getBirthdate());
     assertNotNull(createdUser.getToken());
-    assertEquals(UserStatus.OFFLINE, createdUser.getStatus());
+    assertEquals(UserStatus.ONLINE, createdUser.getStatus());
   }
 
   @Test
@@ -60,8 +66,7 @@ public class UserServiceTest {
     userService.createUser(testUser);
 
     // when -> setup additional mocks for UserRepository
-    Mockito.when(userRepository.findByName(Mockito.any())).thenReturn(testUser);
-    Mockito.when(userRepository.findByUsername(Mockito.any())).thenReturn(null);
+    Mockito.when(userRepository.findByUsername(Mockito.any())).thenReturn(testUser);
 
     // then -> attempt to create second user with same user -> check that an error
     // is thrown
@@ -74,7 +79,6 @@ public class UserServiceTest {
     userService.createUser(testUser);
 
     // when -> setup additional mocks for UserRepository
-    Mockito.when(userRepository.findByName(Mockito.any())).thenReturn(testUser);
     Mockito.when(userRepository.findByUsername(Mockito.any())).thenReturn(testUser);
 
     // then -> attempt to create second user with same user -> check that an error

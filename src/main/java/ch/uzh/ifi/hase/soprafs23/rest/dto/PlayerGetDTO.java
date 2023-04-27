@@ -12,7 +12,6 @@ public class PlayerGetDTO {
     private String playerName;
     private long userId;
     private long gameId;
-    private int points;
     private int totalScore;
     private int roundScore;
     private List<Answer> answers;
@@ -47,14 +46,6 @@ public class PlayerGetDTO {
 
     public void setGameId(long gameId) {
         this.gameId = gameId;
-    }
-
-    public int getPoints() {
-        return points;
-    }
-
-    public void setPoints(int points) {
-        this.points = points;
     }
 
     public int getTotalScore() {
