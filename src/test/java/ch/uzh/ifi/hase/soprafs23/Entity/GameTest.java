@@ -16,6 +16,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +84,9 @@ public class GameTest {
         players.add(new Player());
         players.add(new Player());
 
-        this.game.startGame(this.game.getGameMode(), players);
+        if(this.game.checkIfAllPlayerExist(players)){
+            this.game.startGame(this.game.getGameMode(), players);
+        }
 
         assertNotNull(this.game.getMiniGame());
         assertEquals(2, this.game.getMiniGame().getRounds());
@@ -108,13 +112,13 @@ public class GameTest {
     }
 
     @Test
-    public void cannotStartGameBecausePlayers() throws UnirestException, JsonProcessingException {
+    public void cannotStartGameBecauseNotAllPlayersJoined() throws UnirestException, JsonProcessingException {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.GuessThePrice, 2, 2, Category.SHOES);
         List<Player> players = new ArrayList<>();
         players.add(new Player());
 
-        assertThrows(IllegalStateException.class, () -> game.startGame(this.game.getGameMode(), players) );
+        assertThrows(ResponseStatusException.class, () -> game.startGame(this.game.getGameMode(), players) );
     }
 
     @Test
@@ -172,7 +176,7 @@ public class GameTest {
         this.game.startGame(GameMode.HighOrLow, players2);
         this.game.getMiniGame().setCurrentRound(2);
 
-        assertThrows(IllegalStateException.class, () -> this.game.getNextRound(players2));
+        assertThrows(ResponseStatusException.class, () -> this.game.getNextRound(players2));
     }
 
     @Test
@@ -215,7 +219,6 @@ public class GameTest {
         this.game.getMiniGame().getGameQuestions().get(0).setUsed(true);
 
         assertNotNull(this.game.endGame(players));
-
     }
 
 

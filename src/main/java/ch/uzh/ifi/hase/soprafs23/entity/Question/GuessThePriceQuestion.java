@@ -46,10 +46,6 @@ public class GuessThePriceQuestion extends Question{
     }
 
     //getters
-    public List<String> getFalseAnswers(){
-        return this.falseAnswers;
-    }
-
     public int getTimeToAnswer(){
         return timeToAnswer;
     }

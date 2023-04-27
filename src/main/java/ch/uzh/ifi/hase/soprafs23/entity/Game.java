@@ -10,6 +10,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -64,7 +65,7 @@ public class Game {
             miniGame.setGameQuestions();
 
         }
-        else throw new IllegalStateException("The number of player doesn't match");
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The number of player doesn't match to game setting!");
     }
 
     public void updateGameSetting(GameMode gameMode, int rounds, int numOfPlayer, Category category) {
@@ -86,7 +87,7 @@ public class Game {
             throw new NullPointerException("The game has not started yet!");
         }
         if (!checkIfAllPlayersAnswered(players)) {
-            throw new IllegalStateException("Not all players have answered the current question");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all players have answered the current question");
         }
         return miniGame.showNextQuestion();
     }
@@ -101,7 +102,7 @@ public class Game {
                 .filter(Question::isUsed)
                 .count();
         if (count < rounds) {
-            throw new IllegalStateException("The game is not ended yet.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The game is not ended yet.");
         }
         return getGameLeaderBoard(players);
     }
