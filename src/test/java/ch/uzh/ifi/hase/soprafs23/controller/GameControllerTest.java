@@ -5,12 +5,15 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +30,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.is;
@@ -43,6 +47,10 @@ public class GameControllerTest {
     private PlayerService playerService;
     @MockBean
     private UserService userService;
+
+    @BeforeEach
+
+
     @Test
     public void createLobbyTest() throws Exception {
         //what do i have to mock:
@@ -80,6 +88,51 @@ public class GameControllerTest {
         //then
         mockMvc.perform(postRequest)
                 .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.gameId", is((int) game.getGameId())))
+                .andExpect(jsonPath("$.numOfPlayer", is(game.getNumOfPlayer())))
+                .andExpect(jsonPath("$.gameType", is(game.getGameType().toString())))
+                .andExpect(jsonPath("$.rounds", is(game.getRounds())))
+                .andExpect(jsonPath("$.gamePIN", is(game.getGamePIN())))
+                .andExpect(jsonPath("$.gameMode", is(game.getGameMode().toString())))
+                .andExpect(jsonPath("$.players", hasSize(0)));
+
+    }
+
+    @Test
+    public void updateGameSettingTest() throws Exception {
+        //gamePutDTO as input
+        GamePutDTO gamePutDTO = new GamePutDTO();
+        gamePutDTO.setGameId(0);
+        gamePutDTO.setNumOfPlayer(1);
+        gamePutDTO.setRounds(4);
+        gamePutDTO.setGameMode(GameMode.HighOrLow);
+        gamePutDTO.setCategory(Category.JEANS);
+
+        //the updated game from mocked gameservice
+        Game game = new Game();
+        game.setGameId(0);
+        game.setNumOfPlayer(1);
+        game.setGameType(GameType.SINGLE);
+        game.setRounds(4);
+        game.setGamePIN("1234");
+        game.setGameMode(GameMode.HighOrLow);
+        game.setCategory(Category.JEANS);
+
+        //to mock the playerservice
+        List<Player> players = new ArrayList<>();
+
+        //mock gameService to return an updated game
+        given(gameService.updateGameSetting(Mockito.any(), Mockito.anyLong())).willReturn(game);
+        given(playerService.getPlayersByLobbyId(Mockito.anyLong())).willReturn(players);
+
+        //make Put call
+        MockHttpServletRequestBuilder putRequest = put("/lobbies/0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(gamePutDTO));
+
+        //look if json is correct
+        mockMvc.perform(putRequest)
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.gameId", is((int) game.getGameId())))
                 .andExpect(jsonPath("$.numOfPlayer", is(game.getNumOfPlayer())))
                 .andExpect(jsonPath("$.gameType", is(game.getGameType().toString())))

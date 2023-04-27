@@ -53,7 +53,7 @@ public class GameController {
     }
 
     @PutMapping("/lobbies/{lobbyId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
         Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);

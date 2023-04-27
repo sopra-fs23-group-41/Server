@@ -75,6 +75,10 @@ public interface DTOMapper {
   @Mapping(source = "category", target = "category")
   Game convertGamePutDTOToEntity(GamePutDTO gamePutDTO);
 
+  @Mapping(source="playerAnswer", target="playerAnswer")
+  @Mapping(source="playerId", target="playerId")
+  @Mapping(source="numOfRound", target="numOfRound")
+  @Mapping(source="timeUsed", target="timeUsed")
   Answer convertAnswerPostDTOtoEntity(AnswerPostDTO answerPostDTO);
 
   @Mapping(source = "articles", target = "articles")

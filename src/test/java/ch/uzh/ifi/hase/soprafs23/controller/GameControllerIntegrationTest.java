@@ -80,6 +80,5 @@ public class GameControllerIntegrationTest {
         assertEquals(game.getArticleList().size(), 1);
         assertTrue(game.getMiniGame().getGameQuestions().get(0) instanceof GuessThePriceQuestion);
         assertEquals(game.getMiniGame().getGameQuestions().size(), 1);
-
     }
 }
