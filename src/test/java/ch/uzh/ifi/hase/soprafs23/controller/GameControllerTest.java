@@ -5,15 +5,14 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
+import ch.uzh.ifi.hase.soprafs23.rest.dto.PlayerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import ch.uzh.ifi.hase.soprafs23.service.PlayerService;
 import ch.uzh.ifi.hase.soprafs23.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -139,6 +138,54 @@ public class GameControllerTest {
                 .andExpect(jsonPath("$.players", hasSize(0)));
 
     }
+
+    @Test
+    public void addPlayerToGameTest() throws Exception {
+        //mapping
+        //mock userService to return the player
+        //required = PlayerPostDTO, pathVariable String gamePin
+
+        //required input
+        PlayerPostDTO playerPostDTO = new PlayerPostDTO();
+        playerPostDTO.setId(1L); //userId
+        playerPostDTO.setUsername("Username");
+        playerPostDTO.setName("Name");
+
+
+        //required return of mocks
+        Game game = new Game();
+        game.setGameId(0);
+        game.setNumOfPlayer(1);
+        game.setGameType(GameType.SINGLE);
+        game.setRounds(4);
+        game.setGamePIN("1234");
+        game.setGameMode(GameMode.HighOrLow);
+        game.setCategory(Category.JEANS);
+
+        Player player = new Player();
+        player.setPlayerName("Username");
+        player.setUserId(1L);
+        player.setGameId(0);
+
+        //mock used services
+        given(gameService.getLobbyIdByGamePin(Mockito.anyString())).willReturn(game.getGameId());
+        given(userService.addUserToLobby(Mockito.anyLong(), Mockito.anyLong())).willReturn(player);
+
+        //make post call
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/joinGame/1234")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(playerPostDTO));
+
+        mockMvc.perform(postRequest)
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.playerId", is(((int) player.getPlayerId()))))
+                .andExpect(jsonPath("$.playerName", is(player.getPlayerName())))
+                .andExpect(jsonPath("$.userId", is((int)player.getUserId())))
+                .andExpect(jsonPath("$.gameId", is((int)player.getGameId())))
+                .andExpect(jsonPath("$.totalScore", is(player.getTotalScore())))
+                .andExpect(jsonPath("$.roundScore", is(player.getRoundScore())))
+                .andExpect(jsonPath("$.answers", hasSize(0)));
+      }
 
     /**
      * Helper Method to convert userPostDTO into a JSON string such that the input
