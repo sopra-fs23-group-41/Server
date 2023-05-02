@@ -44,7 +44,7 @@ Timo Tietje: [#91](https://github.com/sopra-fs23-group-41/Server/issues/91) [#85
 
 # Sprint 2:
 
-## Week 4 (26.04.2023):
+## Week 4 (03.05.2023):
 -------------------------
 Yuqing Huang:
 
