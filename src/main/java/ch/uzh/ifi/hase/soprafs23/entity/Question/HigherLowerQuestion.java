@@ -5,7 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 public class HigherLowerQuestion extends Question{
 
     private final int bonus = 10;
-    private int timeToAnswer = 30;
+    private final int timeToAnswer = 30;
 
     //constructor
     public HigherLowerQuestion(Article article1, Article article2) {

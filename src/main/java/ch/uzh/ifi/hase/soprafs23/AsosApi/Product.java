@@ -73,7 +73,7 @@ public class Product {
         return this.price.getPrice();
     }
 
-    private class Price{
+    private static class Price{
         private Current current;
 
         public Price() {
@@ -95,7 +95,7 @@ public class Product {
             return this.current.getValue();
         }
 
-        private class Current{
+        private static class Current{
             private float value;
             private String text;
 

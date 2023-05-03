@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,13 +46,10 @@ public abstract class Question implements Serializable {
 
     public String getTrueAnswer(){
         return this.trueAnswer;
-    };
+    }
 
     public List<String> getFalseAnswers() {
         return falseAnswers;
     }
 
-    public void setFalseAnswers(List<String> falseAnswers) {
-        this.falseAnswers = falseAnswers;
-    }
 }

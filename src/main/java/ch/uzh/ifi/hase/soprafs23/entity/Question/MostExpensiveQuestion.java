@@ -8,7 +8,7 @@ import java.util.Objects;
 public class MostExpensiveQuestion extends Question{
 
     private final int bonus = 30;
-    private int timeToAnswer = 30;
+    private final int timeToAnswer = 30;
 
     public MostExpensiveQuestion(List<Article> fourArticles){
         articles = fourArticles;

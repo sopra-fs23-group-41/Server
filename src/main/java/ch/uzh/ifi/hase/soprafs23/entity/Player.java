@@ -30,15 +30,6 @@ public class Player {
         this.playerName = playerName;
     }
 
-    /*public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return this.token;
-    }
-    */
-
     public void setUserId(long userId) {
         this.userId = userId;
     }
@@ -91,12 +82,4 @@ public class Player {
         return this.answers;
     }
 
-    public void copyFrom(Player other) {
-        this.answers = other.getAnswers();
-        this.totalScore = other.getTotalScore();
-    }
-
-    public void updateScore(){
-
-    }
 }

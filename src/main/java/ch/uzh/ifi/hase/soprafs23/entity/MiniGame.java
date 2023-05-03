@@ -18,9 +18,8 @@ public class MiniGame implements Serializable {
 
     private int rounds;
     protected int currentRound = 0;
-    protected GameJudge judge; // not in the field
     private final List<Article> allArticles;
-    private GameMode gameMode;
+    private final GameMode gameMode;
     private List<Question> gameQuestions = new ArrayList<>();
 
     Logger logger = LoggerFactory.getLogger(MiniGame.class);
@@ -98,7 +97,7 @@ public class MiniGame implements Serializable {
 
     public int getCurrentRound(){
         return this.currentRound;
-    };
+    }
 
     public void setRounds(int rounds){
         this.rounds = rounds;

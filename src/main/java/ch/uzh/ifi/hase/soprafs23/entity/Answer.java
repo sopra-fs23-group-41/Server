@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import java.io.Serializable;
 
 
@@ -10,7 +9,6 @@ public class Answer implements Serializable {
     private int numOfRound = 0;
     private String playerAnswer;
     private double timeUsed;
-    //private Question question;
 
     public long getPlayerId() {
         return playerId;

@@ -1,11 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
-//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -57,7 +55,7 @@ public class GameService {
         return newGame;
     }
 
-    public Game updateGameSetting(Game currentGame, long lobbyId) throws UnirestException, JsonProcessingException {
+    public Game updateGameSetting(Game currentGame, long lobbyId) {
         Game game = GameRepo.findByLobbyId((int) lobbyId);
         game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
         //gameRepository.save(game);
@@ -101,13 +99,12 @@ public class GameService {
     public Question getNextRound(long lobbyId) {
         Game currenteGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
-        Question nextQuestion = currenteGame.getNextRound(players);
 
         //keep the information updated in the repository
-        //gameRepository.save(currenteGame);
+        //gameRepository.save(currentGame);
         //gameRepository.flush();
 
-        return  nextQuestion;
+        return currenteGame.getNextRound(players);
     }
 
     public Question getCurrentRoundQuestion(long lobbyId){

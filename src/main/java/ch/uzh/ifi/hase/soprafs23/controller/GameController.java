@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -47,7 +46,7 @@ public class GameController {
     @ResponseBody
     public GameGetDTO createLobby(@RequestBody GamePostDTO gamePostDTO){
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
-        Game createdGame = gameService.createGame(gameInput); //how do we solve this? with gameinput or updateSettings?
+        Game createdGame = gameService.createGame(gameInput); //how do we solve this? with game input or updateSettings?
         logger.info("Lobby " + createdGame.getGameId() + " created!");
         return addPlayersToGameGetDTO(createdGame);
     }
@@ -106,8 +105,6 @@ public class GameController {
         // Start the game
         logger.info("Lobby with Id: " + lobbyId + " started the game!");
         gameService.beginGame(lobbyId);
-        //Question question = gameService.getNextQuestion(lobbyId);
-        //return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(question);
     }
 
     @GetMapping("/lobbies/{lobbyId}/beginStatus")
@@ -117,17 +114,6 @@ public class GameController {
         return gameService.isTheGameStarted(lobbyId);
     }
 
-    //did all player join the lobby?
-    /*
-    @GetMapping("/lobbies/{lobbyId}/players")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @ResponseBody
-    public Boolean didAllPlayersJoin(@PathVariable long lobbyId){
-
-        return gameService.didAllPlayersJoin(lobbyId);
-    }
-
-     */
 
     //would it be better to get Int-th question of lobby with lobby id?
     //get next question of lobby
@@ -171,7 +157,7 @@ public class GameController {
     public void playerAnswered(@PathVariable long lobbyId, @PathVariable long playerId, @RequestBody AnswerPostDTO answerPostDTO){
         logger.info("Player with Id: " + playerId + " and lobbyId: " + lobbyId + " answered");
         Answer answer = DTOMapper.INSTANCE.convertAnswerPostDTOtoEntity(answerPostDTO);
-        logger.info("" + answer);
+        logger.info("The player answer is: " + answer);
         gameService.savePlayerAnswer(playerId, answer);
     }
 

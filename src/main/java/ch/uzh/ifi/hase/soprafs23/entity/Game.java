@@ -27,13 +27,6 @@ public class Game {
     private MiniGame miniGame = null;
     private Category category;
 
-    /*
-    public Game(GameType gameType){
-        this.gameType = gameType;
-        //this.lobbyOwner = owner;
-        createGamePIN();
-    }
-    */
 
     public Game(){}
 
@@ -109,22 +102,6 @@ public class Game {
         return getGameLeaderBoard(players);
     }
 
-    /*
-    public Player declareWinner(){
-        Player winner = null;
-        int highestScore = Integer.MIN_VALUE;
-
-        for (Player player : players) {
-            int score = player.getTotalScore();
-
-            if (score > highestScore) {
-                highestScore = score;
-                winner = player;
-            }
-        }
-
-        return winner;
-    }  */
 
     public boolean checkIfAllPlayerExist(List<Player> players){
         if(players.size() == 0){
@@ -155,17 +132,6 @@ public class Game {
     public void setGamePIN(String gamePIN) {
         this.gamePIN = gamePIN;
     }
-
-    /*
-    public void setPlayers(List<User> users){
-        for (User user : users){
-            Player player = new Player();
-            player.setPlayerName(user.getUsername());
-            player.setUserId(user.getId());
-            player.setGameId(this.gameId);
-            this.players.add(player);
-        }
-    } */
 
     public String getGamePIN(){
         return this.gamePIN;
