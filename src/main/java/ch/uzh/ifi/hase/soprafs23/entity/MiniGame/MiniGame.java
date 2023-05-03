@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
+import ch.uzh.ifi.hase.soprafs23.entity.Question.MostExpensiveQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,17 +47,28 @@ public abstract class MiniGame implements Serializable {
                 GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
                 question.initializeQuestion();
                 questions.add(question);
+                this.gameQuestions = questions;
             }
-            this.gameQuestions = questions;
         }
         else if(this.gameMode == GameMode.HighOrLow){
             for (int i = 0; i<this.rounds; i++){
                 HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i + this.rounds));
                 question.initializeQuestion();
                 questions.add(question);
+                this.gameQuestions = questions;
             }
-            this.gameQuestions = questions;
         }
+        else if(this.gameMode == GameMode.MostExpensive){
+            for (int i = 0; i<allArticles.size(); i += 4){
+                List<Article> newList = allArticles.subList(i, i+4);
+                List<Article> fourArticles = new ArrayList<>(newList);
+                MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
+                question.initializeQuestion();
+                questions.add(question);
+                this.gameQuestions = questions;
+            }
+        }
+
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
     public boolean checkIfAllPlayersAnswered(List<Player> players){

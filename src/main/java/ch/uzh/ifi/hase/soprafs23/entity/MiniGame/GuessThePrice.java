@@ -7,8 +7,6 @@ import java.util.List;
 
 public class GuessThePrice extends MiniGame{
 
-    private final int roundPoints = 20;
-
     // Constructor
     public GuessThePrice(int rounds, List<Article> articles, GameMode gameMode){
         super(rounds,articles, gameMode);

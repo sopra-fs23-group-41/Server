@@ -10,7 +10,7 @@ import java.util.List;
 
 public abstract class Question implements Serializable {
 
-    protected final List<Article> articles = new ArrayList<>();
+    protected List<Article> articles = new ArrayList<>();
 
     protected String trueAnswer;
     protected List<String> falseAnswers = new ArrayList<>();

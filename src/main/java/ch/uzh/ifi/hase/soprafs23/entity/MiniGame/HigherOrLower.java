@@ -9,8 +9,6 @@ import java.util.List;
 
 public class HigherOrLower extends MiniGame{
 
-    private final int roundPoints = 10;
-
     public HigherOrLower(int rounds, List<Article> articles, GameMode gameMode) {
         super(rounds, articles, gameMode);
     }
