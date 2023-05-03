@@ -10,7 +10,7 @@ public class Answer implements Serializable {
     private int numOfRound = 0;
     private String playerAnswer;
     private double timeUsed;
-    private Question question;
+    //private Question question;
 
     public long getPlayerId() {
         return playerId;
@@ -42,14 +42,6 @@ public class Answer implements Serializable {
 
     public void setTimeUsed(double timeUsed) {
         this.timeUsed = timeUsed;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 
 }
