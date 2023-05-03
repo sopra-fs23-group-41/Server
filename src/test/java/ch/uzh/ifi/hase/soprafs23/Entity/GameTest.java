@@ -88,7 +88,7 @@ public class GameTest {
     @Test
     public void startGame_HighOrLow_createsGame() throws UnirestException, JsonProcessingException {
         this.game.setGameType(GameType.MULTI);
-        this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.BAGS);
+        this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.JEWELRY);
         List<Player> players = new ArrayList<>();
         players.add(new Player());
         players.add(new Player());
@@ -188,7 +188,7 @@ public class GameTest {
         alice.setAnswers(new Answer());
         players.add(alice);
         this.game.setGameType(GameType.SINGLE);
-        this.game.updateGameSetting(GameMode.GuessThePrice, 2, 1, Category.BOOTS);
+        this.game.updateGameSetting(GameMode.GuessThePrice, 2, 1, Category.HOODIES);
         this.game.startGame(GameMode.GuessThePrice, players);
         this.game.getMiniGame().setCurrentRound(1);
 
