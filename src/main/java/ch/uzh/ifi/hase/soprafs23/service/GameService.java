@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -42,7 +43,6 @@ public class GameService {
     public Game createGame(Game newGame) {
         newGame.createGamePIN();
         newGame.setGameMode(GameMode.GuessThePrice);
-        newGame.setCategory(Category.SHOES);
         newGame.setGameId(gameId);
         gameId++;
 
@@ -135,10 +135,29 @@ public class GameService {
     public List<Player> endGame(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
+
+        List<Player> leaderBoard = currentGame.endGame(players);
+
+        // Check if there are multiple winners
+        List<Player> winners = new ArrayList<>();
+        long topScore = leaderBoard.get(0).getTotalScore();
+        for (Player player : leaderBoard) {
+            if (player.getTotalScore() == topScore) {
+                winners.add(player);
+            }
+        }
+
+        // Increment the number of games won for each winner
+        for (Player winner : winners) {
+            long userId = winner.getUserId();
+            User user = userRepository.findById(userId);
+            user.setNumOfGameWon(user.getNumOfGameWon() + 1);
+        }
+
         playerRepository.deleteByGameId(lobbyId);
         //gameRepository.deleteByGameId(lobbyId);
         GameRepo.removeGame((int) lobbyId);
-        return currentGame.endGame(players);
+        return leaderBoard;
     }
     public Player calculatePlayerPoints(Player player, long lobbyId){
         //Game game = gameRepository.findByGameId(lobbyId);
