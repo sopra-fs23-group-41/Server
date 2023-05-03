@@ -10,7 +10,7 @@ Yuqing Huang: [#106](https://github.com/sopra-fs23-group-41/Server/issues/106) [
 
 Eunji Lee: [#52](https://github.com/sopra-fs23-group-41/Client/issues/52) [#53](https://github.com/sopra-fs23-group-41/Client/issues/53) [#42](https://github.com/sopra-fs23-group-41/Client/issues/42)
 
-Laurent Le Febve: [#60](https://github.com/sopra-fs23-group-41/Client/issues/60) [#59](https://github.com/sopra-fs23-group-41/Client/issues/59) [#17](https://github.com/sopra-fs23-group-41/Client/issues/17) [#39](https://github.com/sopra-fs23-group-41/Client/issues/39) [#28](https://github.com/sopra-fs23-group-41/Client/issues/28) [#18](https://github.com/sopra-fs23-group-41/Client/issues/18) [#41](https://github.com/sopra-fs23-group-41/Client/issues/41)
+Laurent Le Febve: [#60](https://github.com/sopra-fs23-group-41/Client/issues/60) [#59](https://github.com/sopra-fs23-group-41/Client/issues/59) [#17](https://github.com/sopra-fs23-group-41/Client/issues/17) [#39](https://github.com/sopra-fs23-group-41/Client/issues/39) [#28](https://github.com/sopra-fs23-group-41/Client/issues/28) [#18](https://github.com/sopra-fs23-group-41/Client/issues/18) [#41](https://github.com/sopra-fs23-group-41/Client/issues/41) [#61](https://github.com/sopra-fs23-group-41/Client/issues/61)
 
 Tiago Ferreiro Matos: [#68](https://github.com/sopra-fs23-group-41/Client/issues/68) [#47](https://github.com/sopra-fs23-group-41/Client/issues/47) [#24](https://github.com/sopra-fs23-group-41/Client/issues/24)
 
