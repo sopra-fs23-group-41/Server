@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.HigherOrLower;
 import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
+import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MostExpensive;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -58,10 +59,15 @@ public class Game {
                 createArticles(this.rounds);
                 miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
             }
-            else{
+            else if (gameMode == GameMode.HighOrLow){
                 createArticles(this.rounds * 2);
                 miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
             }
+            else {
+                createArticles(this.rounds * 4);
+                miniGame = new MostExpensive(this.rounds, this.articleList, gameMode);
+            }
+
             miniGame.setGameQuestions();
 
         }
