@@ -4,14 +4,9 @@ import ch.uzh.ifi.hase.soprafs23.AsosApi.AsosApiUtility;
 import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.HigherOrLower;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MostExpensive;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -57,15 +52,15 @@ public class Game {
         if(checkIfAllPlayerExist(players)){
             if (gameMode == GameMode.GuessThePrice){
                 createArticles(this.rounds);
-                miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+                miniGame = new MiniGame(this.rounds,this.articleList, gameMode);
             }
             else if (gameMode == GameMode.HighOrLow){
                 createArticles(this.rounds * 2);
-                miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
+                miniGame = new MiniGame(this.rounds,this.articleList, gameMode);
             }
             else {
                 createArticles(this.rounds * 4);
-                miniGame = new MostExpensive(this.rounds, this.articleList, gameMode);
+                miniGame = new MiniGame(this.rounds, this.articleList, gameMode);
             }
 
             miniGame.setGameQuestions();
@@ -110,6 +105,7 @@ public class Game {
         if (count < rounds) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The game is not ended yet.");
         }
+
         return getGameLeaderBoard(players);
     }
 

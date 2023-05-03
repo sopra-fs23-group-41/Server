@@ -4,7 +4,6 @@ import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
@@ -70,7 +69,6 @@ public class GameControllerIntegrationTest {
         //test if it worked
         assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
         assertTrue(gameService.isTheGameStarted(game.getGameId()));
-        assertTrue(game.getMiniGame() instanceof GuessThePrice);
         assertEquals(game.getArticleList().size(), 1);
         assertTrue(game.getMiniGame().getGameQuestions().get(0) instanceof GuessThePriceQuestion);
         assertEquals(game.getMiniGame().getGameQuestions().size(), 1);

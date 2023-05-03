@@ -1,10 +1,7 @@
-package ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
+package ch.uzh.ifi.hase.soprafs23.entity;
 
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
-import ch.uzh.ifi.hase.soprafs23.entity.Article;
-import ch.uzh.ifi.hase.soprafs23.entity.GameJudge;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.MostExpensiveQuestion;
@@ -15,14 +12,13 @@ import org.slf4j.LoggerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
-public abstract class MiniGame implements Serializable {
+public class MiniGame implements Serializable {
 
     private int rounds;
     protected int currentRound = 0;
-    protected GameJudge judge;
+    protected GameJudge judge; // not in the field
     private final List<Article> allArticles;
     private GameMode gameMode;
     private List<Question> gameQuestions = new ArrayList<>();

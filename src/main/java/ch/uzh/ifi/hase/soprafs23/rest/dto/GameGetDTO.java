@@ -3,8 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.Article;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 
 import java.util.ArrayList;
@@ -84,6 +82,4 @@ public class GameGetDTO {
     public void setCategory(Category category) {
         this.category = category;
     }
-
-
 }
