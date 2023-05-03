@@ -35,7 +35,7 @@ public class GameControllerIntegrationTest {
         game.setGameId(0);
         game.setNumOfPlayer(1);
         game.setGameType(GameType.SINGLE);
-        game.setRounds(1);
+        game.setRounds(4);
         game.setGamePIN("1234");
         game.setGameMode(GameMode.GuessThePrice);
         game.setCategory(Category.JEANS);
@@ -69,8 +69,8 @@ public class GameControllerIntegrationTest {
         //test if it worked
         assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
         assertTrue(gameService.isTheGameStarted(game.getGameId()));
-        assertEquals(game.getArticleList().size(), 1);
+        assertEquals(game.getArticleList().size(), 4);
         assertTrue(game.getMiniGame().getGameQuestions().get(0) instanceof GuessThePriceQuestion);
-        assertEquals(game.getMiniGame().getGameQuestions().size(), 1);
+        assertEquals(game.getMiniGame().getGameQuestions().size(), 4);
     }
 }

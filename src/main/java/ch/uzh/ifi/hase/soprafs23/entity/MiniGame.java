@@ -36,36 +36,45 @@ public class MiniGame implements Serializable {
     //methods
     public void setGameQuestions(){
         List<Question> questions = new ArrayList<>();
-        logger.info("Questions are set for gameMode: " + this.gameMode);
-        if (this.gameMode == GameMode.GuessThePrice){
-            logger.info("In MiniGame are GuessThePriceQuestions initialized!");
-            for (int i=0; i< this.rounds; i++){
-                GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
-                question.initializeQuestion();
-                questions.add(question);
-                this.gameQuestions = questions;
+
+        switch (this.gameMode) {
+            case GuessThePrice -> {
+                for (int i = 0; i < this.rounds; i++) {
+                    GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
+                    questions.add(question);
+                }
+                logger.info("In MiniGame, GuessThePriceQuestions initialized!");
             }
-        }
-        else if(this.gameMode == GameMode.HighOrLow){
-            for (int i = 0; i<this.rounds; i++){
-                HigherLowerQuestion question = new HigherLowerQuestion(allArticles.get(i),allArticles.get(i + this.rounds));
-                question.initializeQuestion();
-                questions.add(question);
-                this.gameQuestions = questions;
+            case HighOrLow -> {
+                for (int i = 0; i < allArticles.size(); i += 2) {
+                    List<Article> newList = allArticles.subList(i, i + 2);
+                    HigherLowerQuestion question = new HigherLowerQuestion(newList.get(0), newList.get(1));
+                    questions.add(question);
+                }
+                logger.info("In MiniGame, HighOrLowQuestions initialized!");
             }
-        }
-        else if(this.gameMode == GameMode.MostExpensive){
-            for (int i = 0; i<allArticles.size(); i += 4){
-                List<Article> newList = allArticles.subList(i, i+4);
-                List<Article> fourArticles = new ArrayList<>(newList);
-                MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
-                question.initializeQuestion();
-                questions.add(question);
-                this.gameQuestions = questions;
+            case MostExpensive -> {
+                for (int i = 0; i < allArticles.size(); i += 4) {
+                    List<Article> newList = allArticles.subList(i, i + 4);
+                    List<Article> fourArticles = new ArrayList<>(newList);
+                    MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
+                    questions.add(question);
+                }
+                logger.info("In MiniGame, MostExpensiveQuestions initialized!");
             }
+            default -> {
+            }
+            //unknown gameMode or error
         }
 
+        for (Question question : questions){
+            question.initializeQuestion();
+        }
+
+        this.gameQuestions = questions;
+        logger.info("Questions are set for gameMode: " + this.gameMode);
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
+
 
     public boolean checkIfAllPlayersAnswered(List<Player> players){
         return players.stream()
