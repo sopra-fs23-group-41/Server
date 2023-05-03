@@ -41,10 +41,45 @@ Tiago Ferreiro Matos: [#72](https://github.com/sopra-fs23-group-41/Client/issues
 Timo Tietje: [#91](https://github.com/sopra-fs23-group-41/Server/issues/91) [#85](https://github.com/sopra-fs23-group-41/Server/issues/85) [#64](https://github.com/sopra-fs23-group-41/Server/issues/64) [#88](https://github.com/sopra-fs23-group-41/Server/issues/88) [#77](https://github.com/sopra-fs23-group-41/Server/issues/77) [#87](https://github.com/sopra-fs23-group-41/Server/issues/87) [#72](https://github.com/sopra-fs23-group-41/Server/issues/72) [#118](https://github.com/sopra-fs23-group-41/Server/issues/118)
 
 
-
 # Sprint 2:
 
 ## Week 4 (03.05.2023):
+-------------------------
+Yuqing Huang:
+
+Eunji Lee:
+
+Laurent Le Febve:
+
+Tiago Ferreiro Matos: [#85](https://github.com/sopra-fs23-group-41/Client/issues/85) [#86](https://github.com/sopra-fs23-group-41/Client/issues/86)
+
+Timo Tietje: 
+
+## Week 5 (10.05.2023):
+-------------------------
+Yuqing Huang:
+
+Eunji Lee:
+
+Laurent Le Febve:
+
+Tiago Ferreiro Matos:
+
+Timo Tietje: 
+
+## Week 6 (17.05.2023):
+-------------------------
+Yuqing Huang:
+
+Eunji Lee:
+
+Laurent Le Febve:
+
+Tiago Ferreiro Matos:
+
+Timo Tietje: 
+
+## Week 7 (24.05.2023):
 -------------------------
 Yuqing Huang:
 
