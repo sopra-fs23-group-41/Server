@@ -24,7 +24,7 @@ public class GameJudge {
             return Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer());
         }
         else {
-            return (!Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer()));
+            return Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer());
         }
     }
 
