@@ -40,7 +40,7 @@ jobs:
 
       - id: generate_apikey_file
         env:
-          MY_DOTENV: ${{ secrets.API_KEY }}
+          API_KEY: ${{ secrets.API_KEY }}
         run: echo "$API_KEY" > .env-for-app-yaml
 
       - name: Deploy to App Engine
