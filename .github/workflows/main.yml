@@ -38,6 +38,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - id: generate_apikey_file
+        env:
+          MY_DOTENV: ${{ secrets.API_KEY }}
+        run: echo "$API_KEY" > .env-for-app-yaml
+
       - name: Deploy to App Engine
         id: deploy
         uses: google-github-actions/deploy-appengine@v0.2.0
