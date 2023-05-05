@@ -6,23 +6,54 @@ import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.MostExpensiveQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
+@Entity
+@Table(name = "MINIGAME")
+@JsonIgnoreProperties(value="gameQuestions")
 public class MiniGame implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    @Column(unique = true)
+    private long miniGameId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
+    @JsonIgnore
+    private Game game;
+
+    @Column
     private int rounds;
+
+    @Column
     protected int currentRound = 0;
-    private final List<Article> allArticles;
-    private final GameMode gameMode;
+
+    @ElementCollection
+    private List<Article> allArticles;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private GameMode gameMode;
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.LAZY)
+    @JoinColumn(name = "miniGameId")
+    @JsonIgnore
     private List<Question> gameQuestions = new ArrayList<>();
 
-    Logger logger = LoggerFactory.getLogger(MiniGame.class);
 
 
     // constructor
@@ -32,6 +63,10 @@ public class MiniGame implements Serializable {
         this.gameMode = gameMode;
     } //pay attention to the number of articles
 
+    public MiniGame() {
+
+    }
+
     //methods
     public void setGameQuestions(){
         List<Question> questions = new ArrayList<>();
@@ -40,26 +75,26 @@ public class MiniGame implements Serializable {
             case GuessThePrice -> {
                 for (int i = 0; i < this.rounds; i++) {
                     GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
+                    question.setQuestion_type("GTP");
                     questions.add(question);
                 }
-                logger.info("In MiniGame, GuessThePriceQuestions initialized!");
             }
             case HighOrLow -> {
                 for (int i = 0; i < allArticles.size(); i += 2) {
                     List<Article> newList = allArticles.subList(i, i + 2);
                     HigherLowerQuestion question = new HigherLowerQuestion(newList.get(0), newList.get(1));
+                    question.setQuestion_type("HOL");
                     questions.add(question);
                 }
-                logger.info("In MiniGame, HighOrLowQuestions initialized!");
             }
             case MostExpensive -> {
                 for (int i = 0; i < allArticles.size(); i += 4) {
                     List<Article> newList = allArticles.subList(i, i + 4);
                     List<Article> fourArticles = new ArrayList<>(newList);
                     MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
+                    question.setQuestion_type("ME");
                     questions.add(question);
                 }
-                logger.info("In MiniGame, MostExpensiveQuestions initialized!");
             }
             default -> {
             }
@@ -71,7 +106,6 @@ public class MiniGame implements Serializable {
         }
 
         this.gameQuestions = questions;
-        logger.info("Questions are set for gameMode: " + this.gameMode);
     } // should the number of question is larger than the number of rounds? maybe one or two in case of unknown errors
 
 
@@ -81,7 +115,6 @@ public class MiniGame implements Serializable {
     } //frontend need to provide with a wrong answer if the player haven't answered when time was up.
 
     public Question showNextQuestion() {
-        logger.info("Show next Question is invoked! currentRound=" + this.currentRound);
             Question question = getGameQuestions().get(currentRound);
             currentRound++;
             if (!question.isUsed()){
@@ -113,5 +146,37 @@ public class MiniGame implements Serializable {
 
     public List<Question> getGameQuestions() {
         return gameQuestions;
+    }
+
+    public long getMiniGameId() {
+        return miniGameId;
+    }
+
+    public void setMiniGameId(long miniGameId) {
+        this.miniGameId = miniGameId;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public void setAllArticles(List<Article> allArticles) {
+        this.allArticles = allArticles;
+    }
+
+    public GameMode getGameMode() {
+        return gameMode;
+    }
+
+    public void setGameMode(GameMode gameMode) {
+        this.gameMode = gameMode;
+    }
+
+    public void setGameQuestions(List<Question> gameQuestions) {
+        this.gameQuestions = gameQuestions;
     }
 }

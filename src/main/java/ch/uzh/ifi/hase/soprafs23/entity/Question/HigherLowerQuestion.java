@@ -2,15 +2,29 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
+
+@Entity
+@DiscriminatorValue("HOL")
 public class HigherLowerQuestion extends Question{
 
+    @Column
     private final int bonus = 10;
+
+    @Column
     private final int timeToAnswer = 30;
 
     //constructor
     public HigherLowerQuestion(Article article1, Article article2) {
         articles.add(article1);
         articles.add(article2);
+    }
+
+    public HigherLowerQuestion() {
+
     }
 
     @Override
@@ -52,4 +66,5 @@ public class HigherLowerQuestion extends Question{
     public int getBonus(){
         return this.bonus;
     }
+
 }

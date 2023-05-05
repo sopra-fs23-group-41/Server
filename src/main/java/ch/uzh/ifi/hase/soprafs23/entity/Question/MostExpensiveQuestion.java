@@ -2,16 +2,28 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@DiscriminatorValue("ME")
 public class MostExpensiveQuestion extends Question{
 
+    @Column
     private final int bonus = 30;
+
+    @Column
     private final int timeToAnswer = 30;
 
     public MostExpensiveQuestion(List<Article> fourArticles){
         articles = fourArticles;
+    }
+
+    public MostExpensiveQuestion() {
+
     }
 
     @Override

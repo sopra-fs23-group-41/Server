@@ -1,8 +1,9 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
-
+@Embeddable
 public class Answer implements Serializable {
 
     private long playerId;

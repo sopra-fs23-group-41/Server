@@ -171,13 +171,12 @@ public class GameController {
         return allPlayerAnswered;
     }
 
-    //What if last Question is played? -> deleteLobby! and extract the players
-    @PostMapping("/lobbies/{lobbyId}/end")
+    @GetMapping("/lobbies/{lobbyId}/end")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
-    public List<Player> endGame(@PathVariable long lobbyId){
+    public List<Player> endMiniGame(@PathVariable long lobbyId){
         logger.info("Lobby with Id: " + lobbyId + "ended the game!");
-        return gameService.endGame(lobbyId);
+        return gameService.endMiniGame(lobbyId);
     }
 
     @GetMapping("/lobbies/{lobbyId}/articles")
@@ -192,6 +191,13 @@ public class GameController {
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
         gameGetDTO.setPlayers(players);
         return gameGetDTO;
+    }
+
+    @PostMapping("/lobbies/{lobbyId}/end")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void clearLobby(@PathVariable long lobbyId){
+        gameService.clearLobby(lobbyId);
     }
 
 }

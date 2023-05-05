@@ -2,17 +2,29 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@DiscriminatorValue("GTP")
 public class GuessThePriceQuestion extends Question{
 
+    @Column
     private final int bonus = 20;
+
+    @Column
     private final int timeToAnswer = 40;
 
     // constructor
     public GuessThePriceQuestion(Article article){
         articles.add(article);
+    }
+
+    public GuessThePriceQuestion() {
+
     }
 
     @Override

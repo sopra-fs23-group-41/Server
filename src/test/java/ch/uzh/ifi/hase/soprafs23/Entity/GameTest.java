@@ -80,8 +80,8 @@ public class GameTest {
         }
 
         assertNotNull(this.game.getMiniGame());
-        assertEquals(2, this.game.getMiniGame().getRounds());
-        assertNotNull(this.game.getMiniGame().getGameQuestions());
+        assertEquals(2, this.game.getMiniGame().get(0).getRounds());
+        assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
         assertEquals(2, this.game.getArticleList().size());
     }
 
@@ -96,7 +96,7 @@ public class GameTest {
         this.game.startGame(this.game.getGameMode(), players);
 
         assertNotNull(this.game.getMiniGame());
-        assertNotNull(this.game.getMiniGame().getGameQuestions());
+        assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
         assertEquals(4, this.game.getArticleList().size());
     }
 
@@ -114,8 +114,11 @@ public class GameTest {
     public void checkNotAllPlayerAnsweredTest(){
         List<Article> articles = new ArrayList<>();
         articles.add(new Article());
-        this.game.setMiniGame(new MiniGame(2, articles, GameMode.GuessThePrice));
-        this.game.getMiniGame().setCurrentRound(2);
+        MiniGame miniGame = new MiniGame(2, articles, GameMode.GuessThePrice);
+        List<MiniGame> aList = new ArrayList<>();
+        aList.add(miniGame);
+        this.game.setMiniGame(aList);
+        this.game.getMiniGame().get(0).setCurrentRound(2);
         List<Player> players1 = new ArrayList<>();
         players1.add(new Player());
         players1.add(new Player());
@@ -129,8 +132,11 @@ public class GameTest {
         List<Article> articles = new ArrayList<>();
         articles.add(new Article());
         this.game.setArticleList(articles);
-        this.game.setMiniGame(new MiniGame(1, this.game.getArticleList(), GameMode.GuessThePrice));
-        this.game.getMiniGame().setCurrentRound(1);
+        MiniGame miniGame = new MiniGame(2, articles, GameMode.GuessThePrice);
+        List<MiniGame> aList = new ArrayList<>();
+        aList.add(miniGame);
+        this.game.setMiniGame(aList);
+        this.game.getMiniGame().get(0).setCurrentRound(1);
         List<Player> players2 = new ArrayList<>();
         Player alice = new Player();
         alice.setAnswers(new Answer());
@@ -163,7 +169,7 @@ public class GameTest {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.SNEAKERS);
         this.game.startGame(GameMode.HighOrLow, players2);
-        this.game.getMiniGame().setCurrentRound(2);
+        this.game.getMiniGame().get(0).setCurrentRound(2);
 
         assertThrows(ResponseStatusException.class, () -> this.game.getNextRound(players2));
     }
@@ -190,7 +196,7 @@ public class GameTest {
         this.game.setGameType(GameType.SINGLE);
         this.game.updateGameSetting(GameMode.GuessThePrice, 2, 1, Category.HOODIES);
         this.game.startGame(GameMode.GuessThePrice, players);
-        this.game.getMiniGame().setCurrentRound(1);
+        this.game.getMiniGame().get(0).setCurrentRound(1);
 
         assertNotNull(this.game.getCurrentRoundQuestion());
     }
@@ -204,8 +210,8 @@ public class GameTest {
         this.game.setGameType(GameType.SINGLE);
         this.game.updateGameSetting(GameMode.GuessThePrice, 1, 1, Category.ACCESSORIES);
         this.game.startGame(GameMode.GuessThePrice, players);
-        this.game.getMiniGame().setCurrentRound(1);
-        this.game.getMiniGame().getGameQuestions().get(0).setUsed(true);
+        this.game.getMiniGame().get(0).setCurrentRound(1);
+        this.game.getMiniGame().get(0).getGameQuestions().get(0).setUsed(true);
 
         assertNotNull(this.game.endGame(players));
     }

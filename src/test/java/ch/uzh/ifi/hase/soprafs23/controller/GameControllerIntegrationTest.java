@@ -70,7 +70,7 @@ public class GameControllerIntegrationTest {
         assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
         assertTrue(gameService.isTheGameStarted(game.getGameId()));
         assertEquals(game.getArticleList().size(), 4);
-        assertTrue(game.getMiniGame().getGameQuestions().get(0) instanceof GuessThePriceQuestion);
-        assertEquals(game.getMiniGame().getGameQuestions().size(), 4);
+        assertTrue(game.getMiniGame().get(0).getGameQuestions().get(0) instanceof GuessThePriceQuestion);
+        assertEquals(game.getMiniGame().get(0).getGameQuestions().size(), 4);
     }
 }
