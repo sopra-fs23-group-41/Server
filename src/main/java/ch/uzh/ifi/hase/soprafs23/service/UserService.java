@@ -70,6 +70,9 @@ public class UserService {
   public Player addUserToLobby(long userId, long lobbyId){
       //check if user exists
       User userToConvert = userRepository.findById(userId);
+      if (userToConvert == null){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist!");
+      }
 
       //check if user is already in player repository
       Player player = playerRepository.findByUserId(userId);
@@ -114,10 +117,10 @@ public class UserService {
     public User loginUser(String loginUsername, String password) {
         User userToLogin = userRepository.findByUsername(loginUsername);
         if (userToLogin == null || !BCrypt.checkpw(password, userToLogin.getPassword()))  {
-            throw new RuntimeException("Invalid login credentials, make sure that username and password are correct.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid login credentials, make sure that username and password are correct.");
         }
         if (userToLogin.getStatus() == UserStatus.ONLINE) {
-            throw new RuntimeException("User is already logged in.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already logged in.");
         }
 
         userToLogin.setStatus(UserStatus.ONLINE);
@@ -128,6 +131,10 @@ public class UserService {
 
     public void logoutUser(long id) {
       User user = getUserById(id);
+      if (user == null){
+          throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user found!");
+      }
+
       user.setStatus(UserStatus.OFFLINE);
       userRepository.save(user);
       userRepository.flush();
