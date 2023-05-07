@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -76,7 +77,7 @@ public class GameService {
         //Game game = GameRepo.findByLobbyId((int) lobbyId);
     }
 
-    public Game getGameById(long lobbyId) {
+    public Game getGameById(long lobbyId) throws InvalidDataAccessResourceUsageException {
         Game game = gameRepository.findByGameId(lobbyId);
         if (game == null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby does not exist!");
@@ -199,7 +200,9 @@ public class GameService {
         for (Player winner : winners) {
             long userId = winner.getUserId();
             User user = userRepository.findById(userId);
-            user.setNumOfGameWon(user.getNumOfGameWon() + 1);
+            if (currentGame.getNumOfPlayer() > 1){
+                user.setNumOfGameWon(user.getNumOfGameWon() + 1);
+            }
         }
 
         //gameRepository.deleteByGameId(lobbyId);

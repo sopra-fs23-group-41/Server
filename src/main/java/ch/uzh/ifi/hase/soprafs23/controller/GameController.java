@@ -171,14 +171,6 @@ public class GameController {
         return allPlayerAnswered;
     }
 
-    @GetMapping("/lobbies/{lobbyId}/end")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @ResponseBody
-    public List<Player> endMiniGame(@PathVariable long lobbyId){
-        logger.info("Lobby with Id: " + lobbyId + "ended the game!");
-        return gameService.endMiniGame(lobbyId);
-    }
-
     @GetMapping("/lobbies/{lobbyId}/articles")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
@@ -191,6 +183,14 @@ public class GameController {
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
         gameGetDTO.setPlayers(players);
         return gameGetDTO;
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/end")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public List<Player> endMiniGame(@PathVariable long lobbyId){
+        logger.info("Lobby with Id: " + lobbyId + "ended the game!");
+        return gameService.endMiniGame(lobbyId);
     }
 
     @PostMapping("/lobbies/{lobbyId}/end")
