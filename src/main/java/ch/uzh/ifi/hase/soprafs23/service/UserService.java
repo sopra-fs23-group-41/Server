@@ -16,9 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * User Service
@@ -165,5 +164,17 @@ public class UserService {
         String hashedPassword = BCrypt.hashpw(currentUser.getPassword(), BCrypt.gensalt(12));
         user.setPassword(hashedPassword);
         user.setBirthdate(currentUser.getBirthdate());
+    }
+
+    public List<User> getUserLeaderBoard(){
+      List<User> users = userRepository.findAll();
+      users.sort(new Comparator<User>() {
+          @Override
+          public int compare(User u1, User u2) {
+              return u2.getNumOfGameWon() - u1.getNumOfGameWon();
+          }
+      });
+
+      return users;
     }
 }
