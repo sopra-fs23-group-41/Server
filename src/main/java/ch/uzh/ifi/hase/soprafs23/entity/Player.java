@@ -87,4 +87,7 @@ public class Player {
         return this.answers;
     }
 
+    public Answer getAnswerOfRound(int round) {
+        return this.answers.get(round);
+    }
 }

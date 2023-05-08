@@ -146,10 +146,6 @@ public class Game implements Serializable {
                 .collect(Collectors.toList());
     }
 
-
-
-
-    //getters and setters
     public void createGamePIN(){
         UUID uuid = UUID.randomUUID();
 
@@ -157,6 +153,11 @@ public class Game implements Serializable {
         String uuidStr = uuid.toString().replace("-", "");
 
         this.gamePIN = uuidStr.substring(0, 6);
+    }
+
+    //getters and setters
+    public Question getQuestionOfRound(int round){
+        return this.miniGames.get(0).getGameQuestions().get(round);
     }
 
     public void setGamePIN(String gamePIN) {

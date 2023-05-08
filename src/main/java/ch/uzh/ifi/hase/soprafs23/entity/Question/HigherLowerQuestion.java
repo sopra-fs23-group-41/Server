@@ -58,11 +58,11 @@ public class HigherLowerQuestion extends Question{
             this.trueAnswer = "Higher";
         }
     }
-
+    @Override
     public int getTimeToAnswer(){
         return  this.timeToAnswer;
     }
-
+    @Override
     public int getBonus(){
         return this.bonus;
     }

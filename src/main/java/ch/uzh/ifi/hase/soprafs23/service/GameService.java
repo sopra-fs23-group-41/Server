@@ -65,7 +65,7 @@ public class GameService {
     public Game updateGameSetting(Game currentGame, long lobbyId) {
         Game game = gameRepository.findByGameId(lobbyId);
         if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby does not exist!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby with Id: " + lobbyId+ " does not exist!");
         }
 
         game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
@@ -109,7 +109,7 @@ public class GameService {
         gameRepository.save(currentGame);
         gameRepository.flush();
 
-        logger.debug("A new game has initialized and ready to start");
+        logger.info("A new game has been initialized and is ready to start");
     }
 
     private void removePlayersFromLobby(long gameId){
@@ -210,19 +210,22 @@ public class GameService {
     }
 
     public Player calculatePlayerPoints(Player player, long lobbyId){
+        int points;
+        int currentRound;
+        Question currentQuestion;
         Game game = gameRepository.findByGameId(lobbyId);
-        if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game found!");
-        }
-        //Game game = GameRepo.findByLobbyId((int) lobbyId);
-        int currentRound = game.getCurrentRound();
-        GameJudge judge = new GameJudge(game.getMiniGame().get(0).getGameQuestions().get(currentRound-1), player, currentRound);
-        int point = judge.calculatePoints();
-        player.setRoundScore(point);
-        player.setTotalScore(player.getTotalScore()+point);
 
-        playerRepository.save(player);
-        playerRepository.flush();
+        if (game == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game with that Id found!");
+        }
+
+        currentRound = game.getCurrentRound() - 1;
+        currentQuestion = game.getQuestionOfRound(currentRound);
+        GameJudge aGameJudge = new GameJudge(currentQuestion, player, currentRound);
+        points = aGameJudge.calculatePoints();
+
+        player.setRoundScore(points);
+        player.setTotalScore(points);
 
         return player;
     }

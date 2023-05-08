@@ -98,6 +98,11 @@ public abstract class Question implements Serializable {
         Id = id;
     }
 
+    public int getBonus(){
+        return 0;
+    }
+    public int getTimeToAnswer(){return 0;}
+
     public void setArticles(List<Article> articles) {
         this.articles = articles;
     }
