@@ -54,7 +54,7 @@ public class GameController {
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
+    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) {
         Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
         Game currentGame = gameService.updateGameSetting(updateGame, lobbyId);
 
@@ -114,6 +114,16 @@ public class GameController {
         return gameService.isTheGameStarted(lobbyId);
     }
 
+    //get round status
+    @GetMapping("lobbies/{lobbyId}/QuestionStatus/{playerId}")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public boolean isNextRoundSet(@PathVariable long lobbyId,@PathVariable long playerId){
+        //check if # of answers is equal to round of minigame,
+        // if not then getNextRound is not called by the gameMaster and nextQuestion cannot be called
+        return gameService.nextRoundReady(lobbyId, playerId);
+    }
+
 
     //would it be better to get Int-th question of lobby with lobby id?
     //get next question of lobby
@@ -143,12 +153,12 @@ public class GameController {
     }
 
 
-    //AnswerPostDTO:
+    /*AnswerPostDTO:
     // long playerId;
     // int numOfRound;
     // String playerAnswer;
     // double timeUsed;
-    // Question question;
+    // Question question;*/
 
     //player with id answered
     @PostMapping("lobbies/{lobbyId}/player/{playerId}/answered")

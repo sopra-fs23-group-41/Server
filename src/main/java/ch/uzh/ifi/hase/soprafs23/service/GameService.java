@@ -259,4 +259,10 @@ public class GameService {
         gameRepository.deleteByGameId(lobbyId);
         playerRepository.deleteByGameId(lobbyId);
     }
+
+    public boolean nextRoundReady(long lobbyId, long playerId) {
+        Game game = gameRepository.findByGameId(lobbyId);
+        Player player = playerRepository.findByPlayerId(playerId);
+        return game.getCurrentRound() == player.getAnswers().size();
+    }
 }
