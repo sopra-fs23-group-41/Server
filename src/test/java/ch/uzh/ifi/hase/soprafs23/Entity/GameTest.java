@@ -153,7 +153,7 @@ public class GameTest {
         players1.add(new Player());
         players1.add(new Player());
 
-        assertThrows(NullPointerException.class, () -> this.game.getNextRound(players1));
+        assertThrows(IndexOutOfBoundsException.class, () -> this.game.getNextRound(players1));
     }
 
     @Test

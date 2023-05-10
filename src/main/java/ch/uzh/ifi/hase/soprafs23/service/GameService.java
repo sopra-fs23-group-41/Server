@@ -100,7 +100,7 @@ public class GameService {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
         if (currentGame == null || players == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The lobby is not ready!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby is not ready!");
         }
 
         currentGame.startGame(currentGame.getGameMode(), players);

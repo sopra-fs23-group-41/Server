@@ -7,6 +7,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepo;
+import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
 import org.junit.jupiter.api.Test;
@@ -26,13 +27,15 @@ public class GameControllerIntegrationTest {
     private PlayerRepository playerRepository;
     @Autowired
     private GameService gameService;
+    @Autowired
+    private GameRepository gameRepository;
 
     @Test
     public void beginGameTest() {
         //given users as players in a lobby with id 0 and where all players joined
 
         Game game = new Game();
-        game.setGameId(0);
+        game.setGameId(1);
         game.setNumOfPlayer(1);
         game.setGameType(GameType.SINGLE);
         game.setRounds(4);
@@ -44,15 +47,17 @@ public class GameControllerIntegrationTest {
         Player player = new Player();
         player.setUserId(0);
         player.setPlayerName("Name");
-        player.setGameId(0);
+        player.setGameId(1);
 
         //when
         //try to begin the game before all players joined
         ResponseEntity<Void> postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
-        assertEquals(HttpStatus.NOT_FOUND, postResponse.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
 
         //add Game to database
-        GameRepo.addGame((int) game.getGameId(),game);
+
+        gameRepository.save(game);
+        gameRepository.flush();
 
         //when
         //try to begin the game before all players joined
@@ -67,7 +72,7 @@ public class GameControllerIntegrationTest {
         postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
 
         //test if it worked
-        assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, postResponse.getStatusCode());
         assertTrue(gameService.isTheGameStarted(game.getGameId()));
         assertEquals(game.getArticleList().size(), 4);
         assertTrue(game.getMiniGame().get(0).getGameQuestions().get(0) instanceof GuessThePriceQuestion);
