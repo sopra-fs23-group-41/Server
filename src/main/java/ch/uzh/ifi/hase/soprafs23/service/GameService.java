@@ -25,10 +25,6 @@ import java.util.List;
 public class GameService {
     private final GameRepository gameRepository;
 
-    private final MiniGameRepository miniGameRepository;
-
-    private final QuestionRepository questionRepository;
-
     private final PlayerRepository playerRepository;
 
     private final UserRepository userRepository;
@@ -37,12 +33,10 @@ public class GameService {
 
     @Autowired
     public GameService(@Qualifier("gameRepository") GameRepository gameRepository, @Qualifier("playerRepository")PlayerRepository playerRepository,
-            @Qualifier("userRepository")UserRepository userRepository, @Qualifier("miniGameRepository")MiniGameRepository miniGameRepository, @Qualifier("questionRepository")QuestionRepository questionRepository){
+            @Qualifier("userRepository")UserRepository userRepository){
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
         this.userRepository = userRepository;
-        this.miniGameRepository = miniGameRepository;
-        this.questionRepository = questionRepository;
     }
 
     public Game createGame(Game newGame) {

@@ -82,10 +82,11 @@ public class Game implements Serializable {
                 createArticles(this.rounds * 2);
                 miniGames.add(new MiniGame(this.rounds,this.articleList, gameMode));
             }
-            else {
+            /*else {
                 createArticles(this.rounds * 4);
                 miniGames.add(new MiniGame(this.rounds, this.articleList, gameMode));
             }
+             */
 
             miniGames.get(0).setGameQuestions();
 

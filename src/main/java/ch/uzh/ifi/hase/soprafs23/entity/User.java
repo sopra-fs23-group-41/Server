@@ -48,9 +48,6 @@ public class User implements Serializable {
   private LocalDate birthdate;
 
   @Column(nullable = false)
-  private boolean gameStatus=false;
-
-  @Column(nullable = false)
   private int numOfGameWon = 0;
 
   public Long getId() {
@@ -107,14 +104,6 @@ public class User implements Serializable {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
-    }
-
-    public boolean getGameStatus() {
-        return gameStatus;
-    }
-
-    public void setGameStatus(boolean gameStatus) {
-        this.gameStatus = gameStatus;
     }
 
     public int getNumOfGameWon() {

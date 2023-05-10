@@ -13,7 +13,6 @@ public class UserGetDTO {
   private UserStatus status;
   private LocalDate creationDate;
   private LocalDate birthdate;
-  private boolean gameStatus;
   private int numOfGameWon;
 
   public Long getId() {
@@ -62,14 +61,6 @@ public class UserGetDTO {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
-    }
-
-    public boolean isGameStatus() {
-        return gameStatus;
-    }
-
-    public void setGameStatus(boolean gameStatus) {
-        this.gameStatus = gameStatus;
     }
 
     public int getNumOfGameWon() {

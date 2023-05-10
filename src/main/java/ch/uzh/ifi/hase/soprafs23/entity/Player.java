@@ -12,7 +12,6 @@ public class Player {
 
     @Column(nullable = false)
     private String playerName;
-    // private String token;
 
     @Column(nullable = false)
     private long userId;
@@ -108,5 +107,9 @@ public class Player {
 
     public int getStreak() {
         return streak;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
     }
 }
