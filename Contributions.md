@@ -61,7 +61,7 @@ Yuqing Huang: [#113](https://github.com/sopra-fs23-group-41/Client/issues/113) [
 
 Eunji Lee: [#40](https://github.com/sopra-fs23-group-41/Client/issues/40) [#55](https://github.com/sopra-fs23-group-41/Client/issues/55) [#21](https://github.com/sopra-fs23-group-41/Client/issues/21)
 
-Laurent Le Febve:
+Laurent Le Febve: [#91](https://github.com/sopra-fs23-group-41/Client/issues/91) [#44](https://github.com/sopra-fs23-group-41/Client/issues/44) [#45](https://github.com/sopra-fs23-group-41/Client/issues/95) [#46](https://github.com/sopra-fs23-group-41/Client/issues/46) [#32](https://github.com/sopra-fs23-group-41/Client/issues/32)
 
 Tiago Ferreiro Matos:
 
@@ -73,7 +73,7 @@ Yuqing Huang:
 
 Eunji Lee:
 
-Laurent Le Febve: [#91](https://github.com/sopra-fs23-group-41/Client/issues/91) [#44](https://github.com/sopra-fs23-group-41/Client/issues/44) [#45](https://github.com/sopra-fs23-group-41/Client/issues/95) [#46](https://github.com/sopra-fs23-group-41/Client/issues/46) [#32](https://github.com/sopra-fs23-group-41/Client/issues/32)
+Laurent Le Febve: 
 
 
 Tiago Ferreiro Matos:
