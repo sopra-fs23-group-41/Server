@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -50,7 +51,7 @@ public class GuessThePriceQuestion extends Question{
         int max = (int) (1.4 * price);
 
         //generate random floats
-        Random rand = new Random();
+        SecureRandom rand = new SecureRandom();
         float rValue = rand.nextFloat();
         float randomFloat1 = rValue * (max - min) + min;
         float randomFloat2 = rValue * (max - min) + min;
