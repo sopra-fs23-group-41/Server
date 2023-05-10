@@ -51,9 +51,10 @@ public class GuessThePriceQuestion extends Question{
 
         //generate random floats
         Random rand = new Random();
-        float randomFloat1 = rand.nextFloat() * (max - min) + min;
-        float randomFloat2 = rand.nextFloat() * (max - min) + min;
-        float randomFloat3 = rand.nextFloat() * (max - min) + min;
+        float rValue = rand.nextFloat();
+        float randomFloat1 = rValue * (max - min) + min;
+        float randomFloat2 = rValue * (max - min) + min;
+        float randomFloat3 = rValue * (max - min) + min;
 
         //create list for wrong answers using question super class
         super.falseAnswers.add(String.format("%.1f", randomFloat1));
