@@ -224,8 +224,7 @@ public class GameService {
         GameJudge aGameJudge = new GameJudge(currentQuestion, player, currentRound);
         points = aGameJudge.calculatePoints();
 
-        player.setRoundScore(points);
-        player.setTotalScore(points);
+        player.updatePointsAndStreak(points);
 
         return player;
     }

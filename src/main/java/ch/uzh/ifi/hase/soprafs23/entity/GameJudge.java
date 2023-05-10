@@ -1,10 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-
-import java.util.List;
 import java.util.Objects;
 
 public class GameJudge {
@@ -14,13 +10,11 @@ public class GameJudge {
     //answer to know what the guess was and the time used etc. --> one can get answers of through player
     private final Player player;
     //answer to know what the guess was and the time used etc. --> one can get answers of through player
-    private final int round;
     private final Answer playerAnswer;
 
     public GameJudge(Question question,Player player, int round){
         this.question = question;
         this.player = player;
-        this.round = round;
         this.playerAnswer = player.getAnswerOfRound(round);
     }
 
@@ -39,9 +33,18 @@ public class GameJudge {
             points = (int) (10/this.playerAnswer.getTimeUsed());
             points *= this.question.getTimeToAnswer() * question.getBonus();
 
-            //look for 3 streak? and add bonus
-            //look for 5 streak? and add bonus
-            //look for 10 streak and add bonus
+            //look for 3 streak? and add bonus points of 300
+            if(this.player.getStreak() == 2){
+                points += 300;
+            }
+            //look for 5 streak? and add bonus points of 700
+            if(this.player.getStreak() == 4){
+                points += 700;
+            }
+            //look for 7 streak and add bonus points of 1200
+            if(this.player.getStreak() == 6){
+                points += 1200;
+            }
 
         }
         else if(!answerIsCorrect(this.playerAnswer.getPlayerAnswer(), this.question.getTrueAnswer())){

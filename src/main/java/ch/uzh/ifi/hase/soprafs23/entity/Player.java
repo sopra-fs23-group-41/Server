@@ -27,8 +27,23 @@ public class Player {
     private int roundScore;
 
     @Column
+    private int streak = 0;
+
+    @Column
     @ElementCollection
     private List<Answer> answers = new ArrayList<>();
+
+    public void updatePointsAndStreak(int points){
+        if(points == 0){
+            this.streak = 0;
+            this.roundScore=0;
+        }
+        else{
+            this.roundScore = points;
+            this.totalScore += points;
+            this.streak++;
+        }
+    }
 
 
     public void setPlayerName(String playerName) {
@@ -89,5 +104,9 @@ public class Player {
 
     public Answer getAnswerOfRound(int round) {
         return this.answers.get(round);
+    }
+
+    public int getStreak() {
+        return streak;
     }
 }
