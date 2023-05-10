@@ -4,65 +4,90 @@ import ch.uzh.ifi.hase.soprafs23.AsosApi.AsosApiUtility;
 import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.GuessThePrice;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.HigherOrLower;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame.MiniGame;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import javassist.tools.web.BadHttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.persistence.*;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Game {
+
+@Entity
+@Table(name = "GAME")
+@JsonIgnoreProperties(value="miniGames")
+public class Game implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    @Column(name = "game_id", unique = true)
     private long gameId;
+
+    @Column
     private int numOfPlayer = 1;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private GameType gameType;
+
+    @Column
     private int rounds = 1;
+
+    @Column(unique = true)
     private String gamePIN;
+
+    @Column
     private GameMode gameMode;
-    //private final User lobbyOwner;
+
     @ElementCollection
     private List<Article> articleList = new ArrayList<>();
-    private MiniGame miniGame = null;
-    private Category category;
 
-    /*
-    public Game(GameType gameType){
-        this.gameType = gameType;
-        //this.lobbyOwner = owner;
-        createGamePIN();
-    }
-    */
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
+    @JsonIgnore
+    private List<MiniGame> miniGames = new ArrayList<>();
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     public Game(){}
 
     public boolean checkIfAllPlayersAnswered(List<Player> players) {
-        if (!miniGame.checkIfAllPlayersAnswered(players)) {
+        if (!miniGames.get(0).checkIfAllPlayersAnswered(players)) {
             return false;
         }
-        int currentRound = miniGame.getCurrentRound();
+        int currentRound = miniGames.get(0).getCurrentRound();
         return players.stream()
                 .allMatch(player -> player.getAnswers().size() == currentRound);
     }
-
 
     //methods
     public void startGame(GameMode gameMode, List<Player> players) throws UnirestException, JsonProcessingException {
         if(checkIfAllPlayerExist(players)){
             if (gameMode == GameMode.GuessThePrice){
                 createArticles(this.rounds);
-                miniGame = new GuessThePrice(this.rounds,this.articleList, gameMode);
+                miniGames.add(new MiniGame(this.rounds,this.articleList, gameMode));
             }
-            else{
+            else if (gameMode == GameMode.HighOrLow){
                 createArticles(this.rounds * 2);
-                miniGame = new HigherOrLower(this.rounds,this.articleList, gameMode);
+                miniGames.add(new MiniGame(this.rounds,this.articleList, gameMode));
             }
-            miniGame.setGameQuestions();
+            else {
+                createArticles(this.rounds * 4);
+                miniGames.add(new MiniGame(this.rounds, this.articleList, gameMode));
+            }
+
+            miniGames.get(0).setGameQuestions();
 
         }
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The number of player doesn't match to game setting!");
@@ -83,46 +108,28 @@ public class Game {
     }
 
     public Question getNextRound(List<Player> players){
-        if(this.miniGame == null){
-            throw new NullPointerException("The game has not started yet!");
-        }
         if (!checkIfAllPlayersAnswered(players)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Not all players have answered the current question");
         }
-        return miniGame.showNextQuestion();
+        return miniGames.get(0).showNextQuestion();
     }
 
     public Question getCurrentRoundQuestion(){
         //currentRounds starts with 1, so the index should be -1;
-        return miniGame.getGameQuestions().get(miniGame.getCurrentRound()-1);
+        return miniGames.get(0).getGameQuestions().get(miniGames.get(0).getCurrentRound()-1);
     }
 
     public List<Player> endGame(List<Player> players){
-        long count = miniGame.getGameQuestions().stream()
+        long count = miniGames.get(0).getGameQuestions().stream()
                 .filter(Question::isUsed)
                 .count();
         if (count < rounds) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The game is not ended yet.");
         }
+
         return getGameLeaderBoard(players);
     }
 
-    /*
-    public Player declareWinner(){
-        Player winner = null;
-        int highestScore = Integer.MIN_VALUE;
-
-        for (Player player : players) {
-            int score = player.getTotalScore();
-
-            if (score > highestScore) {
-                highestScore = score;
-                winner = player;
-            }
-        }
-
-        return winner;
-    }  */
 
     public boolean checkIfAllPlayerExist(List<Player> players){
         if(players.size() == 0){
@@ -137,10 +144,6 @@ public class Game {
                 .collect(Collectors.toList());
     }
 
-
-
-
-    //getters and setters
     public void createGamePIN(){
         UUID uuid = UUID.randomUUID();
 
@@ -150,20 +153,14 @@ public class Game {
         this.gamePIN = uuidStr.substring(0, 6);
     }
 
+    //getters and setters
+    public Question getQuestionOfRound(int round){
+        return this.miniGames.get(0).getGameQuestions().get(round);
+    }
+
     public void setGamePIN(String gamePIN) {
         this.gamePIN = gamePIN;
     }
-
-    /*
-    public void setPlayers(List<User> users){
-        for (User user : users){
-            Player player = new Player();
-            player.setPlayerName(user.getUsername());
-            player.setUserId(user.getId());
-            player.setGameId(this.gameId);
-            this.players.add(player);
-        }
-    } */
 
     public String getGamePIN(){
         return this.gamePIN;
@@ -172,8 +169,8 @@ public class Game {
     public long getGameId(){
         return this.gameId;
     }
-    public MiniGame getMiniGame(){
-        return this.miniGame;
+    public List<MiniGame> getMiniGame(){
+        return this.miniGames;
     }
 
     public GameMode getGameMode() {
@@ -220,7 +217,7 @@ public class Game {
         this.gameId = gameId;
     }
     public int getCurrentRound(){
-        return miniGame.getCurrentRound();
+        return miniGames.get(0).getCurrentRound();
     }
 
     public List<Article> getArticleList() {
@@ -231,7 +228,7 @@ public class Game {
         this.articleList = articleList;
     }
 
-    public void setMiniGame(MiniGame miniGame) {
-        this.miniGame = miniGame;
+    public void setMiniGame(List<MiniGame> miniGames) {
+        this.miniGames = miniGames;
     }
 }

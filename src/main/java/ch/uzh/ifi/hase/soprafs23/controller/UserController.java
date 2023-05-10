@@ -1,8 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
-import ch.uzh.ifi.hase.soprafs23.rest.dto.GameGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserGetDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.UserPutDTO;
@@ -98,9 +96,23 @@ public class UserController {
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   public UserGetDTO getAUser(@PathVariable Long id){
-        User user = userService.getUserById(id);
+      User user = userService.getUserById(id);
 
-        return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
+      return DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
   }
 
+  @GetMapping("/users/leaderboard")
+  @ResponseStatus(HttpStatus.OK)
+  @ResponseBody
+  public List<UserGetDTO> getUserLeaderBoard(){
+      List<User> users = userService.getUserLeaderBoard();
+
+      List<UserGetDTO> userGetDTOs = new ArrayList<>();
+
+      // convert each user to the API representation
+      for (User user : users) {
+          userGetDTOs.add(DTOMapper.INSTANCE.convertEntityToUserGetDTO(user));
+      }
+      return userGetDTOs;
+  }
 }

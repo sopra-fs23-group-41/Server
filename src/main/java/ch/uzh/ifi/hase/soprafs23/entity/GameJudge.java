@@ -1,60 +1,59 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-
-import java.util.List;
 import java.util.Objects;
 
 public class GameJudge {
-
+    //question to know which answer is true
     private final Question question;
+    //player to know which player to assign points
+    //answer to know what the guess was and the time used etc. --> one can get answers of through player
     private final Player player;
-    private final int round;
+    //answer to know what the guess was and the time used etc. --> one can get answers of through player
+    private final Answer playerAnswer;
 
     public GameJudge(Question question,Player player, int round){
         this.question = question;
         this.player = player;
-        this.round = round;
+        this.playerAnswer = player.getAnswerOfRound(round);
     }
 
-    public boolean answerIsCorrect(){
-        if(question instanceof GuessThePriceQuestion) {
-            return Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer());
-        }
-        else {
-            return (!Objects.equals(player.getAnswers().get(this.round-1).getPlayerAnswer(), question.getTrueAnswer()));
-        }
+    public boolean answerIsCorrect(String playerAnswer, String trueAnswer){
+        return Objects.equals(playerAnswer, trueAnswer);
     }
 
     public int calculatePoints(){
-        String ans = player.getAnswers().get(this.round-1).getPlayerAnswer();
-        if (question instanceof GuessThePriceQuestion){
-            GuessThePriceQuestion que = (GuessThePriceQuestion) question;
-            int bonus = que.getBonus();
-            if(answerIsCorrect()){
-                return bonus;
+        //if answer of player is correct or false
+        //if correct assign points --> look if player is on streak.
+        //if wrong assign no points --> look if player get penalty for bad answers.
+        int points = 0;
+
+        if(answerIsCorrect(this.playerAnswer.getPlayerAnswer(), this.question.getTrueAnswer())){
+            //calculate the points
+            points = (int) (10/this.playerAnswer.getTimeUsed());
+            points *= this.question.getTimeToAnswer() * question.getBonus();
+
+            //look for 3 streak? and add bonus points of 300
+            if(this.player.getStreak() == 2){
+                points += 300;
             }
-            else{
-                float answer = Float.parseFloat(ans);
-                String cr = question.getTrueAnswer();
-                float price = Float.parseFloat(cr);
-                float dif = Math.abs(answer - price)/price;
-                if(dif < 0.1){
-                    return (int) (bonus*0.5);
-                }
-                else return 0;
+            //look for 5 streak? and add bonus points of 700
+            if(this.player.getStreak() == 4){
+                points += 700;
             }
+            //look for 7 streak and add bonus points of 1200
+            if(this.player.getStreak() == 6){
+                points += 1200;
+            }
+
         }
-        else {
-            HigherLowerQuestion que = (HigherLowerQuestion) question;
-            int bonus = que.getBonus();
-            if(answerIsCorrect()){
-                return bonus;
-            }
-            else return 0;
+        else if(!answerIsCorrect(this.playerAnswer.getPlayerAnswer(), this.question.getTrueAnswer())){
+            //look if the last 3 answers were wrong
+            //if yes, minus points
+            //else nothing
+            points = 0;
         }
+        return points;
     }
 
 }

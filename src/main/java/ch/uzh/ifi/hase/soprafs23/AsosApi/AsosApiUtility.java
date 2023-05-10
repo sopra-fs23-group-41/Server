@@ -15,13 +15,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AsosApiUtility {
     static Logger logger = LoggerFactory.getLogger(AsosApiUtility.class);
 
     private static List<Article> GenerateArticleList(Products products){
-        List<Product> productsList = new ArrayList<>();
+        List<Product> productsList;
         List<Article> articleList = new ArrayList<>();
         productsList = products.getProducts();
         for(Product product : productsList){
@@ -47,25 +48,43 @@ public class AsosApiUtility {
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
-        HttpResponse<JsonNode> jsonNodeHttpResponse = createRequest(limit, category);
-        String jsonString = jsonNodeHttpResponse.getBody().toString();
+        Response responses = createRequest(limit, category);
 
-        Products products = mapper.readValue(jsonString, Products.class);
+        HttpResponse<JsonNode> jsonNodeHttpResponse1 = responses.response1();
+        HttpResponse<JsonNode> jsonNodeHttpResponse2 = responses.response2();
 
-        List<Article> articleList = GenerateArticleList(products);
+        String jsonString1 = jsonNodeHttpResponse1.getBody().toString();
+        String jsonString2 = jsonNodeHttpResponse2.getBody().toString();
+
+        Products products1 = mapper.readValue(jsonString1, Products.class);
+        Products products2 = mapper.readValue(jsonString2, Products.class);
+
+        List<Article> articleList = GenerateArticleList(products1);
+        articleList.addAll(GenerateArticleList(products2));
+        Collections.shuffle(articleList);
+
 
         return articleList;
     }
 
-    private static HttpResponse<JsonNode> createRequest(int limit, Category category) throws UnirestException {
-        String secret = System.getenv("secret");
+    private static Response createRequest(int limit, Category category) throws UnirestException {
+        String secret = System.getenv("API_KEY");
         logger.info("secret with value: " + secret + " retrieved!");
         String BaseUrl = "https://asos2.p.rapidapi.com/";
-        HttpResponse<JsonNode> response = Unirest.get(BaseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.categoryId() +"&limit=" + limit + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
+        HttpResponse<JsonNode> response1 = Unirest.get(BaseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.getCategoryIdMen() +"&limit=" + limit/2 + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
                 .header("X-RapidAPI-Key", "6b13e3c424mshd89ea2f0812d131p195a3djsn1e4288e93cca")
                 .header("X-RapidAPI-Host","asos2.p.rapidapi.com")
                 .asJson();
-        return response;
+        HttpResponse<JsonNode> response2 = Unirest.get(BaseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.getCategoryIdWomen() +"&limit=" + limit/2 + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
+                .header("X-RapidAPI-Key", "6b13e3c424mshd89ea2f0812d131p195a3djsn1e4288e93cca")
+                .header("X-RapidAPI-Host","asos2.p.rapidapi.com")
+                .asJson();
+
+        return new Response(response1, response2);
+    }
+
+    // subclass used to store two different HttpResponse together
+    public record Response(HttpResponse<JsonNode> response1, HttpResponse<JsonNode> response2) {
     }
 
 

@@ -69,7 +69,7 @@ public class GameControllerTest {
         game.setRounds(3);
         game.setGamePIN("1234");
         game.setGameMode(GameMode.GuessThePrice);
-        game.setCategory(Category.SHOES);
+        game.setCategory(Category.SNEAKERS);
 
         List<Player> players = new ArrayList<>();
 

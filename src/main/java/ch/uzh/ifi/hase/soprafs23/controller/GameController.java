@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
-//import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.*;
 import ch.uzh.ifi.hase.soprafs23.rest.mapper.DTOMapper;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -47,7 +46,7 @@ public class GameController {
     @ResponseBody
     public GameGetDTO createLobby(@RequestBody GamePostDTO gamePostDTO){
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
-        Game createdGame = gameService.createGame(gameInput); //how do we solve this? with gameinput or updateSettings?
+        Game createdGame = gameService.createGame(gameInput); //how do we solve this? with game input or updateSettings?
         logger.info("Lobby " + createdGame.getGameId() + " created!");
         return addPlayersToGameGetDTO(createdGame);
     }
@@ -55,7 +54,7 @@ public class GameController {
     @PutMapping("/lobbies/{lobbyId}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) throws UnirestException, JsonProcessingException {
+    public GameGetDTO updateGameSetting(@PathVariable long lobbyId, @RequestBody GamePutDTO gamePutDTO) {
         Game updateGame = DTOMapper.INSTANCE.convertGamePutDTOToEntity(gamePutDTO);
         Game currentGame = gameService.updateGameSetting(updateGame, lobbyId);
 
@@ -99,15 +98,12 @@ public class GameController {
     @ResponseBody
     public void beginGame(@PathVariable long lobbyId) throws UnirestException, JsonProcessingException {
         //should only start if all player joined
-        if (!gameService.didAllPlayersJoin(lobbyId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot start the game until all players have joined the lobby.");
+        if(gameService.didAllPlayersJoin(lobbyId)){
+            //start the game
+            logger.info("Lobby with Id: " + lobbyId + " started the game!");
+            gameService.beginGame(lobbyId);
         }
-
-        // Start the game
-        logger.info("Lobby with Id: " + lobbyId + " started the game!");
-        gameService.beginGame(lobbyId);
-        //Question question = gameService.getNextQuestion(lobbyId);
-        //return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(question);
+        else throw new ResponseStatusException(HttpStatus.CONFLICT, "Something very bad happened!");
     }
 
     @GetMapping("/lobbies/{lobbyId}/beginStatus")
@@ -117,17 +113,16 @@ public class GameController {
         return gameService.isTheGameStarted(lobbyId);
     }
 
-    //did all player join the lobby?
-    /*
-    @GetMapping("/lobbies/{lobbyId}/players")
-    @ResponseStatus(HttpStatus.ACCEPTED)
+    //get round status
+    @GetMapping("lobbies/{lobbyId}/QuestionStatus/{playerId}")
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public Boolean didAllPlayersJoin(@PathVariable long lobbyId){
-
-        return gameService.didAllPlayersJoin(lobbyId);
+    public boolean isNextRoundSet(@PathVariable long lobbyId,@PathVariable long playerId){
+        //check if # of answers is equal to round of minigame,
+        // if not then getNextRound is not called by the gameMaster and nextQuestion cannot be called
+        return gameService.nextRoundReady(lobbyId, playerId);
     }
 
-     */
 
     //would it be better to get Int-th question of lobby with lobby id?
     //get next question of lobby
@@ -157,12 +152,12 @@ public class GameController {
     }
 
 
-    //AnswerPostDTO:
+    /*AnswerPostDTO:
     // long playerId;
     // int numOfRound;
     // String playerAnswer;
     // double timeUsed;
-    // Question question;
+    // Question question;*/
 
     //player with id answered
     @PostMapping("lobbies/{lobbyId}/player/{playerId}/answered")
@@ -171,7 +166,7 @@ public class GameController {
     public void playerAnswered(@PathVariable long lobbyId, @PathVariable long playerId, @RequestBody AnswerPostDTO answerPostDTO){
         logger.info("Player with Id: " + playerId + " and lobbyId: " + lobbyId + " answered");
         Answer answer = DTOMapper.INSTANCE.convertAnswerPostDTOtoEntity(answerPostDTO);
-        logger.info("" + answer);
+        logger.info("The player answer is: " + answer);
         gameService.savePlayerAnswer(playerId, answer);
     }
 
@@ -183,15 +178,6 @@ public class GameController {
         boolean allPlayerAnswered = gameService.didAllPlayersAnswer(lobbyId);
         logger.info("in lobby with Id: " + lobbyId + " did all player answer: " + allPlayerAnswered);
         return allPlayerAnswered;
-    }
-
-    //What if last Question is played? -> deleteLobby! and extract the players
-    @PostMapping("/lobbies/{lobbyId}/end")
-    @ResponseStatus(HttpStatus.ACCEPTED)
-    @ResponseBody
-    public List<Player> endGame(@PathVariable long lobbyId){
-        logger.info("Lobby with Id: " + lobbyId + "ended the game!");
-        return gameService.endGame(lobbyId);
     }
 
     @GetMapping("/lobbies/{lobbyId}/articles")
@@ -206,6 +192,21 @@ public class GameController {
         GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
         gameGetDTO.setPlayers(players);
         return gameGetDTO;
+    }
+
+    @GetMapping("/lobbies/{lobbyId}/end")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    @ResponseBody
+    public List<Player> endMiniGame(@PathVariable long lobbyId){
+        logger.info("Lobby with Id: " + lobbyId + "ended the game!");
+        return gameService.endMiniGame(lobbyId);
+    }
+
+    @PostMapping("/lobbies/{lobbyId}/end")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void clearLobby(@PathVariable long lobbyId){
+        gameService.clearLobby(lobbyId);
     }
 
 }

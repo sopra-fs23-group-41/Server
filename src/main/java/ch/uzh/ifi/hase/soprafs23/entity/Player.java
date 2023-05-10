@@ -16,28 +16,39 @@ public class Player {
 
     @Column(nullable = false)
     private long userId;
+
     @Column(nullable = false)
     private long gameId;
+
     @Column
     private int totalScore;
+
     @Column
     private int roundScore;
+
+    @Column
+    private int streak = 0;
+
     @Column
     @ElementCollection
     private List<Answer> answers = new ArrayList<>();
 
+    public void updatePointsAndStreak(int points){
+        if(points == 0){
+            this.streak = 0;
+            this.roundScore=0;
+        }
+        else{
+            this.roundScore = points;
+            this.totalScore += points;
+            this.streak++;
+        }
+    }
+
+
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
-
-    /*public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getToken() {
-        return this.token;
-    }
-    */
 
     public void setUserId(long userId) {
         this.userId = userId;
@@ -91,12 +102,11 @@ public class Player {
         return this.answers;
     }
 
-    public void copyFrom(Player other) {
-        this.answers = other.getAnswers();
-        this.totalScore = other.getTotalScore();
+    public Answer getAnswerOfRound(int round) {
+        return this.answers.get(round);
     }
 
-    public void updateScore(){
-
+    public int getStreak() {
+        return streak;
     }
 }

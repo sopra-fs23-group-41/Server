@@ -3,9 +3,9 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Internal User Representation
@@ -21,6 +21,7 @@ import java.util.Date;
 @Table(name = "USER")
 public class User implements Serializable {
 
+  @Serial
   private static final long serialVersionUID = 1L;
 
   @Id

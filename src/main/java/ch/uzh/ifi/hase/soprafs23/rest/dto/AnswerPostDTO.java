@@ -7,7 +7,6 @@ public class AnswerPostDTO {
     private int numOfRound;
     private String playerAnswer;
     private double timeUsed;
-    private Question question;
 
     public long getPlayerId() {
         return playerId;
@@ -41,11 +40,4 @@ public class AnswerPostDTO {
         this.timeUsed = timeUsed;
     }
 
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
 }

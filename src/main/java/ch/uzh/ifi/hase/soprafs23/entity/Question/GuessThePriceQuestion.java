@@ -2,17 +2,31 @@ package ch.uzh.ifi.hase.soprafs23.entity.Question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+@Entity
+@DiscriminatorValue("GTP")
 public class GuessThePriceQuestion extends Question{
 
+    @Column
     private final int bonus = 20;
-    private int timeToAnswer = 40;
+
+    @Column
+    private final int timeToAnswer = 40;
 
     // constructor
     public GuessThePriceQuestion(Article article){
         articles.add(article);
+    }
+
+    public GuessThePriceQuestion() {
+
     }
 
     @Override
@@ -28,28 +42,33 @@ public class GuessThePriceQuestion extends Question{
 
     @Override
     public void generateFalseAnswers() {
+        //get the true price
         String num = super.getTrueAnswer();
         float price = Float.parseFloat(num);
-        List<String> falseAnswers = new ArrayList<>();
-        for (float i = -1; i < 3; i++){
-            if(i==0){
-                continue;
-            }
-            else {
-                float ans = (float) (price*(1+i*0.1));
-                String wrong = String.format("%.1f", ans);
-                falseAnswers.add(wrong);
-            }
-        }
 
-        this.falseAnswers = falseAnswers;
+        //generate min max of possible wrong answers
+        int min = (int) (0.6 * price);
+        int max = (int) (1.4 * price);
+
+        //generate random floats
+        SecureRandom rand = new SecureRandom();
+        float rValue = rand.nextFloat();
+        float randomFloat1 = rValue * (max - min) + min;
+        float randomFloat2 = rValue * (max - min) + min;
+        float randomFloat3 = rValue * (max - min) + min;
+
+        //create list for wrong answers using question super class
+        super.falseAnswers.add(String.format("%.1f", randomFloat1));
+        super.falseAnswers.add(String.format("%.1f", randomFloat2));
+        super.falseAnswers.add(String.format("%.1f", randomFloat3));
     }
 
     //getters
+    @Override
     public int getTimeToAnswer(){
         return timeToAnswer;
     }
-
+    @Override
     public int getBonus(){
         return  this.bonus;
     }
