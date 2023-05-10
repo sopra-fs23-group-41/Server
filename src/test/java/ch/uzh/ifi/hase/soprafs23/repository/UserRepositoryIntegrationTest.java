@@ -22,7 +22,7 @@ public class UserRepositoryIntegrationTest {
   private UserRepository userRepository;
 
   @Test
-  public void findByName_success() {
+  public void findByUserName_success() {
       // given
       User user = new User();
       user.setUsername("firstname@lastname");
@@ -31,6 +31,7 @@ public class UserRepositoryIntegrationTest {
       user.setBirthdate(LocalDate.of(2002,4,24));
       user.setCreationDate(LocalDate.of(2002, 4 ,23));
       user.setToken("1");
+      user.setNumOfGameWon(2);
 
       entityManager.persist(user);
       entityManager.flush();
@@ -46,5 +47,6 @@ public class UserRepositoryIntegrationTest {
       assertEquals(found.getStatus(), user.getStatus());
       assertEquals(found.getBirthdate(), user.getBirthdate());
       assertEquals(found.getCreationDate(), user.getCreationDate());
+      assertEquals(found.getNumOfGameWon(), user.getNumOfGameWon());
   }
 }
