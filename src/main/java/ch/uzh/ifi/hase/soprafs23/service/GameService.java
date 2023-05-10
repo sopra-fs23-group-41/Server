@@ -80,11 +80,9 @@ public class GameService {
     public Game getGameById(long lobbyId) throws InvalidDataAccessResourceUsageException {
         Game game = gameRepository.findByGameId(lobbyId);
         if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby does not exist!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The requested lobby does not exist!");
         }
-
         return game;
-        //return GameRepo.findByLobbyId((int) lobbyId);
     }
     public long getLobbyIdByGamePin(String gamePin){
         Game game = gameRepository.findByGamePIN(gamePin);
@@ -120,13 +118,9 @@ public class GameService {
         }
     }
 
-    public Boolean didAllPlayersJoin(long lobbyId) {
+    public boolean didAllPlayersJoin(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
-        if (currentGame == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The lobby is not provided!");
-        }
-
         return currentGame.checkIfAllPlayerExist(players);
     }
 
@@ -232,7 +226,7 @@ public class GameService {
     public boolean isTheGameStarted(long lobbyId) {
         Game currentGame = gameRepository.findByGameId(lobbyId);
         if (currentGame == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No such lobby exist!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such lobby exist!");
         }
         //Game currentGame = GameRepo.findByLobbyId((int)lobbyId);
         if(currentGame.getMiniGame().size() == 0){

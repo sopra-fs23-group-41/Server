@@ -98,13 +98,12 @@ public class GameController {
     @ResponseBody
     public void beginGame(@PathVariable long lobbyId) throws UnirestException, JsonProcessingException {
         //should only start if all player joined
-        if (!gameService.didAllPlayersJoin(lobbyId)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cannot start the game until all players have joined the lobby.");
+        if(gameService.didAllPlayersJoin(lobbyId)){
+            //start the game
+            logger.info("Lobby with Id: " + lobbyId + " started the game!");
+            gameService.beginGame(lobbyId);
         }
-
-        // Start the game
-        logger.info("Lobby with Id: " + lobbyId + " started the game!");
-        gameService.beginGame(lobbyId);
+        else throw new ResponseStatusException(HttpStatus.CONFLICT, "Something very bad happened!");
     }
 
     @GetMapping("/lobbies/{lobbyId}/beginStatus")

@@ -60,7 +60,6 @@ public class Game implements Serializable {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-
     public Game(){}
 
     public boolean checkIfAllPlayersAnswered(List<Player> players) {
@@ -71,7 +70,6 @@ public class Game implements Serializable {
         return players.stream()
                 .allMatch(player -> player.getAnswers().size() == currentRound);
     }
-
 
     //methods
     public void startGame(GameMode gameMode, List<Player> players) throws UnirestException, JsonProcessingException {
