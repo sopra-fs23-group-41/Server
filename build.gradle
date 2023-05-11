@@ -64,9 +64,6 @@ sonarqube {
       property "sonar.projectKey", "sopra-fs23-group-41_Server"
       property "sonar.organization", "sopra-fs23-group-41"
       property "sonar.host.url", "https://sonarcloud.io"
-      property 'sonar.analysis.mode', ''
-      property 'sonar.pullrequest.key', ''
-      property 'sonar.pullrequest.branch', ''
   }
 }
 
