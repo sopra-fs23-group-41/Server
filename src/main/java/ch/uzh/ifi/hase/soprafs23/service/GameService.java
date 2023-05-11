@@ -59,9 +59,8 @@ public class GameService {
     public Game updateGameSetting(Game currentGame, long lobbyId) {
         Game game = gameRepository.findByGameId(lobbyId);
         if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby with Id: " + lobbyId+ " does not exist!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby with Id: " + lobbyId + " does not exist!");
         }
-
         game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
 
         gameRepository.save(game);
