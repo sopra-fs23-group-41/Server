@@ -52,7 +52,8 @@ public class GameRepositoryIntegrationTest {
         Game found = gameRepository.findByGamePIN(game.getGamePIN());
 
         //then
-        assertNotNull(found.getGameId());
+        Long id = found.getGameId();
+        assertNotNull(id);
         assertNotNull(found.getMiniGame());
         assertNotNull(found.getArticleList());
         assertEquals(found.getGameMode(), game.getGameMode());

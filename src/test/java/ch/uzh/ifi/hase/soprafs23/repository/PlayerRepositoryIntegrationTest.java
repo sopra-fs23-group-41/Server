@@ -42,7 +42,8 @@ public class PlayerRepositoryIntegrationTest {
         Player found = playerRepository.findByUserId(player.getUserId());
 
         // then
-        assertNotNull(found.getPlayerId());
+        Long id = found.getPlayerId();
+        assertNotNull(id);
         assertNotNull(found.getAnswers());
         assertEquals(found.getUserId(), player.getUserId());
         assertEquals(found.getGameId(), player.getGameId());
