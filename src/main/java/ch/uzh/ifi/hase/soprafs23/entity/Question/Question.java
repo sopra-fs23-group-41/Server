@@ -21,7 +21,7 @@ public abstract class Question implements Serializable {
     @Id
     @GeneratedValue
     @Column(unique = true)
-    private long Id;
+    private long id;
 
     @ElementCollection
     protected List<Article> articles = new ArrayList<>();
@@ -86,16 +86,12 @@ public abstract class Question implements Serializable {
         this.question_type = question_type;
     }
 
-    public String getQuestion_type() {
-        return question_type;
-    }
-
     public long getId() {
-        return Id;
+        return id;
     }
 
     public void setId(long id) {
-        Id = id;
+        this.id = id;
     }
 
     public int getBonus(){
@@ -117,13 +113,5 @@ public abstract class Question implements Serializable {
 
     public void setPicUrls(List<String> picUrls) {
         this.picUrls = picUrls;
-    }
-
-    public MiniGame getMiniGame() {
-        return miniGame;
-    }
-
-    public void setMiniGame(MiniGame miniGame) {
-        this.miniGame = miniGame;
     }
 }
