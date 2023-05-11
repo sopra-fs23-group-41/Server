@@ -124,7 +124,7 @@ public class Game implements Serializable {
         long count = miniGames.get(0).getGameQuestions().stream()
                 .filter(Question::isUsed)
                 .count();
-        if (count < rounds) {
+        if (count < rounds-1) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"The game is not ended yet.");
         }
 

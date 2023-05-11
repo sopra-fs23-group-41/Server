@@ -6,9 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+
 
 @Entity
 @DiscriminatorValue("GTP")
@@ -52,10 +50,9 @@ public class GuessThePriceQuestion extends Question{
 
         //generate random floats
         SecureRandom rand = new SecureRandom();
-        float rValue = rand.nextFloat();
-        float randomFloat1 = rValue * (max - min) + min;
-        float randomFloat2 = rValue * (max - min) + min;
-        float randomFloat3 = rValue * (max - min) + min;
+        float randomFloat1 = rand.nextFloat() * (max - min) + min;
+        float randomFloat2 = rand.nextFloat() * (max - min) + min;
+        float randomFloat3 = rand.nextFloat() * (max - min) + min;
 
         //create list for wrong answers using question super class
         super.falseAnswers.add(String.format("%.1f", randomFloat1));
