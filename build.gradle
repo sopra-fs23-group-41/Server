@@ -61,7 +61,7 @@ bootJar {
 
 sonarqube {
   properties {
-    property "sonar.projectKey", "sopra-fs23-group-41_Client"
+    property "sonar.projectKey", "sopra-fs23-group-41_Server"
     property "sonar.organization", "sopra-fs23-group-41"
     property "sonar.host.url", "https://sonarcloud.io"
   }
