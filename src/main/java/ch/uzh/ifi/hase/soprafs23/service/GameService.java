@@ -28,7 +28,6 @@ public class GameService {
     private final PlayerRepository playerRepository;
 
     private final UserRepository userRepository;
-    private long gameId = 0;
     Logger logger = LoggerFactory.getLogger(GameService.class);
 
     @Autowired
@@ -40,20 +39,21 @@ public class GameService {
     }
 
     public Game createGame(Game newGame) {
-        newGame.createGamePIN();
-        newGame.setGameMode(GameMode.GuessThePrice);
-        newGame.setGameId(gameId);
-        newGame.setRounds(2);
-        gameId++;
+        Game game = new Game();
+        game.setNumOfPlayer(newGame.getNumOfPlayer());
+        game.setGameType(newGame.getGameType());
+        game.setRounds(newGame.getRounds());
+        game.setGameMode(newGame.getGameMode());
+        game.setCategory(newGame.getCategory());
 
-        removePlayersFromLobby(newGame.getGameId());
-        gameRepository.save(newGame);
+        game.createGamePIN();
+
+        removePlayersFromLobby(game.getGameId());
+        gameRepository.save(game);
         gameRepository.flush();
 
-        //GameRepo.addGame((int) newGame.getGameId(), newGame);
-
-        logger.debug("A new Lobby has started: {}", newGame);
-        return newGame;
+        logger.debug("A new Lobby has started: {}", game);
+        return game;
     }
 
     public Game updateGameSetting(Game currentGame, long lobbyId) {
