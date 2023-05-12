@@ -154,10 +154,6 @@ public class Game implements Serializable {
     }
 
     //getters and setters
-    public Question getQuestionOfRound(int round){
-        return this.miniGames.get(0).getGameQuestions().get(round);
-    }
-
     public void setGamePIN(String gamePIN) {
         this.gamePIN = gamePIN;
     }
@@ -219,7 +215,6 @@ public class Game implements Serializable {
     public int getCurrentRound(){
         return miniGames.get(0).getCurrentRound();
     }
-
     public List<Article> getArticleList() {
         return articleList;
     }

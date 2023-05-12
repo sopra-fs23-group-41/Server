@@ -56,10 +56,8 @@ public class GameService {
     }
 
     public Game updateGameSetting(Game currentGame, long lobbyId) {
-        Game game = gameRepository.findByGameId(lobbyId);
-        if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The requested lobby with Id: " + lobbyId + " does not exist!");
-        }
+        Game game = getGameById(lobbyId);
+
         game.updateGameSetting(currentGame.getGameMode(),currentGame.getRounds(), currentGame.getNumOfPlayer(),currentGame.getCategory());
 
         gameRepository.save(game);
@@ -129,7 +127,7 @@ public class GameService {
     public Question getCurrentRoundQuestion(long lobbyId){
         Game currentGame = getGameById(lobbyId);
         if (currentGame == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong lobby!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Something wrong with lobby!");
         }
 
         return currentGame.getCurrentRoundQuestion();
@@ -195,7 +193,7 @@ public class GameService {
         }
 
         currentRound = game.getCurrentRound() - 1;
-        currentQuestion = game.getQuestionOfRound(currentRound);
+        currentQuestion = game.getCurrentRoundQuestion();
         GameJudge aGameJudge = new GameJudge(currentQuestion, player, currentRound);
         points = aGameJudge.calculatePoints();
 
