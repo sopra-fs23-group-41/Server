@@ -240,9 +240,9 @@ public class GameService {
 
     private void gameErrors(Game currentGame, List<Player> players, long lobbyId) {
         if (currentGame == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game with Id" + lobbyId + " found!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No game with Id" + lobbyId + " found!");
         }
-        else if (players ==null) {
+        else if (players == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Players are not initialize in Lobby with Id " + currentGame.getGameId());
         }
         else if (players.isEmpty()){
