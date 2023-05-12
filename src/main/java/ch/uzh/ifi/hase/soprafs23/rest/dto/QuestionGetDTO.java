@@ -2,7 +2,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionGetDTO {

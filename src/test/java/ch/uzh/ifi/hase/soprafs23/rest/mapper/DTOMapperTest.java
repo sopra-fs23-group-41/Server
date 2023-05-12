@@ -48,6 +48,7 @@ public class DTOMapperTest {
         user.setBirthdate(LocalDate.of(2002,4,24));
         user.setCreationDate(LocalDate.of(2002, 4 ,23));
         user.setToken("1");
+        user.setNumOfGameWon(0);
 
         // MAP -> Create UserGetDTO
         UserGetDTO userGetDTO = DTOMapper.INSTANCE.convertEntityToUserGetDTO(user);
@@ -59,6 +60,7 @@ public class DTOMapperTest {
         assertEquals(user.getStatus(), userGetDTO.getStatus());
         assertEquals(user.getCreationDate(), userGetDTO.getCreationDate());
         assertEquals(user.getBirthdate(), userGetDTO.getBirthdate());
+        assertEquals(user.getNumOfGameWon(), userGetDTO.getNumOfGameWon());
     }
 
     @Test

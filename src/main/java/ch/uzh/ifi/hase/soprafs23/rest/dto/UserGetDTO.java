@@ -3,7 +3,6 @@ package ch.uzh.ifi.hase.soprafs23.rest.dto;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class UserGetDTO {
 

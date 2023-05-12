@@ -1,7 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public class UserPostDTO {
 
