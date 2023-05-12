@@ -33,8 +33,10 @@ public class GameJudge {
 
         if(answerIsCorrect(this.playerAnswer.getPlayerAnswer(), this.question.getTrueAnswer())){
             //calculate the points
-            points = (int) (10/this.playerAnswer.getTimeUsed());
-            points *= this.question.getTimeToAnswer() * question.getBonus();
+            double point;
+            point = 1/this.playerAnswer.getTimeUsed();
+            point *= this.question.getTimeToAnswer() * question.getBonus();
+            points = (int) (point);
 
             //look for 3 streak? and add bonus points of 300
             if(this.player.getStreak() == 2){
@@ -50,13 +52,7 @@ public class GameJudge {
             }
 
         }
-        else if(!answerIsCorrect(this.playerAnswer.getPlayerAnswer(), this.question.getTrueAnswer())){
-            //look if the last 3 answers were wrong
-            //if yes, minus points
-            //else nothing
-            points = 0;
-        }
-        if(bonusround(round)){
+        if(bonusRound(round)){
             points *= 2;
         }
 
@@ -64,7 +60,7 @@ public class GameJudge {
         return points;
     }
 
-    private boolean bonusround(int round){
+    private boolean bonusRound(int round){
         return round % 3 == 0;
     }
 
