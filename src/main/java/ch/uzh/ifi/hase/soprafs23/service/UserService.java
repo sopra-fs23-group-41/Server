@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
-import org.mindrot.jbcrypt.BCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -33,6 +33,7 @@ public class UserService {
 
   private final UserRepository userRepository;
   private final PlayerRepository playerRepository;
+  private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   @Autowired
   public UserService(@Qualifier("userRepository") UserRepository userRepository,
@@ -52,8 +53,8 @@ public class UserService {
     checkIfUserExists(newUser);
 
     // hash the password using BCrypt
-    String hashedPassword = BCrypt.hashpw(newUser.getPassword(), BCrypt.gensalt(12));
-    newUser.setPassword(hashedPassword);
+      String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+      newUser.setPassword(encodedPassword);
 
     // saves the given entity but data is only persisted in the database once
     // flush() is called
@@ -114,7 +115,7 @@ public class UserService {
 
     public User loginUser(String loginUsername, String password) {
         User userToLogin = userRepository.findByUsername(loginUsername);
-        if (userToLogin == null || !BCrypt.checkpw(password, userToLogin.getPassword()))  {
+        if (userToLogin == null || !passwordEncoder.matches(password, userToLogin.getPassword()))  {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid login credentials, make sure that username and password are correct.");
         }
         if (userToLogin.getStatus() == UserStatus.ONLINE) {
@@ -129,7 +130,7 @@ public class UserService {
 
     public void logoutUser(long id) {
       User user = getUserById(id);
-      if (user == null){
+      if (user == null || user.getStatus() == UserStatus.OFFLINE){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user found!");
       }
 
@@ -148,27 +149,24 @@ public class UserService {
     }
 
     public void updateUserProfile(User currentUser) {
-      Optional<User> userOp = userRepository.findById(currentUser.getId());
-        if (userOp.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    String.format("Could not find user with id %d.", currentUser.getId()));
-        }
+        User user = getUserById(currentUser.getId());
         String message = "This user name is taken. Please use another one";
 
-        User user = userOp.get();
         if (userRepository.findByUsername(currentUser.getUsername()) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
         }
         user.setUsername(currentUser.getUsername());
-        String hashedPassword = BCrypt.hashpw(currentUser.getPassword(), BCrypt.gensalt(12));
-        user.setPassword(hashedPassword);
+        String encodedPassword = passwordEncoder.encode(currentUser.getPassword());
+        user.setPassword(encodedPassword);
         user.setBirthdate(currentUser.getBirthdate());
+
+        userRepository.save(user);
+        userRepository.flush();
     }
 
     public List<User> getUserLeaderBoard(){
       List<User> users = userRepository.findAll();
       users.sort((u1, u2) -> u2.getNumOfGameWon() - u1.getNumOfGameWon());
-
       return users;
     }
 }
