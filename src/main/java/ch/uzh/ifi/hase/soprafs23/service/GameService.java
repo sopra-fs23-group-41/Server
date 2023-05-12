@@ -66,7 +66,6 @@ public class GameService {
         gameRepository.flush();
 
         return game;
-        //Game game = GameRepo.findByLobbyId((int) lobbyId);
     }
 
     public Game getGameById(long lobbyId) throws InvalidDataAccessResourceUsageException {
@@ -83,7 +82,6 @@ public class GameService {
         }
 
         return game.getGameId();
-        //return GameRepo.findByGamePin(gamePin).getGameId();
     }
 
     public void beginGame(long lobbyId) throws UnirestException, JsonProcessingException {
@@ -94,18 +92,17 @@ public class GameService {
         }
 
         currentGame.startGame(currentGame.getGameMode(), players);
-        //MiniGame currentMiniGame = currentGame.getMiniGame();
 
         gameRepository.save(currentGame);
         gameRepository.flush();
 
-        logger.info("A new game has been initialized and is ready to start");
+        logger.info("A new game with Id {} has been initialized and is ready to start", currentGame.getGameId());
     }
 
     private void removePlayersFromLobby(long gameId){
         List<Player> playerList = playerRepository.findByGameId(gameId);
         for (Player player : playerList){
-            logger.info("Player with Id : " + player.getPlayerName() + "deleted!");
+            logger.info("Player with Id : {} deleted!", player.getPlayerName());
             playerRepository.deleteById(player.getPlayerId());
         }
     }
@@ -119,9 +116,7 @@ public class GameService {
     public Question getNextRound(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
-        if (currentGame == null || players == null || players.size() == 0){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is something wrong with the game!");
-        }
+        gameErrors(currentGame, players, lobbyId);
 
         Question question = currentGame.getNextRound(players);
         gameRepository.save(currentGame);
@@ -157,9 +152,7 @@ public class GameService {
     public boolean didAllPlayersAnswer(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
-        if (currentGame == null || players == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is something wrong with the game!");
-        }
+        gameErrors(currentGame, players, lobbyId);
 
         return currentGame.checkIfAllPlayersAnswered(players);
     }
@@ -167,9 +160,7 @@ public class GameService {
     public List<Player> endMiniGame(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
-        if (currentGame == null || players == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "There is something wrong with the game!");
-        }
+        gameErrors(currentGame, players, lobbyId);
 
         List<Player> leaderBoard = currentGame.endGame(players);
 
@@ -190,8 +181,6 @@ public class GameService {
                 user.setNumOfGameWon(user.getNumOfGameWon() + 1);
             }
         }
-
-        //gameRepository.deleteByGameId(lobbyId);
         return leaderBoard;
     }
 
@@ -202,7 +191,7 @@ public class GameService {
         Game game = gameRepository.findByGameId(lobbyId);
 
         if (game == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game with that Id found!");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game with that Id "+ lobbyId+ " found!");
         }
 
         currentRound = game.getCurrentRound() - 1;
@@ -220,12 +209,11 @@ public class GameService {
         if (currentGame == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such lobby exist!");
         }
-        //Game currentGame = GameRepo.findByLobbyId((int)lobbyId);
-        if(currentGame.getMiniGame().size() == 0){
+        if(currentGame.getMiniGame().isEmpty()){
             return false;
         }
         else {
-            return (currentGame.getMiniGame().get(0).getGameQuestions().size() > 0);
+            return (!currentGame.getMiniGame().get(0).getGameQuestions().isEmpty());
         }
     }
 
@@ -237,7 +225,6 @@ public class GameService {
         else {
             return currentGame.getArticleList();
         }
-        //Game currentGame = GameRepo.findByLobbyId((int) lobbyId);
     }
 
     public void clearLobby(long lobbyId) {
@@ -249,5 +236,18 @@ public class GameService {
         Game game = gameRepository.findByGameId(lobbyId);
         Player player = playerRepository.findByPlayerId(playerId);
         return game.getCurrentRound() == player.getAnswers().size();
+    }
+
+    private void gameErrors(Game currentGame, List<Player> players, long lobbyId) {
+        if (currentGame == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No game with Id" + lobbyId + " found!");
+        }
+        else if (players ==null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Players are not initialize in Lobby with Id " + currentGame.getGameId());
+        }
+        else if (players.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No player assigned to Lobby with Id " + currentGame.getGameId() + " yet!");
+        }
+
     }
 }

@@ -13,10 +13,10 @@ import java.security.SecureRandom;
 public class GuessThePriceQuestion extends Question{
 
     @Column
-    private final int bonus = 20;
+    private static final int BONUS = 20;
 
     @Column
-    private final int timeToAnswer = 40;
+    private static final int TIME_TO_ANSWER = 40;
 
     // constructor
     public GuessThePriceQuestion(Article article){
@@ -63,11 +63,11 @@ public class GuessThePriceQuestion extends Question{
     //getters
     @Override
     public int getTimeToAnswer(){
-        return timeToAnswer;
+        return TIME_TO_ANSWER;
     }
     @Override
     public int getBonus(){
-        return  this.bonus;
+        return  BONUS;
     }
 
 }

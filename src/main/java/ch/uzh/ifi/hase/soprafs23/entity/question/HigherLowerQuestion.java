@@ -12,10 +12,10 @@ import javax.persistence.Entity;
 public class HigherLowerQuestion extends Question{
 
     @Column
-    private final int bonus = 10;
+    private static final int BONUS = 10;
 
     @Column
-    private final int timeToAnswer = 30;
+    private static final int TIME_TO_ANSWER = 30;
 
     //constructor
     public HigherLowerQuestion(Article article1, Article article2) {
@@ -60,11 +60,11 @@ public class HigherLowerQuestion extends Question{
     }
     @Override
     public int getTimeToAnswer(){
-        return  this.timeToAnswer;
+        return  TIME_TO_ANSWER;
     }
     @Override
     public int getBonus(){
-        return this.bonus;
+        return BONUS;
     }
 
 }

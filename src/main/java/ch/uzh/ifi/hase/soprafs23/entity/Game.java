@@ -133,7 +133,7 @@ public class Game implements Serializable {
 
 
     public boolean checkIfAllPlayerExist(List<Player> players){
-        if(players.size() == 0){
+        if(players.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No players in the Lobby!");
         }
         return (players.size() == this.numOfPlayer);
