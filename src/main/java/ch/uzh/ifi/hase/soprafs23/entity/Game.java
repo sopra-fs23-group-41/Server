@@ -60,7 +60,9 @@ public class Game implements Serializable {
     @Enumerated(EnumType.STRING)
     private Category category;
 
-    public Game(){}
+    public Game(){
+        //for constructing the Entity
+    }
 
     public boolean checkIfAllPlayersAnswered(List<Player> players) {
         if (!miniGames.get(0).checkIfAllPlayersAnswered(players)) {
@@ -100,8 +102,6 @@ public class Game implements Serializable {
         this.numOfPlayer = numOfPlayer;
         this.category = category;
 
-        //createArticles();
-        //can we put creatArticle() here?
     }
 
     public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
@@ -116,7 +116,7 @@ public class Game implements Serializable {
     }
 
     public Question getCurrentRoundQuestion(){
-        //currentRounds starts with 1, so the index should be -1;
+        //The current round starts with 1, so the index should be -1
         return miniGames.get(0).getGameQuestions().get(miniGames.get(0).getCurrentRound()-1);
     }
 
@@ -142,7 +142,7 @@ public class Game implements Serializable {
     public List<Player> getGameLeaderBoard(List<Player> players){
         return players.stream()
                 .sorted(Comparator.comparingInt(Player::getTotalScore).reversed())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public void createGamePIN(){

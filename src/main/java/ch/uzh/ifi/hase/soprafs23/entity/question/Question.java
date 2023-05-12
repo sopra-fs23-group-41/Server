@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "question_type", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "questionType", discriminatorType = DiscriminatorType.STRING)
 public abstract class Question implements Serializable {
 
     @Serial
@@ -24,22 +24,22 @@ public abstract class Question implements Serializable {
     private long id;
 
     @ElementCollection
-    protected List<Article> articles = new ArrayList<>();
+    transient List<Article> articles = new ArrayList<>();
 
     @Column
     protected String trueAnswer;
 
     @ElementCollection
-    protected List<String> falseAnswers = new ArrayList<>();
+    transient List<String> falseAnswers = new ArrayList<>();
 
     @ElementCollection
-    protected List<String> picUrls = new ArrayList<>();
+    transient List<String> picUrls = new ArrayList<>();
 
     @Column
     private boolean isUsed = false;
 
     @Column(insertable = false, updatable = false)
-    private String question_type;
+    private String questionType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miniGameId")
@@ -47,8 +47,10 @@ public abstract class Question implements Serializable {
     private MiniGame miniGame;
 
     abstract void generateFalseAnswers();
-    abstract protected void setPicUrl();
-    abstract protected void setTrueAnswer();
+
+    protected abstract void setPicUrl();
+
+    protected abstract void setTrueAnswer();
 
     // methods
     public void initializeQuestion(){
@@ -82,8 +84,8 @@ public abstract class Question implements Serializable {
         return falseAnswers;
     }
 
-    public void setQuestion_type(String question_type) {
-        this.question_type = question_type;
+    public void setQuestionType(String questionType) {
+        this.questionType = questionType;
     }
 
     public long getId() {

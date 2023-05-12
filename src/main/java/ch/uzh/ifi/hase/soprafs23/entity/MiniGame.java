@@ -73,7 +73,7 @@ public class MiniGame implements Serializable {
             case GuessThePrice -> {
                 for (int i = 0; i < this.rounds; i++) {
                     GuessThePriceQuestion question = new GuessThePriceQuestion(allArticles.get(i));
-                    question.setQuestion_type("GTP");
+                    question.setQuestionType("GTP");
                     questions.add(question);
                 }
             }
@@ -81,7 +81,7 @@ public class MiniGame implements Serializable {
                 for (int i = 0; i < allArticles.size(); i += 2) {
                     List<Article> newList = allArticles.subList(i, i + 2);
                     HigherLowerQuestion question = new HigherLowerQuestion(newList.get(0), newList.get(1));
-                    question.setQuestion_type("HOL");
+                    question.setQuestionType("HOL");
                     questions.add(question);
                 }
             }
@@ -90,7 +90,7 @@ public class MiniGame implements Serializable {
                     List<Article> newList = allArticles.subList(i, i + 4);
                     List<Article> fourArticles = new ArrayList<>(newList);
                     MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
-                    question.setQuestion_type("ME");
+                    question.setQuestionType("ME");
                     questions.add(question);
                 }
             }

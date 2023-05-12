@@ -17,7 +17,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User Service
@@ -65,7 +64,7 @@ public class UserService {
     return newUser;
   }
 
-  //add user to game with gamepin
+  //add user to game with game pin
   public Player addUserToLobby(long userId, long lobbyId){
       //check if user exists
       User userToConvert = userRepository.findById(userId);
@@ -168,12 +167,7 @@ public class UserService {
 
     public List<User> getUserLeaderBoard(){
       List<User> users = userRepository.findAll();
-      users.sort(new Comparator<User>() {
-          @Override
-          public int compare(User u1, User u2) {
-              return u2.getNumOfGameWon() - u1.getNumOfGameWon();
-          }
-      });
+      users.sort((u1, u2) -> u2.getNumOfGameWon() - u1.getNumOfGameWon());
 
       return users;
     }
