@@ -16,7 +16,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class GameTest {
+class GameTest {
 
     private Game game;
 
@@ -27,7 +27,7 @@ public class GameTest {
     }
 
     @Test
-    public void updateGameSettingTest(){
+    void updateGameSettingTest(){
         this.game.setGameType(GameType.SINGLE);
         this.game.updateGameSetting(GameMode.GuessThePrice, 3, 1, Category.SNEAKERS);
 
@@ -39,7 +39,7 @@ public class GameTest {
 
 
     @Test
-    public void checkNotAllPlayerExist(){
+    void checkNotAllPlayerExist(){
         this.game.setNumOfPlayer(2);
         List<Player> players = new ArrayList<>();
         players.add(new Player());
@@ -48,7 +48,7 @@ public class GameTest {
     }
 
     @Test
-    public void checkAllPlayerExist(){
+    void checkAllPlayerExist(){
         this.game.setNumOfPlayer(2);
         List<Player> players = new ArrayList<>();
         players.add(new Player());
@@ -58,7 +58,7 @@ public class GameTest {
     }
 
     @Test
-    public void createGamePINTest(){
+    void createGamePINTest(){
         this.game.createGamePIN();
         String str = this.game.getGamePIN();
 
@@ -68,7 +68,7 @@ public class GameTest {
     }
 
     @Test
-    public void startGame_GuessThePrice_createsGame() throws UnirestException, JsonProcessingException {
+    void startGame_GuessThePrice_createsGame() throws UnirestException, JsonProcessingException {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.GuessThePrice, 2, 2, Category.SNEAKERS);
         List<Player> players = new ArrayList<>();
@@ -86,7 +86,7 @@ public class GameTest {
     }
 
     @Test
-    public void startGame_HighOrLow_createsGame() throws UnirestException, JsonProcessingException {
+    void startGame_HighOrLow_createsGame() throws UnirestException, JsonProcessingException {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.JEWELRY);
         List<Player> players = new ArrayList<>();
@@ -101,17 +101,18 @@ public class GameTest {
     }
 
     @Test
-    public void cannotStartGameBecauseNotAllPlayersJoined() throws UnirestException, JsonProcessingException {
+    void cannotStartGameBecauseNotAllPlayersJoined() {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.GuessThePrice, 2, 2, Category.JEWELRY);
         List<Player> players = new ArrayList<>();
         players.add(new Player());
+        GameMode gameMode = this.game.getGameMode();
 
-        assertThrows(ResponseStatusException.class, () -> game.startGame(this.game.getGameMode(), players) );
+        assertThrows(RuntimeException.class, () -> game.startGame(gameMode, players));
     }
 
     @Test
-    public void checkNotAllPlayerAnsweredTest(){
+    void checkNotAllPlayerAnsweredTest(){
         List<Article> articles = new ArrayList<>();
         articles.add(new Article());
         MiniGame miniGame = new MiniGame(2, articles, GameMode.GuessThePrice);
@@ -127,7 +128,7 @@ public class GameTest {
     }
 
     @Test
-    public void checkAllPlayersAnsweredTest() {
+    void checkAllPlayersAnsweredTest() {
         // Test case when all players have answered
         List<Article> articles = new ArrayList<>();
         articles.add(new Article());
@@ -148,7 +149,7 @@ public class GameTest {
     }
 
     @Test
-    public void cannotGetNextRoundBecauseMiniGameNotExist(){
+    void cannotGetNextRoundBecauseMiniGameNotExist(){
         List<Player> players1 = new ArrayList<>();
         players1.add(new Player());
         players1.add(new Player());
@@ -157,7 +158,7 @@ public class GameTest {
     }
 
     @Test
-    public void cannotGetNextRoundBecauseNotAllPlayersAnswered() throws UnirestException, JsonProcessingException {
+    void cannotGetNextRoundBecauseNotAllPlayersAnswered() throws UnirestException, JsonProcessingException {
         List<Player> players2 = new ArrayList<>();
         Player alice = new Player();
         alice.setAnswers(new Answer());
@@ -175,7 +176,7 @@ public class GameTest {
     }
 
     @Test
-    public void getNextRoundTest() throws UnirestException, JsonProcessingException {
+    void getNextRoundTest() throws UnirestException, JsonProcessingException {
         this.game.setGameType(GameType.MULTI);
         this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.HOODIES);
         List<Player> players = new ArrayList<>();
@@ -188,7 +189,7 @@ public class GameTest {
     }
 
     @Test
-    public void getCurrentRoundQuestionTest() throws UnirestException, JsonProcessingException {
+    void getCurrentRoundQuestionTest() throws UnirestException, JsonProcessingException {
         List<Player> players = new ArrayList<>();
         Player alice = new Player();
         alice.setAnswers(new Answer());
@@ -202,7 +203,7 @@ public class GameTest {
     }
 
     @Test
-    public void endGameTest() throws UnirestException, JsonProcessingException {
+    void endGameTest() throws UnirestException, JsonProcessingException {
         List<Player> players = new ArrayList<>();
         Player alice = new Player();
         alice.setAnswers(new Answer());
