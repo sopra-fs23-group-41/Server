@@ -4,7 +4,7 @@ import ch.uzh.ifi.hase.soprafs23.asosapi.AsosApiUtility;
 import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;

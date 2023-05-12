@@ -1,8 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;

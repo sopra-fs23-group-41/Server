@@ -2,14 +2,12 @@ package ch.uzh.ifi.hase.soprafs23.entity;
 
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.GuessThePriceQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.HigherLowerQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.MostExpensiveQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
+import ch.uzh.ifi.hase.soprafs23.entity.question.HigherLowerQuestion;
+import ch.uzh.ifi.hase.soprafs23.entity.question.MostExpensiveQuestion;
+import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.*;
 import java.io.Serial;

@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
-import ch.uzh.ifi.hase.soprafs23.entity.Question.Question;
+import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import java.util.Objects;
 
 public class GameJudge {

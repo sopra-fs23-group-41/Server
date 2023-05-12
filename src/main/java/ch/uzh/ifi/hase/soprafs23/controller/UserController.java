@@ -84,7 +84,7 @@ public class UserController {
   @PutMapping("/users/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @ResponseBody
-  public UserGetDTO updateUserProfile(@RequestBody UserPutDTO userPutDTO, @PathVariable String id){
+  public UserGetDTO updateUserProfile(@RequestBody UserPutDTO userPutDTO){
       User currentUser = DTOMapper.INSTANCE.convertUserPutDTOToEntity(userPutDTO);
       userService.updateUserProfile(currentUser);
 

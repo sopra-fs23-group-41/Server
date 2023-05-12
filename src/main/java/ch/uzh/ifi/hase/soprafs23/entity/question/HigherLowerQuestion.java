@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.entity.Question;
+package ch.uzh.ifi.hase.soprafs23.entity.question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
