@@ -47,7 +47,7 @@ public class GameController {
     public GameGetDTO createLobby(@RequestBody GamePostDTO gamePostDTO){
         Game gameInput = DTOMapper.INSTANCE.convertGamePostDTOtoEntity(gamePostDTO);
         Game createdGame = gameService.createGame(gameInput); //how do we solve this? with game input or updateSettings?
-        logger.info("Lobby " + createdGame.getGameId() + " created!");
+        logger.info("Lobby {} created!", createdGame.getGameId());
         return addPlayersToGameGetDTO(createdGame);
     }
 
@@ -69,7 +69,7 @@ public class GameController {
     public PlayerGetDTO addPlayerToGame(@RequestBody PlayerPostDTO playerPostDTO, @PathVariable String gamePin){
         long userId = playerPostDTO.getId();
         Player player = userService.addUserToLobby(userId, gameService.getLobbyIdByGamePin(gamePin));
-        logger.info("User with id: " + userId + " added to Lobby with id: " + player.getGameId() + " as Player with id: " + player.getPlayerId());
+        logger.info("User with id: {} added to Lobby with id: {} as Player with id: {}" , userId, player.getGameId(), player.getPlayerId());
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }
 
@@ -100,7 +100,7 @@ public class GameController {
         //should only start if all player joined
         if(gameService.didAllPlayersJoin(lobbyId)){
             //start the game
-            logger.info("Lobby with Id: " + lobbyId + " started the game!");
+            logger.info("Lobby with Id: {} started the game!", lobbyId);
             gameService.beginGame(lobbyId);
         }
         else throw new ResponseStatusException(HttpStatus.CONFLICT, "Something very bad happened!");
@@ -130,7 +130,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public QuestionGetDTO getQuestion(@PathVariable long lobbyId){
-        logger.info("Lobby with Id: " + lobbyId + "requested next question");
+        logger.info("Lobby with Id: {} requested next question", lobbyId);
         Question nextQuestion = gameService.getCurrentRoundQuestion(lobbyId);
         return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
     }
@@ -146,27 +146,27 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public QuestionGetDTO getNextRound(@PathVariable long lobbyId){
-        logger.info("Lobby with Id: " + lobbyId + "requested next question");
+        logger.info("Lobby with Id: {} requested next question", lobbyId);
         Question nextQuestion = gameService.getNextRound(lobbyId);
         return DTOMapper.INSTANCE.convertQuestionToQuestionGetDTO(nextQuestion);
     }
 
 
-    /*AnswerPostDTO:
-    // long playerId;
-    // int numOfRound;
-    // String playerAnswer;
-    // double timeUsed;
-    // Question question;*/
+    /*AnswerPostDTO
+    long playerId
+    int numOfRound
+    String playerAnswer
+    double timeUsed
+    Question question */
 
     //player with id answered
     @PostMapping("lobbies/{lobbyId}/player/{playerId}/answered")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public void playerAnswered(@PathVariable long lobbyId, @PathVariable long playerId, @RequestBody AnswerPostDTO answerPostDTO){
-        logger.info("Player with Id: " + playerId + " and lobbyId: " + lobbyId + " answered");
+        logger.info("Player with Id: {} and lobbyId: {} answered", playerId, lobbyId);
         Answer answer = DTOMapper.INSTANCE.convertAnswerPostDTOtoEntity(answerPostDTO);
-        logger.info("The player answer is: " + answer);
+        logger.info("The player answer is: {} ", answer);
         gameService.savePlayerAnswer(playerId, answer);
     }
 
@@ -176,7 +176,7 @@ public class GameController {
     @ResponseBody
     public boolean allPlayerAnswered(@PathVariable long lobbyId){
         boolean allPlayerAnswered = gameService.didAllPlayersAnswer(lobbyId);
-        logger.info("in lobby with Id: " + lobbyId + " did all player answer: " + allPlayerAnswered);
+        logger.info("in lobby with Id: {} did all player answer: {}", lobbyId, allPlayerAnswered);
         return allPlayerAnswered;
     }
 
@@ -198,7 +198,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
     public List<Player> endMiniGame(@PathVariable long lobbyId){
-        logger.info("Lobby with Id: " + lobbyId + "ended the game!");
+        logger.info("Lobby with Id: {} ended the game!", lobbyId);
         return gameService.endMiniGame(lobbyId);
     }
 
