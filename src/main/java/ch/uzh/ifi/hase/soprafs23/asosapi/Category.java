@@ -1,4 +1,4 @@
-package ch.uzh.ifi.hase.soprafs23.AsosApi;
+package ch.uzh.ifi.hase.soprafs23.asosapi;
 
 public enum Category {
 

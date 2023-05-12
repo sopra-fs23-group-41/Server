@@ -36,7 +36,7 @@ public class Answer implements Serializable {
     }
 
     public double getTimeUsed() {
-        return timeUsed;
+        return this.timeUsed;
     }
 
     public void setTimeUsed(double timeUsed) {
