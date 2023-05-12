@@ -68,7 +68,7 @@ public class UserService {
   //add user to game with game pin
   public Player addUserToLobby(long userId, long lobbyId){
       //check if user exists
-      User userToConvert = userRepository.findById(userId);
+      User userToConvert = getUserById(userId);
       if (userToConvert == null){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The user does not exist!");
       }

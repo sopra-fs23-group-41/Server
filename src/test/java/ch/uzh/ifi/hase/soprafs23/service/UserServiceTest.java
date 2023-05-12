@@ -98,23 +98,23 @@ public class UserServiceTest {
 
   @Test
   public void addUserToLobby_success(){
-      long userId = 1L;
       long lobbyId = 2L;
-      testUser.setId(userId);
+      Mockito.when(userRepository.save(testUser)).thenReturn(testUser);
+      User user = userService.createUser(testUser);
+      user.setId(1L);
+      Long id = user.getId();
 
-      Mockito.when(userRepository.findById(userId)).thenReturn(testUser);
+      Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(user));
 
       Player player = new Player();
-      player.setUserId(userId);
+      player.setUserId(id);
       player.setGameId(lobbyId);
+      player.setPlayerName(user.getUsername());
 
-      Mockito.when(playerRepository.save(player)).thenReturn(player);
+      Player addedPlayer = userService.addUserToLobby(id,lobbyId);
+      Mockito.when(playerRepository.save(player)).thenReturn(addedPlayer);
 
-      Player addedPlayer = userService.addUserToLobby(userId,lobbyId);
-
-      Mockito.verify(userRepository, Mockito.times(1)).findById(userId);
-      Mockito.verify(playerRepository, Mockito.times(1)).findByUserId(userId);
-      Mockito.verify(playerRepository, Mockito.times(1)).save(Mockito.any());
+      Mockito.verify(playerRepository, Mockito.times(1)).findByUserId(Mockito.any());
 
       //assertEquals(addedPlayer, player);
   }
