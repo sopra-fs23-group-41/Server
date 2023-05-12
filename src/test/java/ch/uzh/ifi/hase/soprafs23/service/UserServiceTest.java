@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserServiceTest {
+class UserServiceTest {
 
   @Mock
   private UserRepository userRepository;
@@ -54,7 +54,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void createUser_validInputs_success() {
+  void createUser_validInputs_success() {
     // when -> any object is being saved in the userRepository -> return the dummy
     // testUser
     User createdUser = userService.createUser(testUser);
@@ -71,7 +71,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void createUser_duplicateName_throwsException() {
+  void createUser_duplicateName_throwsException() {
     // given -> a first user has already been created
     userService.createUser(testUser);
 
@@ -84,7 +84,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void createUser_duplicateInputs_throwsException() {
+  void createUser_duplicateInputs_throwsException() {
     // given -> a first user has already been created
     userService.createUser(testUser);
 
@@ -97,7 +97,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void addUserToLobby_success(){
+  void addUserToLobby_success(){
       long lobbyId = 2L;
       Mockito.when(userRepository.save(testUser)).thenReturn(testUser);
       User user = userService.createUser(testUser);
@@ -120,7 +120,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void userLogin_withFalseCredential_throwException(){
+  void userLogin_withFalseCredential_throwException(){
       String loginUsername = "testUser";
       String password = "incorrectPassword";
       Mockito.when(userRepository.findByUsername(loginUsername)).thenReturn(null);
@@ -129,7 +129,7 @@ public class UserServiceTest {
   }
 
   @Test
-  public void userLogin_whenUserAlreadyLogin_throwException(){
+  void userLogin_whenUserAlreadyLogin_throwException(){
       String loginUsername = "testUser";
       String password = "password";
       User userToLogin = new User();
@@ -139,9 +139,8 @@ public class UserServiceTest {
       userService.createUser(userToLogin);
       Mockito.when(userRepository.findByUsername(loginUsername)).thenReturn(userToLogin);
 
-      assertThrows(ResponseStatusException.class, () -> {
-          userService.loginUser(loginUsername, password);
-      });
+      assertThrows(ResponseStatusException.class, () ->
+          userService.loginUser(loginUsername, password));
   }
 
     @Test
