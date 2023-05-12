@@ -12,9 +12,12 @@ public class GameJudge {
     //answer to know what the guess was and the time used etc. --> one can get answers of through player
     private final Answer playerAnswer;
 
+    private final int round;
+
     public GameJudge(Question question,Player player, int round){
         this.question = question;
         this.player = player;
+        this.round = round;
         this.playerAnswer = player.getAnswerOfRound(round);
     }
 
@@ -53,7 +56,16 @@ public class GameJudge {
             //else nothing
             points = 0;
         }
+        if(bonusround(round)){
+            points *= 2;
+        }
+
+
         return points;
+    }
+
+    private boolean bonusround(int round){
+        return round % 3 == 0;
     }
 
 }
