@@ -1,6 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.controller;
 
-import ch.uzh.ifi.hase.soprafs23.AsosApi.Category;
+import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
@@ -63,7 +63,6 @@ public class GameControllerTest {
 
         //given
         Game game = new Game();
-        game.setGameId(0);
         game.setNumOfPlayer(1);
         game.setGameType(GameType.SINGLE);
         game.setRounds(3);
