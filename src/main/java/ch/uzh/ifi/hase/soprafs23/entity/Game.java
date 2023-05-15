@@ -83,11 +83,7 @@ public class Game implements Serializable {
                 createArticles(this.rounds * 2);
                 miniGames.add(new MiniGame(this.rounds,this.articleList, gameMode));
             }
-            else if (gameMode == GameMode.MostExpensive){
-                createArticles(this.rounds * 4);
-                miniGames.add(new MiniGame(this.rounds, this.articleList, gameMode));
-            }
-            else if (gameMode == GameMode.Mix){
+            else if (gameMode == GameMode.MostExpensive || gameMode == GameMode.Mix){
                 createArticles(this.rounds * 4);
                 miniGames.add(new MiniGame(this.rounds, this.articleList, gameMode));
             }
@@ -115,7 +111,7 @@ public class Game implements Serializable {
 
         for (Article article : articles){
             float price = article.getPrice();
-            if (!prices.contains(price) && unique.size()<numOfArticles+2){
+            if (!prices.contains(price) && unique.size()<numOfArticles+1){
                 prices.add(price);
                 unique.add(article);
             }
