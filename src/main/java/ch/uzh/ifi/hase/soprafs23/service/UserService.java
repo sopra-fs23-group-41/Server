@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
@@ -50,6 +51,7 @@ public class UserService {
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.ONLINE);
     newUser.setCreationDate(LocalDate.now());
+    newUser.setProfilePicture(ProfilePicture.ONE); // needs to be randomized
     checkIfUserExists(newUser);
 
     // hash the password using BCrypt
@@ -86,6 +88,7 @@ public class UserService {
       convertedUser.setPlayerName(userToConvert.getUsername());
       convertedUser.setUserId(userId);
       convertedUser.setGameId(lobbyId);
+      convertedUser.setProfilePicture(userToConvert.getProfilePicture());
 
       Player addedPlayer = playerRepository.save(convertedUser);
       playerRepository.flush();
@@ -159,6 +162,7 @@ public class UserService {
         String encodedPassword = passwordEncoder.encode(currentUser.getPassword());
         user.setPassword(encodedPassword);
         user.setBirthdate(currentUser.getBirthdate());
+        user.setProfilePicture(currentUser.getProfilePicture());
 
         userRepository.save(user);
         userRepository.flush();

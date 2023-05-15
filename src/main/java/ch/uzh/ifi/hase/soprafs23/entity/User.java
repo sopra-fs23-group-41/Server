@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import javax.persistence.*;
@@ -49,6 +50,9 @@ public class User implements Serializable {
 
   @Column(nullable = false)
   private int numOfGameWon = 0;
+
+  @Column
+  private ProfilePicture profilePicture;
 
   public Long getId() {
     return id;
@@ -112,5 +116,13 @@ public class User implements Serializable {
 
     public void setNumOfGameWon(int numOfGameWon) {
         this.numOfGameWon = numOfGameWon;
+    }
+
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

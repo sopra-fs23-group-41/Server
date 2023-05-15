@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 
 import java.time.LocalDate;
@@ -13,6 +14,8 @@ public class UserGetDTO {
   private LocalDate creationDate;
   private LocalDate birthdate;
   private int numOfGameWon;
+
+  private ProfilePicture profilePicture;
 
   public Long getId() {
     return id;
@@ -68,5 +71,13 @@ public class UserGetDTO {
 
     public void setNumOfGameWon(int numOfGameWon) {
         this.numOfGameWon = numOfGameWon;
+    }
+
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }
