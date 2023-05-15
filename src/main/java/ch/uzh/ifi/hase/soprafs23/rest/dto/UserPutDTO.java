@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
+
 import java.time.LocalDate;
 
 public class UserPutDTO {
@@ -11,6 +13,8 @@ public class UserPutDTO {
     private String username;
 
     private LocalDate birthdate;
+
+    private ProfilePicture profilePicture;
 
     public String getPassword() {
         return password;
@@ -42,5 +46,13 @@ public class UserPutDTO {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 }

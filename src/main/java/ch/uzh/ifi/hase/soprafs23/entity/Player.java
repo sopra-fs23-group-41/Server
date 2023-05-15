@@ -1,5 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.entity;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,9 @@ public class Player {
 
     @Column(nullable = false)
     private long gameId;
+
+    @Column
+    private ProfilePicture profilePicture;
 
     @Column
     private int totalScore;
@@ -87,6 +92,14 @@ public class Player {
 
     public long getGameId() {
         return this.gameId;
+    }
+
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public int getTotalScore() {

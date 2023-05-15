@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.rest.dto;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs23.entity.Answer;
 
 import java.util.List;
@@ -9,8 +10,10 @@ public class PlayerGetDTO {
     private String playerName;
     private long userId;
     private long gameId;
+    private ProfilePicture profilePicture;
     private int totalScore;
     private int roundScore;
+    private int streak;
     private List<Answer> answers;
 
     public long getPlayerId() {
@@ -45,6 +48,14 @@ public class PlayerGetDTO {
         this.gameId = gameId;
     }
 
+    public ProfilePicture getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(ProfilePicture profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public int getTotalScore() {
         return totalScore;
     }
@@ -67,5 +78,13 @@ public class PlayerGetDTO {
 
     public void setAnswers(List<Answer> answers) {
         this.answers = answers;
+    }
+
+    public int getStreak() {
+        return streak;
+    }
+
+    public void setStreak(int streak) {
+        this.streak = streak;
     }
 }
