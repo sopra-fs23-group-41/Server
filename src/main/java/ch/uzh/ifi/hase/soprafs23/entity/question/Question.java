@@ -52,6 +52,10 @@ public abstract class Question implements Serializable {
 
     protected abstract void setTrueAnswer();
 
+    public abstract int getBonus();
+
+    public abstract int getTimeToAnswer();
+
     // methods
     public void initializeQuestion(){
         setPicUrl();
@@ -95,11 +99,6 @@ public abstract class Question implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
-
-    public int getBonus(){
-        return 0;
-    }
-    public int getTimeToAnswer(){return 0;}
 
     public void setArticles(List<Article> articles) {
         this.articles = articles;

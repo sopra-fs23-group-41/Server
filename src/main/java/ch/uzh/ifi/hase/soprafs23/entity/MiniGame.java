@@ -78,7 +78,7 @@ public class MiniGame implements Serializable {
                 }
             }
             case HighOrLow -> {
-                for (int i = 0; i < allArticles.size(); i += 2) {
+                for (int i = 0; i < this.rounds*2; i += 2) {
                     List<Article> newList = allArticles.subList(i, i + 2);
                     HigherLowerQuestion question = new HigherLowerQuestion(newList.get(0), newList.get(1));
                     question.setQuestionType("HOL");
@@ -86,7 +86,7 @@ public class MiniGame implements Serializable {
                 }
             }
             case MostExpensive -> {
-                for (int i = 0; i < allArticles.size(); i += 4) {
+                for (int i = 0; i < this.rounds*4; i += 4) {
                     List<Article> newList = allArticles.subList(i, i + 4);
                     List<Article> fourArticles = new ArrayList<>(newList);
                     MostExpensiveQuestion question = new MostExpensiveQuestion(fourArticles);
@@ -94,6 +94,25 @@ public class MiniGame implements Serializable {
                     questions.add(question);
                 }
             }
+            case Mix -> {
+                for (int i=0; i<((this.rounds/2)+1)*7; i+=7){
+                    GuessThePriceQuestion queG = new GuessThePriceQuestion(allArticles.get(i));
+                    queG.setQuestionType("GTP");
+
+                    List<Article> newList1 = allArticles.subList(i+1, i+5);
+                    List<Article> fourArticles = new ArrayList<>(newList1);
+                    MostExpensiveQuestion queM = new MostExpensiveQuestion(fourArticles);
+                    queM.setQuestionType("ME");
+
+                    HigherLowerQuestion queH = new HigherLowerQuestion(allArticles.get(i+5), allArticles.get(i+6));
+                    queH.setQuestionType("HOL");
+
+                    questions.add(queG);
+                    questions.add(queM);
+                    questions.add(queH);
+                }
+            }
+
             default -> {
             }
             //unknown gameMode or error
