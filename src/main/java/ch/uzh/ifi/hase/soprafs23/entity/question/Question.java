@@ -43,6 +43,7 @@ public abstract class Question implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miniGameId")
+    @JsonIgnore
     private MiniGame miniGame;
 
     abstract void generateFalseAnswers();

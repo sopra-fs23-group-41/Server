@@ -5,6 +5,8 @@ import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "GAME")
+@JsonIgnoreProperties(value = "miniGames")
 public class Game implements Serializable {
 
     @Serial
@@ -49,6 +52,7 @@ public class Game implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
+    @JsonIgnore
     private List<MiniGame> miniGames = new ArrayList<>();
 
     @Column
@@ -101,6 +105,7 @@ public class Game implements Serializable {
 
     public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
         List<Article> articles = AsosApiUtility.getArticles(100, this.category);
+        Collections.shuffle(articles);
         List<Article> unique = new ArrayList<>();
         Set<Float> prices = new HashSet<>();
 

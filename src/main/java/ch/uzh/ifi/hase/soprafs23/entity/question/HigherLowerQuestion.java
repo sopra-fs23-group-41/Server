@@ -37,7 +37,6 @@ public class HigherLowerQuestion extends Question{
         else if (price1 > price2){
             this.falseAnswers.add("Higher");
         }
-        // TODO: prices equals
     }
 
     @Override

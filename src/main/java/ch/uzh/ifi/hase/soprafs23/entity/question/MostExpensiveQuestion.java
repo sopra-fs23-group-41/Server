@@ -58,4 +58,13 @@ public class MostExpensiveQuestion extends Question{
 
         trueAnswer = String.valueOf(Objects.requireNonNull(mostExpensive).getProductId());
     }
+
+    @Override
+    public int getTimeToAnswer(){
+        return timeToAnswer;
+    }
+    @Override
+    public int getBonus(){
+        return bonus;
+    }
 }
