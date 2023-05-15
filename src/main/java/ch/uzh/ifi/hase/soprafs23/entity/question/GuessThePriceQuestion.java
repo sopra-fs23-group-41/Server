@@ -13,10 +13,10 @@ import java.security.SecureRandom;
 public class GuessThePriceQuestion extends Question{
 
     @Column
-    private static final int BONUS = 20;
+    private final int BONUS = 20;
 
     @Column
-    private static final int TIME_TO_ANSWER = 40;
+    private final int TIME_TO_ANSWER = 40;
 
     // constructor
     public GuessThePriceQuestion(Article article){

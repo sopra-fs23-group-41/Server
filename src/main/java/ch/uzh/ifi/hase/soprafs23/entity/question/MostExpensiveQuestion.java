@@ -13,10 +13,10 @@ import java.util.Objects;
 public class MostExpensiveQuestion extends Question{
 
     @Column
-    private final int bonus = 30;
+    private final int BONUS = 30;
 
     @Column
-    private final int timeToAnswer = 30;
+    private final int TIME_TO_ANSWER = 30;
 
     public MostExpensiveQuestion(List<Article> fourArticles){
         articles = fourArticles;
@@ -61,10 +61,10 @@ public class MostExpensiveQuestion extends Question{
 
     @Override
     public int getTimeToAnswer(){
-        return timeToAnswer;
+        return TIME_TO_ANSWER;
     }
     @Override
     public int getBonus(){
-        return bonus;
+        return BONUS;
     }
 }
