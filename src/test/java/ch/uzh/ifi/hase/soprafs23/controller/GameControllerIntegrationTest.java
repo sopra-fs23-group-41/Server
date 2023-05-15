@@ -5,6 +5,7 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -50,7 +51,7 @@ public class GameControllerIntegrationTest {
 
         //when
         //try to begin the game before game is in the database
-        ResponseEntity<Void> postResponse = restTemplate.postForEntity("/lobbies/" + 0 + "/begin", null, Void.class);
+        ResponseEntity<Void> postResponse = restTemplate.postForEntity("/lobbies/" + 1 + "/begin", null, Void.class);
         assertEquals(HttpStatus.NOT_FOUND, postResponse.getStatusCode());
 
         //add Game to database
