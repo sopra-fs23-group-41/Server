@@ -111,6 +111,8 @@ public class Game implements Serializable {
                 unique.add(article);
             }
         }
+
+        this.articleList = unique;
     }
 
     public Question getNextRound(List<Player> players){
