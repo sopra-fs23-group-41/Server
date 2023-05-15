@@ -178,6 +178,8 @@ public class GameService {
             User user = userRepository.findById(userId);
             if (currentGame.getGameType() == GameType.MULTI){
                 user.setNumOfGameWon(user.getNumOfGameWon() + 1);
+                userRepository.save(user);
+                userRepository.flush();
             }
         }
         return leaderBoard;
