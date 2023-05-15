@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.*;
@@ -175,7 +176,7 @@ public class GameService {
         for (Player winner : winners) {
             long userId = winner.getUserId();
             User user = userRepository.findById(userId);
-            if (currentGame.getNumOfPlayer() > 1){
+            if (currentGame.getGameType() == GameType.MULTI){
                 user.setNumOfGameWon(user.getNumOfGameWon() + 1);
             }
         }

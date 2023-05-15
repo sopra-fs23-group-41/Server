@@ -20,7 +20,6 @@ import java.util.*;
 
 @Entity
 @Table(name = "GAME")
-@JsonIgnoreProperties(value="miniGames")
 public class Game implements Serializable {
 
     @Serial
@@ -47,12 +46,11 @@ public class Game implements Serializable {
     @Column
     private GameMode gameMode;
 
-    @ElementCollection
+    @ElementCollection(targetClass = Article.class)
     private List<Article> articleList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
-    @JsonIgnore
     private List<MiniGame> miniGames = new ArrayList<>();
 
     @Column

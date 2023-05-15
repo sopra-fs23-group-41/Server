@@ -18,7 +18,6 @@ import java.util.List;
 
 @Entity
 @Table(name = "MINIGAME")
-@JsonIgnoreProperties(value="gameQuestions")
 public class MiniGame implements Serializable {
 
     @Serial
@@ -31,7 +30,6 @@ public class MiniGame implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
-    @JsonIgnore
     private Game game;
 
     @Column
@@ -40,7 +38,7 @@ public class MiniGame implements Serializable {
     @Column
     protected int currentRound = 0;
 
-    @ElementCollection
+    @ElementCollection(targetClass = Article.class)
     private List<Article> allArticles;
 
     @Column
@@ -49,7 +47,6 @@ public class MiniGame implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true ,fetch = FetchType.LAZY)
     @JoinColumn(name = "miniGameId")
-    @JsonIgnore
     private List<Question> gameQuestions = new ArrayList<>();
 
 

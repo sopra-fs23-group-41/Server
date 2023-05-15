@@ -23,17 +23,17 @@ public abstract class Question implements Serializable {
     @Column(unique = true)
     private long id;
 
-    @ElementCollection
-    transient List<Article> articles = new ArrayList<>();
+    @ElementCollection(targetClass = Article.class)
+    protected List<Article> articles = new ArrayList<>();
 
     @Column
     protected String trueAnswer;
 
-    @ElementCollection
-    transient List<String> falseAnswers = new ArrayList<>();
+    @ElementCollection(targetClass = String.class)
+    protected List<String> falseAnswers = new ArrayList<>();
 
-    @ElementCollection
-    transient List<String> picUrls = new ArrayList<>();
+    @ElementCollection(targetClass = String.class)
+    protected List<String> picUrls = new ArrayList<>();
 
     @Column
     private boolean isUsed = false;
@@ -43,7 +43,6 @@ public abstract class Question implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "miniGameId")
-    @JsonIgnore
     private MiniGame miniGame;
 
     abstract void generateFalseAnswers();
