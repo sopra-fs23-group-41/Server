@@ -5,8 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.springframework.http.HttpStatus;
@@ -81,11 +79,11 @@ public class Game implements Serializable {
                 createArticles(this.rounds * 2);
                 miniGames.add(new MiniGame(this.rounds,this.articleList, gameMode));
             }
-            /*else {
+            else {
                 createArticles(this.rounds * 4);
                 miniGames.add(new MiniGame(this.rounds, this.articleList, gameMode));
             }
-             */
+
 
             miniGames.get(0).setGameQuestions();
 
@@ -102,7 +100,17 @@ public class Game implements Serializable {
     }
 
     public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
-        this.articleList = AsosApiUtility.getArticles(numOfArticles, this.category);
+        List<Article> articles = AsosApiUtility.getArticles(100, this.category);
+        List<Article> unique = new ArrayList<>();
+        Set<Float> prices = new HashSet<>();
+
+        for (Article article : articles){
+            float price = article.getPrice();
+            if (!prices.contains(price) && unique.size()<numOfArticles){
+                prices.add(price);
+                unique.add(article);
+            }
+        }
     }
 
     public Question getNextRound(List<Player> players){
