@@ -236,7 +236,7 @@ public class GameService {
     public boolean nextRoundReady(long lobbyId, long playerId) {
         Game game = gameRepository.findByGameId(lobbyId);
         Player player = playerRepository.findByPlayerId(playerId);
-        return game.getCurrentRound() == player.getAnswers().size();
+        return game.getCurrentRound() != player.getAnswers().size();
     }
 
     private void gameErrors(Game currentGame, List<Player> players, long lobbyId) {
