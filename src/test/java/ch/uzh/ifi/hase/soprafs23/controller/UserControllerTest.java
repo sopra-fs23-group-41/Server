@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -202,6 +203,25 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username").value(user.getUsername()))
                 .andExpect(jsonPath("$.password").value(user.getPassword()));
     }
+
+    @Test
+    void getLeaderBoard_success() throws Exception {
+      List<User> users = new ArrayList<>();
+      User user1 = new User();
+      user1.setNumOfGameWon(1);
+      User user2 = new User();
+      user2.setNumOfGameWon(2);
+      users.add(user1);
+      users.add(user2);
+
+      given(userService.getUserLeaderBoard()).willReturn(users);
+
+      MockHttpServletRequestBuilder getRequest = get("/users/leaderboard");
+      
+      mockMvc.perform(getRequest)
+              .andExpect(status().isOk());
+
+  }
 
   /**
    * Helper Method to convert userPostDTO into a JSON string such that the input
