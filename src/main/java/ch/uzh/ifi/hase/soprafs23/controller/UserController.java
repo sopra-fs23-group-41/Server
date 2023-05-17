@@ -84,9 +84,9 @@ public class UserController {
   @PutMapping("/users/{id}")
   @ResponseStatus(HttpStatus.ACCEPTED)
   @ResponseBody
-  public UserGetDTO updateUserProfile(@RequestBody UserPutDTO userPutDTO){
-      User currentUser = DTOMapper.INSTANCE.convertUserPutDTOToEntity(userPutDTO);
-      userService.updateUserProfile(currentUser);
+  public UserGetDTO updateUserProfile(@PathVariable long userId, @RequestBody UserPutDTO userPutDTO){
+      User userWithUpdates = DTOMapper.INSTANCE.convertUserPutDTOToEntity(userPutDTO);
+      User currentUser = userService.updateUserProfile(userId, userWithUpdates);
 
       return DTOMapper.INSTANCE.convertEntityToUserGetDTO(currentUser);
 

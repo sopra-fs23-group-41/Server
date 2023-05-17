@@ -219,7 +219,7 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(loginUser));
         Mockito.when(userRepository.findByUsername("update")).thenReturn(null);
-        userService.updateUserProfile(updateUser);
+        userService.updateUserProfile(id, updateUser);
 
         User user = userService.getUserById(id);
         Mockito.verify(userRepository,Mockito.times(2)).save(Mockito.any());
@@ -243,7 +243,7 @@ class UserServiceTest {
 
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(loginUser));
         Mockito.when(userRepository.findByUsername("firstname@lastname")).thenReturn(loginUser);
-        assertThrows(ResponseStatusException.class, ()-> userService.updateUserProfile(updateUser));
+        assertThrows(ResponseStatusException.class, ()-> userService.updateUserProfile(id, updateUser));
     }
 
     @Test

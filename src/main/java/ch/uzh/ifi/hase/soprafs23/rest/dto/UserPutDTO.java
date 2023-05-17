@@ -6,8 +6,6 @@ import java.time.LocalDate;
 
 public class UserPutDTO {
 
-    private long id;
-
     private String password;
 
     private String username;
@@ -38,14 +36,6 @@ public class UserPutDTO {
 
     public void setBirthdate(LocalDate birthdate) {
         this.birthdate = birthdate;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public ProfilePicture getProfilePicture() {

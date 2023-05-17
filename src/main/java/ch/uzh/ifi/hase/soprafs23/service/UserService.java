@@ -151,21 +151,23 @@ public class UserService {
       return user.get();
     }
 
-    public void updateUserProfile(User currentUser) {
-        User user = getUserById(currentUser.getId());
+    public User updateUserProfile(long userId, User userWithUpdates) {
+        User user = getUserById(userId);
         String message = "This user name is taken. Please use another one";
 
-        if (userRepository.findByUsername(currentUser.getUsername()) != null){
+        if (userRepository.findByUsername(userWithUpdates.getUsername()) != null){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
         }
-        user.setUsername(currentUser.getUsername());
-        String encodedPassword = passwordEncoder.encode(currentUser.getPassword());
+        user.setUsername(userWithUpdates.getUsername());
+        String encodedPassword = passwordEncoder.encode(userWithUpdates.getPassword());
         user.setPassword(encodedPassword);
-        user.setBirthdate(currentUser.getBirthdate());
-        user.setProfilePicture(currentUser.getProfilePicture());
+        user.setBirthdate(userWithUpdates.getBirthdate());
+        user.setProfilePicture(userWithUpdates.getProfilePicture());
 
         userRepository.save(user);
         userRepository.flush();
+
+        return user;
     }
 
     public List<User> getUserLeaderBoard(){
