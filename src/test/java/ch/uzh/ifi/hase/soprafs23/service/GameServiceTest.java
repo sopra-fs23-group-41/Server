@@ -3,10 +3,7 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.Answer;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
@@ -104,6 +101,8 @@ class GameServiceTest {
     @Test
     void getLobbyIdByGamePin_success(){
         Game createdGame = gameService.createGame(testGame);
+
+        // it also verifies that the game pin is issued
         String pin = createdGame.getGamePIN();
 
         Mockito.when(gameRepository.findByGamePIN(pin)).thenReturn(createdGame);
@@ -248,6 +247,53 @@ class GameServiceTest {
         Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
         assertEquals(20, calculated.getTotalScore());
         assertEquals(0, calculated.getRoundScore());
+    }
+
+    @Test
+    void endMiniGame_getRightLeaderBoard(){
+        testGame.setGameId(2L);
+        testGame.setNumOfPlayer(2);
+        testGame.setGameType(GameType.MULTI);
+
+        User user1 = new User();
+        user1.setId(1L);
+        User user2 = new User();
+        user2.setId(2L);
+
+        List<Player> players = new ArrayList<>();
+        Player player1 = new Player();
+        player1.setGameId(testGame.getGameId());
+        player1.setUserId(user1.getId());
+        player1.setTotalScore(2000);
+        players.add(player1);
+        Player player2 = new Player();
+        player2.setGameId(testGame.getGameId());
+        player2.setUserId(user2.getId());
+        player2.setTotalScore(3000);
+        players.add(player2);
+
+        List<MiniGame> game = new ArrayList<>();
+        MiniGame miniGame = new MiniGame();
+        List<Question> questions = new ArrayList<>();
+        Question question1 = new GuessThePriceQuestion();
+        question1.setUsed(true);
+        questions.add(question1);
+        Question question2 = new GuessThePriceQuestion();
+        question2.setUsed(true);
+        questions.add(question2);
+        miniGame.setGameQuestions(questions);
+        game.add(miniGame);
+        testGame.setMiniGame(game);
+
+        Mockito.when(gameRepository.findByGameId(2L)).thenReturn(testGame);
+        Mockito.when(playerRepository.findByGameId(2L)).thenReturn(players);
+        Mockito.when(userRepository.findById(player2.getUserId())).thenReturn(user2);
+
+        List<Player> leaderBoard = gameService.endMiniGame(2L);
+        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
+        assertEquals(user2.getId(),leaderBoard.get(0).getUserId());
+        assertEquals(user1.getId(), leaderBoard.get(1).getUserId());
+        assertEquals(1, user2.getNumOfGameWon());
     }
 
 }
