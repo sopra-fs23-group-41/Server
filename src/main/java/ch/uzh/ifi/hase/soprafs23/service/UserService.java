@@ -155,8 +155,8 @@ public class UserService {
         User user = getUserById(userId);
         String message = "This user name is taken. Please use another one";
 
-        if (userRepository.findByUsername(userWithUpdates.getUsername()) != null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
+        if (userRepository.findByUsername(userWithUpdates.getUsername()) != null && (userRepository.findByUsername(userWithUpdates.getUsername()).getId() != userId)){
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
         }
         user.setUsername(userWithUpdates.getUsername());
         String encodedPassword = passwordEncoder.encode(userWithUpdates.getPassword());
