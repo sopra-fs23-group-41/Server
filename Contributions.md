@@ -69,7 +69,7 @@ Timo Tietje: [#130](https://github.com/sopra-fs23-group-41/Server/issues/130) [#
 
 ## Week 6 (17.05.2023):
 -------------------------
-Yuqing Huang:
+Yuqing Huang: [#139](https://github.com/sopra-fs23-group-41/Server/issues/139) [#140](https://github.com/sopra-fs23-group-41/Server/issues/140) [#151](https://github.com/sopra-fs23-group-41/Server/issues/151) [#153](https://github.com/sopra-fs23-group-41/Server/issues/153)
 
 Eunji Lee:
 
