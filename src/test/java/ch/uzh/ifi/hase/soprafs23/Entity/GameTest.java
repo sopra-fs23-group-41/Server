@@ -4,12 +4,10 @@ import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
-import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.web.config.QuerydslWebConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -186,9 +184,8 @@ class GameTest {
         players.add(new Player());
 
         this.game.startGame(this.game.getGameMode(), players);
-        Question que = this.game.getNextRound(players);
 
-        assertNotNull(que);
+        assertNotNull(this.game.getNextRound(players));
     }
 
     @Test
