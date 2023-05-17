@@ -39,10 +39,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up environment variables
-        run: |
-            echo "API_KEY=${{ secrets.API_KEY }}" >> $GITHUB_ENV
-
       - name: Deploy to App Engine
         id: deploy
         uses: google-github-actions/deploy-appengine@v0.2.0
@@ -50,6 +46,8 @@ jobs:
           deliverables: app.yaml
           version: v1
           credentials: ${{ secrets.GCP_SERVICE_CREDENTIALS }}
+          env:
+            API_KEY: ${{ secrets.API_KEY }}
 
       - name: Test
         run: curl "${{ steps.deploy.outputs.url }}"
