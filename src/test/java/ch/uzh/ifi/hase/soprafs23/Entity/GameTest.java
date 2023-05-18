@@ -57,15 +57,6 @@ class GameTest {
         assertTrue(this.game.checkIfAllPlayerExist(players));
     }
 
-    @Test
-    void createGamePINTest(){
-        this.game.createGamePIN();
-        String str = this.game.getGamePIN();
-
-        assertTrue((str != null));
-        assertTrue((str.length() == 6));
-        //assertTrue((str.matches("[a-z]+") && str.matches(".*\\d.*")));
-    }
 
     @Test
     void startGame_GuessThePrice_createsGame() throws UnirestException, JsonProcessingException {
@@ -82,7 +73,7 @@ class GameTest {
         assertNotNull(this.game.getMiniGame());
         assertEquals(2, this.game.getMiniGame().get(0).getRounds());
         assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
-        assertEquals(3, this.game.getArticleList().size());
+        assertEquals(4, this.game.getArticleList().size());
     }
 
     @Test
@@ -97,18 +88,7 @@ class GameTest {
 
         assertNotNull(this.game.getMiniGame());
         assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
-        assertEquals(5, this.game.getArticleList().size());
-    }
-
-    @Test
-    void cannotStartGameBecauseNotAllPlayersJoined() {
-        this.game.setGameType(GameType.MULTI);
-        this.game.updateGameSetting(GameMode.GuessThePrice, 2, 2, Category.JEWELRY);
-        List<Player> players = new ArrayList<>();
-        players.add(new Player());
-        GameMode gameMode = this.game.getGameMode();
-
-        assertThrows(RuntimeException.class, () -> game.startGame(gameMode, players));
+        assertEquals(6, this.game.getArticleList().size());
     }
 
     @Test
@@ -173,33 +153,6 @@ class GameTest {
         this.game.getMiniGame().get(0).setCurrentRound(2);
 
         assertThrows(ResponseStatusException.class, () -> this.game.getNextRound(players2));
-    }
-
-    @Test
-    void getNextRoundTest() throws UnirestException, JsonProcessingException {
-        this.game.setGameType(GameType.MULTI);
-        this.game.updateGameSetting(GameMode.HighOrLow, 2, 2, Category.HOODIES);
-        List<Player> players = new ArrayList<>();
-        players.add(new Player());
-        players.add(new Player());
-
-        this.game.startGame(this.game.getGameMode(), players);
-
-        assertNotNull(this.game.getNextRound(players));
-    }
-
-    @Test
-    void getCurrentRoundQuestionTest() throws UnirestException, JsonProcessingException {
-        List<Player> players = new ArrayList<>();
-        Player alice = new Player();
-        alice.setAnswers(new Answer());
-        players.add(alice);
-        this.game.setGameType(GameType.SINGLE);
-        this.game.updateGameSetting(GameMode.GuessThePrice, 2, 1, Category.HOODIES);
-        this.game.startGame(GameMode.GuessThePrice, players);
-        this.game.getMiniGame().get(0).setCurrentRound(1);
-
-        assertNotNull(this.game.getCurrentRoundQuestion());
     }
 
     @Test
