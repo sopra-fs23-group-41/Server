@@ -73,7 +73,7 @@ class GameTest {
         assertNotNull(this.game.getMiniGame());
         assertEquals(2, this.game.getMiniGame().get(0).getRounds());
         assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
-        assertEquals(12, this.game.getArticleList().size());
+        assertEquals(2, this.game.getArticleList().size());
     }
 
     @Test
@@ -88,7 +88,7 @@ class GameTest {
 
         assertNotNull(this.game.getMiniGame());
         assertNotNull(this.game.getMiniGame().get(0).getGameQuestions());
-        assertEquals(14, this.game.getArticleList().size());
+        assertEquals(4, this.game.getArticleList().size());
     }
 
     @Test

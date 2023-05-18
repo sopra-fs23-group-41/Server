@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
@@ -224,7 +225,13 @@ public class GameService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The lobby does not exist!");
         }
         else {
-            return currentGame.getArticleList();
+            int i=0;
+            List<Article> used = new ArrayList<>();
+            while (i<currentGame.getRounds()){
+                used.addAll(currentGame.getMiniGame().get(0).getGameQuestions().get(i).getArticles());
+                i++;
+            }
+            return used;
         }
     }
 
