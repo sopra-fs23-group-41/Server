@@ -111,7 +111,7 @@ public class Game implements Serializable {
 
         for (Article article : articles){
             float price = article.getPrice();
-            if (!prices.contains(price) && unique.size()<numOfArticles+1){
+            if (!prices.contains(price) && unique.size()<numOfArticles+2){
                 prices.add(price);
                 unique.add(article);
             }
