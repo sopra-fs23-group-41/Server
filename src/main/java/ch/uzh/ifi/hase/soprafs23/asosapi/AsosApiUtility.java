@@ -75,11 +75,11 @@ public class AsosApiUtility {
         logger.debug("secret with value: {} retrieved!", secret);
         String baseUrl = "https://asos2.p.rapidapi.com/";
         HttpResponse<JsonNode> response1 = Unirest.get(baseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.getCategoryIdMen() +"&limit=" + limit/2 + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
-                .header("X-RapidAPI-Key", secret)
+                .header("X-RapidAPI-Key", "6b13e3c424mshd89ea2f0812d131p195a3djsn1e4288e93cca")
                 .header("X-RapidAPI-Host","asos2.p.rapidapi.com")
                 .asJson();
         HttpResponse<JsonNode> response2 = Unirest.get(baseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.getCategoryIdWomen() +"&limit=" + limit/2 + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
-                .header("X-RapidAPI-Key", secret)
+                .header("X-RapidAPI-Key", "6b13e3c424mshd89ea2f0812d131p195a3djsn1e4288e93cca")
                 .header("X-RapidAPI-Host","asos2.p.rapidapi.com")
                 .asJson();
 
