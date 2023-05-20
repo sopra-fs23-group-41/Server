@@ -72,6 +72,9 @@ public class AsosApiUtility {
         if(secret == null){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Api key not found! ");
         }
+        if(!secret.equals("ce1cbe76a8mshf63b35305984825p156bb0jsnaa544f64c17b")){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Api key is not fully retrieved");
+        }
         logger.debug("secret with value: {} retrieved!", secret);
         String baseUrl = "https://asos2.p.rapidapi.com/";
         HttpResponse<JsonNode> response1 = Unirest.get(baseUrl + "products/v2/list?store=US&offset=0&categoryId="+ category.getCategoryIdMen() +"&limit=" + limit/2 + "&country=US&sort=freshness&currency=USD&sizeSchema=US&lang=en-US")
