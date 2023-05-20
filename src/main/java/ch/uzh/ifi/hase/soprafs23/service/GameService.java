@@ -1,6 +1,5 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
-import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
@@ -138,7 +137,7 @@ public class GameService {
     public void savePlayerAnswer(long playerId, Answer answer) {
         Player currentPlayer = playerRepository.findByPlayerId(playerId);
         if (currentPlayer == null){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No such player exist!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such player exist!");
         }
 
         currentPlayer.setAnswers(answer);
@@ -222,7 +221,7 @@ public class GameService {
     public List<Article> getAllArticles(long lobbyId){
         Game currentGame = gameRepository.findByGameId(lobbyId);
         if (currentGame ==null) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The lobby does not exist!");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby does not exist!");
         }
         else {
             int i=0;

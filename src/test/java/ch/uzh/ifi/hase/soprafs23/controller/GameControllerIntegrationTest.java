@@ -20,7 +20,7 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class GameControllerIntegrationTest {
+class GameControllerIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
@@ -32,8 +32,8 @@ public class GameControllerIntegrationTest {
     private GameRepository gameRepository;
 
     @Test
-    public void beginGameTest() {
-        //given users as players in a lobby with id 0 and where all players joined
+    void beginGameTest() {
+        //given users as players in a lobby with id 1 and where all players joined
         Game game = new Game();
         game.setGameId(1);
         game.setNumOfPlayer(1);
@@ -75,8 +75,5 @@ public class GameControllerIntegrationTest {
         //test if it worked
         assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
         assertTrue(gameService.isTheGameStarted(finalGame.getGameId()));
-        //assertEquals(4, finalGame.getArticleList().size());
-        //assertTrue(finalGame.getMiniGame().get(0).getGameQuestions().get(0) instanceof GuessThePriceQuestion);
-        //assertEquals(4, finalGame.getMiniGame().get(0).getGameQuestions().size());
     }
 }

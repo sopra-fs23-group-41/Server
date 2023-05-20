@@ -118,7 +118,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public boolean isNextRoundSet(@PathVariable long lobbyId,@PathVariable long playerId){
-        //check if # of answers is equal to round of minigame,
+        //check if # of answers is equal to round of miniGame,
         // if not then getNextRound is not called by the gameMaster and nextQuestion cannot be called
         return gameService.nextRoundReady(lobbyId, playerId);
     }
@@ -187,13 +187,6 @@ public class GameController {
         return gameService.getAllArticles(lobbyId);
     }
 
-    public GameGetDTO addPlayersToGameGetDTO(Game game){
-        List<Player> players = playerService.getPlayersByLobbyId(game.getGameId());
-        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
-        gameGetDTO.setPlayers(players);
-        return gameGetDTO;
-    }
-
     @GetMapping("/lobbies/{lobbyId}/end")
     @ResponseStatus(HttpStatus.ACCEPTED)
     @ResponseBody
@@ -207,6 +200,13 @@ public class GameController {
     @ResponseBody
     public void clearLobby(@PathVariable long lobbyId){
         gameService.clearLobby(lobbyId);
+    }
+
+    private GameGetDTO addPlayersToGameGetDTO(Game game){
+        List<Player> players = playerService.getPlayersByLobbyId(game.getGameId());
+        GameGetDTO gameGetDTO = DTOMapper.INSTANCE.convertEntityToGameGetDTO(game);
+        gameGetDTO.setPlayers(players);
+        return gameGetDTO;
     }
 
 }
