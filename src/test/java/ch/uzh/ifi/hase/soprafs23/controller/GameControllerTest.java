@@ -9,7 +9,6 @@ import ch.uzh.ifi.hase.soprafs23.entity.Article;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
-import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.AnswerPostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePostDTO;
 import ch.uzh.ifi.hase.soprafs23.rest.dto.GamePutDTO;
@@ -446,7 +445,7 @@ class GameControllerTest {
         //when
         MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/player/" + 1 + "/answered")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(answerPostDTO));;
+                .content(asJsonString(answerPostDTO));
         //then
         mockMvc.perform(postRequest).andExpect(status().isAccepted());
     }
@@ -460,7 +459,7 @@ class GameControllerTest {
         //when
         MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/player/" + 1 + "/answered")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(answerPostDTO));;
+                .content(asJsonString(answerPostDTO));
         //then
         mockMvc.perform(postRequest).andExpect(status().isNotFound());
     }
@@ -542,30 +541,46 @@ class GameControllerTest {
                 .andExpect(jsonPath("$[0].totalScore", is(player.getTotalScore())))
                 .andExpect(jsonPath("$[0].roundScore", is(player.getRoundScore())))
                 .andExpect(jsonPath("$[0].streak", is(player.getStreak())))
-                .andExpect(jsonPath("$[0].answers", hasSize(0)))
-
-        ;
-
-
+                .andExpect(jsonPath("$[0].answers", hasSize(0)));
     }
 
     @Test
-    void endMiniGameThrowExceptionNoGameFoundTest(){
-
+    void endMiniGameThrowExceptionNoGameFoundTest() throws Exception {
+        given(gameService.endMiniGame(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.NOT_FOUND));
+        //when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/" + 1 + "/end");
+        //then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isNotFound());
     }
     @Test
-    void endMiniGameThrowExceptionNoPlayerTest(){
-
+    void endMiniGameThrowExceptionNoPlayerTest() throws Exception {
+        given(gameService.endMiniGame(Mockito.anyLong())).willThrow(new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        //when
+        MockHttpServletRequestBuilder getRequest = get("/lobbies/" + 1 + "/end");
+        //then
+        mockMvc.perform(getRequest)
+                .andExpect(status().isBadRequest());
     }
 
     @Test
-    void clearLobbyTest(){
-
+    void clearLobbyTest() throws Exception {
+        Mockito.doNothing().when(gameService).clearLobby(Mockito.anyLong());
+        //when
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/end");
+        //then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isOk());
     }
 
     @Test
-    void clearLobbyThrowsExceptionTest(){
-
+    void clearLobbyThrowsExceptionTest() throws Exception {
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(gameService).clearLobby(Mockito.anyLong());
+        //when
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/end");
+        //then
+        mockMvc.perform(postRequest)
+                .andExpect(status().isNotFound());
     }
 
 

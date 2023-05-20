@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * This tests if the UserController works.
  */
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
   @Autowired
   private MockMvc mockMvc;
@@ -48,7 +48,7 @@ public class UserControllerTest {
   private UserService userService;
 
   @Test
-  public void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
+  void givenUsers_whenGetUsers_thenReturnJsonArray() throws Exception {
     // given
     User user = new User();
     user.setUsername("firstname@lastname");
@@ -78,7 +78,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void createUser_validInput_userCreated() throws Exception {
+  void createUser_validInput_userCreated() throws Exception {
     // given
     User user = new User();
     user.setId(1L);
@@ -107,7 +107,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void logoutUser_success() throws Exception {
+  void logoutUser_success() throws Exception {
       // given
       User user = new User();
       user.setId(1L);
@@ -124,7 +124,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void loginUser_success() throws Exception {
+  void loginUser_success() throws Exception {
       // given
       User user = new User();
       user.setId(1L);
@@ -154,7 +154,7 @@ public class UserControllerTest {
   }
 
   @Test
-  public void updateUserProfile_success() throws Exception {
+  void updateUserProfile_success() throws Exception {
       // given
       Long userId = 1L;
       UserPutDTO userPutDTO = new UserPutDTO();
@@ -177,35 +177,34 @@ public class UserControllerTest {
               .andExpect(status().isAccepted());
   }
 
-    @Test
-    public void getAUser_success() throws Exception {
-        // given
-        Long userId = 1L;
-        User user = new User();
-        user.setId(userId);
-        user.setUsername("testUser");
-        user.setPassword("password");
+  @Test
+  void getAUser_success() throws Exception {
+      // given
+      Long userId = 1L;
+      User user = new User();
+      user.setId(userId);
+      user.setUsername("testUser");
+      user.setPassword("password");
 
-        UserGetDTO userGetDTO = new UserGetDTO();
-        userGetDTO.setId(user.getId());
-        userGetDTO.setUsername(user.getUsername());
-        userGetDTO.setPassword(user.getPassword());
+      UserGetDTO userGetDTO = new UserGetDTO();
+      userGetDTO.setId(user.getId());
+      userGetDTO.setUsername(user.getUsername());
+      userGetDTO.setPassword(user.getPassword());
 
-        given(userService.getUserById(userId)).willReturn(user);
+      given(userService.getUserById(userId)).willReturn(user);
 
-        MockHttpServletRequestBuilder getRequest = get("/users/{id}", userId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(userGetDTO));
+      MockHttpServletRequestBuilder getRequest = get("/users/{id}", userId)
+              .contentType(MediaType.APPLICATION_JSON)
+              .content(asJsonString(userGetDTO));
 
-        mockMvc.perform(getRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(user.getId().intValue()))
-                .andExpect(jsonPath("$.username").value(user.getUsername()))
-                .andExpect(jsonPath("$.password").value(user.getPassword()));
+      mockMvc.perform(getRequest)
+              .andExpect(status().isOk())
+              .andExpect(jsonPath("$.id").value(user.getId().intValue()))
+              .andExpect(jsonPath("$.username").value(user.getUsername()))
+              .andExpect(jsonPath("$.password").value(user.getPassword()));
     }
-
-    @Test
-    void getLeaderBoard_success() throws Exception {
+  @Test
+  void getLeaderBoard_success() throws Exception {
       List<User> users = new ArrayList<>();
       User user1 = new User();
       user1.setNumOfGameWon(1);
@@ -220,7 +219,6 @@ public class UserControllerTest {
       
       mockMvc.perform(getRequest)
               .andExpect(status().isOk());
-
   }
 
   /**
@@ -228,7 +226,6 @@ public class UserControllerTest {
    * can be processed
    * Input will look like this: {"name": "Test User", "username": "testUsername"}
    * 
-   * @param object
    * @return string
    */
   private String asJsonString(final Object object) {
@@ -236,7 +233,7 @@ public class UserControllerTest {
       return new ObjectMapper().writeValueAsString(object);
     } catch (JsonProcessingException e) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-          String.format("The request body could not be created.%s", e.toString()));
+          String.format("The request body could not be created.%s", e));
     }
   }
 }
