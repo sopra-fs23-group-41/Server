@@ -41,7 +41,6 @@ jobs:
       - name: print .env-for-app-yaml & app.yaml template before
         run: |
           cat .env-for-app-yaml | sed 's/./& /g'
-          cat app.yaml.in | sed 's/./& /g'
 
       - name: prepare app yaml
         uses: mshick/fast-envsubst@v1
