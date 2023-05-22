@@ -203,6 +203,8 @@ class UserControllerTest {
               .andExpect(jsonPath("$.username").value(user.getUsername()))
               .andExpect(jsonPath("$.password").value(user.getPassword()));
     }
+
+    // this test also verifies that all user can be retrieved from backend #83
   @Test
   void getLeaderBoard_success() throws Exception {
       List<User> users = new ArrayList<>();
