@@ -77,6 +77,7 @@ class UserControllerTest {
 
   }
 
+  // test for #81
   @Test
   void createUser_validInput_userCreated() throws Exception {
     // given
