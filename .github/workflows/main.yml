@@ -41,7 +41,7 @@ jobs:
         uses: mshick/fast-envsubst@v1
         with:
             env-file: .env-for-app-yaml
-            in-file: app.yaml
+            in-file: app.yaml.in
             out-file: app.yaml
 
       - name: Deploy to App Engine
