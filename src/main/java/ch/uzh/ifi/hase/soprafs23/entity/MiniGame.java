@@ -96,7 +96,7 @@ public class MiniGame implements Serializable {
             }
             case Mix -> {
                 int i=0;
-                while (this.rounds > questions.size()){
+                while (this.rounds > questions.size() && i + 7 < allArticles.size()){
                     GuessThePriceQuestion queG = new GuessThePriceQuestion(allArticles.get(i));
                     queG.setQuestionType("GTP");
 
