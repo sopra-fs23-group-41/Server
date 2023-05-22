@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -48,15 +49,18 @@ public class UserService {
   }
 
   public User createUser(User newUser) {
+    SecureRandom rand = new SecureRandom();
+
     newUser.setToken(UUID.randomUUID().toString());
     newUser.setStatus(UserStatus.ONLINE);
     newUser.setCreationDate(LocalDate.now());
-    newUser.setProfilePicture(ProfilePicture.ONE); // needs to be randomized
+    newUser.setProfilePicture(ProfilePicture.values()[rand.nextInt(10)]);
+
     checkIfUserExists(newUser);
 
     // hash the password using BCrypt
-      String encodedPassword = passwordEncoder.encode(newUser.getPassword());
-      newUser.setPassword(encodedPassword);
+    String encodedPassword = passwordEncoder.encode(newUser.getPassword());
+    newUser.setPassword(encodedPassword);
 
     // saves the given entity but data is only persisted in the database once
     // flush() is called
@@ -102,8 +106,8 @@ public class UserService {
    * defined in the User entity. The method will do nothing if the input is unique
    * and throw an error otherwise.
    *
-   * @param userToBeCreated
-   * @throws org.springframework.web.server.ResponseStatusException
+   * @param userToBeCreated user that must not exist
+   * @throws org.springframework.web.server.ResponseStatusException Exception to let the frontend know what when wrong
    * @see User
    */
   private void checkIfUserExists(User userToBeCreated) {
