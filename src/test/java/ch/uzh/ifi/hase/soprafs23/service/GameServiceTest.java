@@ -115,7 +115,7 @@ class GameServiceTest {
         Mockito.when(gameRepository.findByGamePIN("123456")).thenReturn(null);
         assertThrows(ResponseStatusException.class, () -> gameService.getLobbyIdByGamePin("123456"));
     }
-/*
+
     @Test
     void beginGame_success() throws UnirestException, JsonProcessingException {
         Game createdGame = gameService.createGame(testGame);
@@ -137,7 +137,7 @@ class GameServiceTest {
         assertNotNull(createdGame.getMiniGame());
         assertNotNull(createdGame.getArticleList());
         assertNotNull(createdGame.getMiniGame().get(0).getGameQuestions());
-    }*/
+    }
 
     @Test
     void allPlayerJoinedCheck_true(){

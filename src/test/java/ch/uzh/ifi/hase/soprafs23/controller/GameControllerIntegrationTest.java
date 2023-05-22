@@ -5,7 +5,6 @@ import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
 import ch.uzh.ifi.hase.soprafs23.entity.Game;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
-import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
 import ch.uzh.ifi.hase.soprafs23.service.GameService;
@@ -32,7 +31,7 @@ class GameControllerIntegrationTest {
     private GameRepository gameRepository;
 
     @Test
-    void beginGameTest() {/*
+    void beginGameTest() {
         //given users as players in a lobby with id 1 and where all players joined
         Game game = new Game();
         game.setGameId(1);
@@ -74,6 +73,6 @@ class GameControllerIntegrationTest {
 
         //test if it worked
         assertEquals(HttpStatus.NO_CONTENT, postResponse.getStatusCode());
-        assertTrue(gameService.isTheGameStarted(finalGame.getGameId()));*/
+        assertTrue(gameService.isTheGameStarted(finalGame.getGameId()));
     }
 }
