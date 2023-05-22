@@ -64,6 +64,7 @@ class GameServiceTest {
 
         Mockito.verify(gameRepository, Mockito.times(1)).save(Mockito.any());
         assertNotNull(id);
+        // verify pin code is generated #85
         assertNotNull(createdGame.getGamePIN());
         assertEquals(testGame.getNumOfPlayer(), createdGame.getNumOfPlayer());
         assertEquals(testGame.getGameType(), createdGame.getGameType());

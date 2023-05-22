@@ -81,6 +81,7 @@ public class GameServiceIntegrationTest {
         assertEquals(newGame.getGameMode(), game.getGameMode());
         assertEquals(newGame.getCategory(), game.getCategory());
         assertEquals(newGame.getNumOfPlayer(), game.getNumOfPlayer());
+        //verify pin code is generated and provided #85
         assertNotNull(game.getGamePIN());
     }
 
@@ -106,6 +107,8 @@ public class GameServiceIntegrationTest {
         assertEquals(current.getRounds(), game.getRounds());
     }
 
+    // begin game tests use actual api calls, which verify the api is working properly #111 #103
+    // the questions are created within this method, verifies #102
     @Test
     void beginGame_ME_success() throws UnirestException, JsonProcessingException {
         newGame.setGameMode(GameMode.MostExpensive);
