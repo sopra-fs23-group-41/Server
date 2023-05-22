@@ -95,6 +95,7 @@ public class DTOMapperTest {
         assertEquals(answerPostDTO.getTimeUsed(), answer.getTimeUsed());
     }
 
+    // test for #87
     @Test
     public void testGetQuestion_fromQuestion_toQuestionGetDTO_success(){
         // create
