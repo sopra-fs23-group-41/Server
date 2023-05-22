@@ -229,6 +229,7 @@ public class GameServiceIntegrationTest {
         assertTrue(gameService.didAllPlayersAnswer(theGame.getGameId()));
     }
 
+    //test for #93
     @Test
     void getAllArticles_success() throws UnirestException, JsonProcessingException {
         newGame.setGameMode(GameMode.Mix);
