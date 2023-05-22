@@ -96,6 +96,8 @@ class UserServiceTest {
     assertThrows(ResponseStatusException.class, () -> userService.createUser(testUser));
   }
 
+  // test verifies that when new player join game, the user will be converted to player
+    //assigned with userId and gameId to identify #88
   @Test
   void addUserToLobby_success(){
       long lobbyId = 2L;
