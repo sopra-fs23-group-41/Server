@@ -206,6 +206,7 @@ class UserControllerTest {
     }
 
     // this test also verifies that all user can be retrieved from backend #83
+    // test for #148
   @Test
   void getLeaderBoard_success() throws Exception {
       List<User> users = new ArrayList<>();
