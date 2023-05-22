@@ -35,24 +35,23 @@ jobs:
       - name: Set up environment variables
         env:
           API_KEY: ${{ secrets.API_KEY }}
-        run: |
-          echo "$API_KEY" > .env-for-app-yaml
+        run: echo "$API_KEY" > environment.env
 
       - name: print .env-for-app-yaml & app.yaml template before
         run: |
-          cat .env-for-app-yaml | sed 's/./& /g'
+          cat environment.env | sed 's/./& /g'
 
       - name: prepare app yaml
         uses: mshick/fast-envsubst@v1
         with:
-            env-file: .env-for-app-yaml
+            env-file: environment.env
             in-file: app.yaml.in
             out-file: app.yaml
 
       - name: print .env-for-app-yaml & app.yaml template after
         run: |
-          cat .env-for-app-yaml | sed 's/./& /g'
-          cat app.yaml.in | sed 's/./& /g'
+          cat environment.env | sed 's/./& /g'
+          cat app.yaml | sed 's/./& /g'
 
       - name: Deploy to App Engine
         id: deploy
