@@ -249,6 +249,7 @@ class GameServiceTest {
         assertEquals(0, calculated.getRoundScore());
     }
 
+    // verifies task #89
     @Test
     void endMiniGame_getRightLeaderBoard(){
         testGame.setGameId(2L);
