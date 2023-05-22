@@ -41,4 +41,5 @@ public class QuestionGetDTO {
     public void setFalseAnswers(List<String> falseAnswers) {
         this.falseAnswers = falseAnswers;
     }
+
 }
