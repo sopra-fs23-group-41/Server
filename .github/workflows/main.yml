@@ -37,12 +37,12 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
         run: echo "$API_KEY" > .env-for-app-yaml
 
-   #   - name: prepare app yaml
-    #    uses: mshick/fast-envsubst@v1
-     #   with:
-      #      env-file: .env-for-app-yaml
-       #     in-file: app.yaml
-        #    out-file: app.yaml
+      - name: prepare app yaml
+        uses: mshick/fast-envsubst@v1
+        with:
+            env-file: .env-for-app-yaml
+            in-file: app.yaml
+            out-file: app.yaml
 
       - name: Deploy to App Engine
         id: deploy
