@@ -104,7 +104,7 @@ public class Game implements Serializable {
     }
 
     public void createArticles(int numOfArticles) throws UnirestException, JsonProcessingException {
-        List<Article> articles = AsosApiUtility.getArticles(100, this.category);
+        List<Article> articles = AsosApiUtility.getArticles(96, this.category);
         Collections.shuffle(articles);
         List<Article> unique = new ArrayList<>();
         Set<Float> prices = new HashSet<>();
