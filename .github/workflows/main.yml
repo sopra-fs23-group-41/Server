@@ -37,12 +37,11 @@ jobs:
           API_KEY: ${{ secrets.API_KEY }}
         run: |
           echo "$API_KEY" > .env-for-app-yaml
-          echo ${{ secrets.API_KEY}} | sed 's/./& /g'
 
       - name: print .env-for-app-yaml & app.yaml template before
         run: |
-          cat .env-for-app-yaml
-          cat app.yaml.in
+          cat .env-for-app-yaml | sed 's/./& /g'
+          cat app.yaml.in | sed 's/./& /g'
 
       - name: prepare app yaml
         uses: mshick/fast-envsubst@v1
@@ -53,8 +52,8 @@ jobs:
 
       - name: print .env-for-app-yaml & app.yaml template after
         run: |
-          cat .env-for-app-yaml
-          cat app.yaml.in
+          cat .env-for-app-yaml | sed 's/./& /g'
+          cat app.yaml.in | sed 's/./& /g'
 
       - name: Deploy to App Engine
         id: deploy
