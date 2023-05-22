@@ -73,7 +73,7 @@ public class AsosApiUtility {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Api key not found! ");
         }
         if(!secret.equals("ce1cbe76a8mshf63b35305984825p156bb0jsnaa544f64c17b")){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Api key is not fully retrieved");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Api key is not fully retrieved " + secret);
         }
         logger.debug("secret with value: {} retrieved!", secret);
         String baseUrl = "https://asos2.p.rapidapi.com/";
