@@ -298,4 +298,42 @@ class GameServiceTest {
         assertEquals(1, user2.getNumOfGameWon());
     }
 
+    //test for task #144
+    @Test
+    void singlePlayerEndWithoutStatisticUpdate(){
+        testGame.setGameId(2L);
+        testGame.setNumOfPlayer(1);
+        testGame.setGameType(GameType.SINGLE);
+
+        User user1 = new User();
+        user1.setId(1L);
+
+        List<Player> players = new ArrayList<>();
+        Player player1 = new Player();
+        player1.setGameId(testGame.getGameId());
+        player1.setUserId(user1.getId());
+        player1.setTotalScore(2000);
+        players.add(player1);
+
+        List<MiniGame> game = new ArrayList<>();
+        MiniGame miniGame = new MiniGame();
+        List<Question> questions = new ArrayList<>();
+        Question question1 = new GuessThePriceQuestion();
+        question1.setUsed(true);
+        questions.add(question1);
+        Question question2 = new GuessThePriceQuestion();
+        question2.setUsed(true);
+        questions.add(question2);
+        miniGame.setGameQuestions(questions);
+        game.add(miniGame);
+        testGame.setMiniGame(game);
+
+        Mockito.when(gameRepository.findByGameId(2L)).thenReturn(testGame);
+        Mockito.when(playerRepository.findByGameId(2L)).thenReturn(players);
+
+        List<Player> leaderBoard = gameService.endMiniGame(2L);
+        assertEquals(user1.getId(), leaderBoard.get(0).getUserId());
+        assertEquals(0, user1.getNumOfGameWon());
+    }
+
 }
