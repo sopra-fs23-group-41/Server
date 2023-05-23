@@ -163,8 +163,10 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, String.format(message));
         }
         user.setUsername(userWithUpdates.getUsername());
-        String encodedPassword = passwordEncoder.encode(userWithUpdates.getPassword());
-        user.setPassword(encodedPassword);
+        if (!Objects.equals(user.getPassword(), userWithUpdates.getPassword())){
+            String encodedPassword = passwordEncoder.encode(userWithUpdates.getPassword());
+            user.setPassword(encodedPassword);
+        }
         user.setBirthdate(userWithUpdates.getBirthdate());
         user.setProfilePicture(userWithUpdates.getProfilePicture());
 
