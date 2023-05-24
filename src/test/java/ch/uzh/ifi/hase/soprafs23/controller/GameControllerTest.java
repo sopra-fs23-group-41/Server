@@ -565,9 +565,9 @@ class GameControllerTest {
 
     @Test
     void clearLobbyTest() throws Exception {
-        Mockito.doNothing().when(gameService).clearLobby(Mockito.anyLong());
+        Mockito.doNothing().when(gameService).clearLobby(Mockito.anyLong(), Mockito.anyLong());
         //when
-        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/end");
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/" + 1 + "/end");
         //then
         mockMvc.perform(postRequest)
                 .andExpect(status().isOk());
@@ -575,9 +575,9 @@ class GameControllerTest {
 
     @Test
     void clearLobbyThrowsExceptionTest() throws Exception {
-        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(gameService).clearLobby(Mockito.anyLong());
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(gameService).clearLobby(Mockito.anyLong(), Mockito.anyLong());
         //when
-        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 + "/end");
+        MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 +"/"+ 1 + "/end");
         //then
         mockMvc.perform(postRequest)
                 .andExpect(status().isNotFound());

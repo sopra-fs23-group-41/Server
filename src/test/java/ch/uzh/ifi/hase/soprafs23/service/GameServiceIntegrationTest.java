@@ -223,8 +223,8 @@ public class GameServiceIntegrationTest {
 
         Player current = playerRepository.findByPlayerId(thePlayer.getPlayerId());
 
-        assertEquals(30, current.getRoundScore());
-        assertEquals(30, current.getTotalScore());
+        assertEquals(90, current.getRoundScore());
+        assertEquals(90, current.getTotalScore());
         assertEquals(1, current.getStreak());
         assertTrue(gameService.didAllPlayersAnswer(theGame.getGameId()));
     }
@@ -255,7 +255,7 @@ public class GameServiceIntegrationTest {
         player.setPlayerId(1L);
         playerRepository.save(player);
 
-        gameService.clearLobby(newGame.getGameId());
+        gameService.clearLobby(newGame.getGameId(), player.getPlayerId());
 
         assertNull(gameRepository.findByGameId(newGame.getGameId()));
         assertNull(playerRepository.findByPlayerId(newGame.getGameId()));

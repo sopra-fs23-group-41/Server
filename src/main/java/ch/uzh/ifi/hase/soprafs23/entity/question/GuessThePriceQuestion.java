@@ -13,7 +13,7 @@ import java.security.SecureRandom;
 public class GuessThePriceQuestion extends Question{
 
     @Column
-    private final int BONUS = 20;
+    private final int BONUS = 30;
 
     @Column
     private final int TIME_TO_ANSWER = 40;
