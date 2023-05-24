@@ -3,15 +3,14 @@ package ch.uzh.ifi.hase.soprafs23.service;
 import ch.uzh.ifi.hase.soprafs23.asosapi.Category;
 import ch.uzh.ifi.hase.soprafs23.constant.GameMode;
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
-import ch.uzh.ifi.hase.soprafs23.entity.Answer;
-import ch.uzh.ifi.hase.soprafs23.entity.Game;
-import ch.uzh.ifi.hase.soprafs23.entity.MiniGame;
-import ch.uzh.ifi.hase.soprafs23.entity.Player;
+import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
+import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.GuessThePriceQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.question.HigherLowerQuestion;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.GameRepository;
 import ch.uzh.ifi.hase.soprafs23.repository.PlayerRepository;
+import ch.uzh.ifi.hase.soprafs23.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import org.junit.jupiter.api.AfterEach;
@@ -23,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,6 +38,10 @@ public class GameServiceIntegrationTest {
     @Qualifier("playerRepository")
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Qualifier("userRepository")
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private GameService gameService;
@@ -248,17 +252,43 @@ public class GameServiceIntegrationTest {
 
     @Test
     void gameDataIsCleanedAfterGameEnd(){
-        gameService.createGame(newGame);
+        newGame.setGameMode(GameMode.HighOrLow);
+        MiniGame miniGame = new MiniGame();
+        HigherLowerQuestion que1 = new HigherLowerQuestion();
+        que1.setTrueAnswer("Higher");
+        que1.setUsed(true);
+        HigherLowerQuestion que2 = new HigherLowerQuestion();
+        que2.setTrueAnswer("lower");
+        que2.setUsed(true);
+        miniGame.setGameQuestions(List.of(que1, que2));
+        miniGame.setCurrentRound(1);
+        newGame.setMiniGame(List.of(miniGame));
+        gameRepository.save(newGame);
+        User user = new User();
+        user.setId(1L);
+        user.setCreationDate(LocalDate.now());
+        user.setUsername("Aa");
+        user.setPassword("aa");
+        user.setStatus(UserStatus.ONLINE);
+        user.setToken("aa");
+        userRepository.save(user);
+
+        Game theGame = gameRepository.findByGamePIN("123456");
+
         Player player = new Player();
-        player.setGameId(newGame.getGameId());
+        player.setGameId(theGame.getGameId());
         player.setPlayerName("Aa");
         player.setPlayerId(1L);
+        player.setUserId(1L);
         playerRepository.save(player);
 
-        gameService.clearLobby(newGame.getGameId(), player.getPlayerId());
+        Player current = playerRepository.findByGameId(theGame.getGameId()).get(0);
 
-        assertNull(gameRepository.findByGameId(newGame.getGameId()));
-        assertNull(playerRepository.findByPlayerId(newGame.getGameId()));
+        gameService.clearLobby(theGame.getGameId(), current.getPlayerId());
+
+        assertNull(gameRepository.findByGameId(theGame.getGameId()));
+        assertNull(playerRepository.findByPlayerId(theGame.getGameId()));
+        assertEquals(1, userRepository.findById(1L).getNumOfGameWon());
 
     }
 
