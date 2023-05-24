@@ -6,7 +6,7 @@
 Our project began from the keyword online shopping, which has various merits like lower price, more products and so on.
 But it's still quite tedious, boring, and hard to get an intuitive understanding on price.
 So, we wanted to create an intuitive and fun quiz game where the users have to guess the price of Asos products.
-Show me the money.
+Show me the money!
 
 
 ## Technologies
