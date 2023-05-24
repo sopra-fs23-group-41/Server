@@ -68,7 +68,11 @@ public class GameController {
     @ResponseBody
     public PlayerGetDTO addPlayerToGame(@RequestBody PlayerPostDTO playerPostDTO, @PathVariable String gamePin){
         long userId = playerPostDTO.getId();
-        Player player = userService.addUserToLobby(userId, gameService.getLobbyIdByGamePin(gamePin));
+        long lobbyId = gameService.getLobbyIdByGamePin(gamePin);
+        if (gameService.checkIfLobbyIsFull(lobbyId)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The lobby is full!");
+        }
+        Player player = userService.addUserToLobby(userId, lobbyId);
         logger.info("User with id: {} added to Lobby with id: {} as Player with id: {}" , userId, player.getGameId(), player.getPlayerId());
         return DTOMapper.INSTANCE.convertEntityToPlayerGetDTO(player);
     }

@@ -260,4 +260,9 @@ public class GameService {
         }
 
     }
+
+    public boolean checkIfLobbyIsFull(long lobbyId) {
+        Game game = getGameById(lobbyId);
+        return (playerRepository.findByGameId(lobbyId).size() >= game.getNumOfPlayer());
+    }
 }
