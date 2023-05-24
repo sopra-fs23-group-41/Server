@@ -5,13 +5,15 @@
 ## Introduction
 Our project began from the keyword online shopping, which has various merits like lower price, more products and so on.
 But it's still quite tedious, boring, and hard to get an intuitive understanding on price.
-So, we wanted to create an intuitive and fun quiz game where the users have to guess the price of Asos products.
+So, we wanted to create an intuitive and fun quiz game where the users have to guess the price of Asos products. 
 Show me the money!
 
-<div style="display: flex; justify-content: center;">
-  <img src="img.png" alt="Image 1" width="200" />
-  <img src="img_1.png" alt="Image 2" width="200" />
-  <img src="img_2.png" alt="Image 3" width="200" />
+<div style="text-align: center;">
+    <div style="display: inline-flex">
+        <img src="img.png" alt="Image 1" width="200" />
+        <img src="img_1.png" alt="Image 2" width="200" />
+        <img src="img_2.png" alt="Image 3" width="200" />
+    </div>
 </div>
 
 
