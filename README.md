@@ -8,15 +8,11 @@ But it's still quite tedious, boring, and hard to get an intuitive understanding
 So, we wanted to create an intuitive and fun quiz game where the users have to guess the price of Asos products.
 Show me the money!
 
-
-<img src="img.png" alt="Alt text" style="max-width: 300px;">
-
 <div style="display: flex; justify-content: center;">
   <img src="img.png" alt="Image 1" width="200" />
   <img src="img_1.png" alt="Image 2" width="200" />
   <img src="img_2.png" alt="Image 3" width="200" />
 </div>
-
 
 
 ## Technologies
