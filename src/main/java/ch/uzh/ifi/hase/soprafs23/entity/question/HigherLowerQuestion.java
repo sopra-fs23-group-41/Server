@@ -12,7 +12,7 @@ import javax.persistence.Entity;
 public class HigherLowerQuestion extends Question{
 
     @Column
-    private final int BONUS = 10;
+    private final int BONUS = 30;
 
     @Column
     private final int TIME_TO_ANSWER = 30;

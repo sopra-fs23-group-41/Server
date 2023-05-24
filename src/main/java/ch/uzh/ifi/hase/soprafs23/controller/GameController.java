@@ -195,11 +195,11 @@ public class GameController {
         return gameService.endMiniGame(lobbyId);
     }
 
-    @PostMapping("/lobbies/{lobbyId}/end")
+    @PostMapping("/lobbies/{lobbyId}/{playerId}/end")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public void clearLobby(@PathVariable long lobbyId){
-        gameService.clearLobby(lobbyId);
+    public void clearLobby(@PathVariable long lobbyId,@PathVariable long playerId){
+        gameService.clearLobby(lobbyId, playerId);
     }
 
     private GameGetDTO addPlayersToGameGetDTO(Game game){

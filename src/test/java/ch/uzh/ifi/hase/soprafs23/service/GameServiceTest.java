@@ -292,10 +292,8 @@ class GameServiceTest {
         Mockito.when(userRepository.findById(player2.getUserId())).thenReturn(user2);
 
         List<Player> leaderBoard = gameService.endMiniGame(2L);
-        Mockito.verify(userRepository, Mockito.times(1)).save(Mockito.any());
         assertEquals(user2.getId(),leaderBoard.get(0).getUserId());
         assertEquals(user1.getId(), leaderBoard.get(1).getUserId());
-        assertEquals(1, user2.getNumOfGameWon());
     }
 
     //test for task #144

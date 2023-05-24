@@ -161,28 +161,7 @@ public class GameService {
         List<Player> players = playerRepository.findByGameId(lobbyId);
         gameErrors(currentGame, players, lobbyId);
 
-        List<Player> leaderBoard = currentGame.endGame(players);
-
-        // Check if there are multiple winners
-        List<Player> winners = new ArrayList<>();
-        long topScore = leaderBoard.get(0).getTotalScore();
-        for (Player player : leaderBoard) {
-            if (player.getTotalScore() == topScore) {
-                winners.add(player);
-            }
-        }
-
-        // Increment the number of games won for each winner
-        for (Player winner : winners) {
-            long userId = winner.getUserId();
-            User user = userRepository.findById(userId);
-            if (currentGame.getGameType() == GameType.MULTI){
-                user.setNumOfGameWon(user.getNumOfGameWon() + 1);
-                userRepository.save(user);
-                userRepository.flush();
-            }
-        }
-        return leaderBoard;
+        return currentGame.endGame(players);
     }
 
     public Player calculatePlayerPoints(Player player, long lobbyId){
@@ -234,9 +213,33 @@ public class GameService {
         }
     }
 
-    public void clearLobby(long lobbyId) {
-        gameRepository.deleteByGameId(lobbyId);
-        playerRepository.deleteByGameId(lobbyId);
+    public void clearLobby(long lobbyId, long playerId) {
+        Game currentGame = getGameById(lobbyId);
+        Player current = playerRepository.findByPlayerId(playerId);
+        if (current == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The player is not found in the lobby");
+        }
+        List<Player> order = endMiniGame(lobbyId);
+        List<Player> winners = new ArrayList<>();
+        long topScore = order.get(0).getTotalScore();
+        for (Player player : order) {
+            if (player.getTotalScore() == topScore) {
+                winners.add(player);
+            }
+        }
+        for (Player winner : winners) {
+            long userId = winner.getUserId();
+            User user = userRepository.findById(userId);
+            if (currentGame.getGameType() == GameType.MULTI && current.getUserId() == userId){
+                user.setNumOfGameWon(user.getNumOfGameWon() + 1);
+                userRepository.save(user);
+                userRepository.flush();
+            }
+        }
+        playerRepository.deleteByPlayerId(playerId);
+        if (playerRepository.findByGameId(lobbyId).isEmpty()){
+            gameRepository.deleteByGameId(lobbyId);
+        }
     }
 
     public boolean nextRoundReady(long lobbyId, long playerId) {
