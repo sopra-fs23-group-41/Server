@@ -37,6 +37,9 @@ public class Player {
     @ElementCollection
     private List<Answer> answers = new ArrayList<>();
 
+    @Column
+    private long lastActivityTimestamp = 0;
+
     public void updatePointsAndStreak(int points){
         if(points == 0){
             this.streak = 0;
@@ -124,5 +127,13 @@ public class Player {
 
     public void setStreak(int streak) {
         this.streak = streak;
+    }
+
+    public long getLastActivityTimestamp() {
+        return lastActivityTimestamp;
+    }
+
+    public void setLastActivityTimestamp(long lastActivityTimestamp) {
+        this.lastActivityTimestamp = lastActivityTimestamp;
     }
 }

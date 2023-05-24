@@ -1,6 +1,7 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
 import ch.uzh.ifi.hase.soprafs23.constant.GameType;
+import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.*;
 import ch.uzh.ifi.hase.soprafs23.entity.question.Question;
 import ch.uzh.ifi.hase.soprafs23.repository.*;
@@ -91,6 +92,10 @@ public class GameService {
         }
 
         currentGame.startGame(currentGame.getGameMode(), players);
+        currentGame.setGameTimeStamp(System.currentTimeMillis());
+        for (Player player : players){
+            player.setLastActivityTimestamp(System.currentTimeMillis());
+        }
 
         gameRepository.save(currentGame);
         gameRepository.flush();
@@ -114,10 +119,12 @@ public class GameService {
 
     public Question getNextRound(long lobbyId) {
         Game currentGame = getGameById(lobbyId);
+
         List<Player> players = playerRepository.findByGameId(lobbyId);
         gameErrors(currentGame, players, lobbyId);
 
         Question question = currentGame.getNextRound(players);
+        currentGame.setGameTimeStamp(System.currentTimeMillis());
         gameRepository.save(currentGame);
         gameRepository.flush();
 
@@ -142,6 +149,7 @@ public class GameService {
 
         currentPlayer.setAnswers(answer);
         Player updatedPlayer = calculatePlayerPoints(currentPlayer, currentPlayer.getGameId());
+        updatedPlayer.setLastActivityTimestamp(System.currentTimeMillis());
         playerRepository.save(updatedPlayer);
         playerRepository.flush();
 
@@ -149,6 +157,13 @@ public class GameService {
     }
 
     public boolean didAllPlayersAnswer(long lobbyId) {
+        Game current = getGameById(lobbyId);
+        current.setGameTimeStamp(System.currentTimeMillis());
+        gameRepository.save(current);
+        gameRepository.flush();
+
+        checkNotRespondingPlayer(lobbyId);
+
         Game currentGame = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
         gameErrors(currentGame, players, lobbyId);
@@ -264,5 +279,29 @@ public class GameService {
     public boolean checkIfLobbyIsFull(long lobbyId) {
         Game game = getGameById(lobbyId);
         return (playerRepository.findByGameId(lobbyId).size() >= game.getNumOfPlayer());
+    }
+
+    private void checkNotRespondingPlayer(long lobbyId){
+        Game game = getGameById(lobbyId);
+        List<Player> players = playerRepository.findByGameId(lobbyId);
+        for (Player player : players){
+            if ((game.getGameTimeStamp()-player.getLastActivityTimestamp()) >= 20000){
+                playerRepository.deleteByPlayerId(player.getPlayerId());
+                User user = userRepository.findById(player.getUserId());
+                user.setStatus(UserStatus.OFFLINE);
+                userRepository.save(user);
+                userRepository.flush();
+            }
+        }
+
+        int size = playerRepository.findByGameId(lobbyId).size();
+        if (size == 0){
+            gameRepository.deleteByGameId(lobbyId);
+        }
+        else{
+            game.setNumOfPlayer(size);
+            gameRepository.save(game);
+            gameRepository.flush();
+        }
     }
 }

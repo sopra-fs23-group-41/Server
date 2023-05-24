@@ -59,6 +59,9 @@ public class Game implements Serializable {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    @Column
+    private long gameTimeStamp = 0;
+
     public Game(){
         //for constructing the Entity
     }
@@ -238,5 +241,13 @@ public class Game implements Serializable {
 
     public void setMiniGame(List<MiniGame> miniGames) {
         this.miniGames = miniGames;
+    }
+
+    public long getGameTimeStamp() {
+        return gameTimeStamp;
+    }
+
+    public void setGameTimeStamp(long gameTimeStamp) {
+        this.gameTimeStamp = gameTimeStamp;
     }
 }
