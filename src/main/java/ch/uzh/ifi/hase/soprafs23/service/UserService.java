@@ -133,6 +133,7 @@ public class UserService {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already logged in.");
             }
             else {
+                playerRepository.deleteByPlayerId(exist.getPlayerId());
                 logoutUser(exist.getUserId());
             }
         }
