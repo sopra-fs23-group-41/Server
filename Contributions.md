@@ -65,7 +65,7 @@ Laurent Le Febve: [#91](https://github.com/sopra-fs23-group-41/Client/issues/91)
 
 Tiago Ferreiro Matos: [#95](https://github.com/sopra-fs23-group-41/Client/issues/95) [#98](https://github.com/sopra-fs23-group-41/Client/issues/98)
 
-Timo Tietje: [#130](https://github.com/sopra-fs23-group-41/Server/issues/130) [#115](https://github.com/sopra-fs23-group-41/Server/issues/115) [#32](https://github.com/sopra-fs23-group-41/Server/issues/32) [#132](https://github.com/sopra-fs23-group-41/Server/issues/132) [#131](https://github.com/sopra-fs23-group-41/Server/issues/131)
+Timo Tietje: [#130](https://github.com/sopra-fs23-group-41/Server/issues/130) [#115](https://github.com/sopra-fs23-group-41/Server/issues/115) [#32](https://github.com/sopra-fs23-group-41/Server/issues/32) [#132](https://github.com/sopra-fs23-group-41/Server/issues/132) [#131](https://github.com/sopra-fs23-group-41/Server/issues/131) [#149](https://github.com/sopra-fs23-group-41/Server/issues/149)
 
 ## Week 6 (17.05.2023):
 -------------------------
@@ -77,4 +77,4 @@ Laurent Le Febve: [#99](https://github.com/sopra-fs23-group-41/Client/issues/99)
 
 Tiago Ferreiro Matos: [#92](https://github.com/sopra-fs23-group-41/Client/issues/92) [#93](https://github.com/sopra-fs23-group-41/Client/issues/93) [#94](https://github.com/sopra-fs23-group-41/Client/issues/94)
 
-Timo Tietje: [#126](https://github.com/sopra-fs23-group-41/Server/issues/126) [#131](https://github.com/sopra-fs23-group-41/Server/issues/131) [#132](https://github.com/sopra-fs23-group-41/Server/issues/132) 
+Timo Tietje: [#126](https://github.com/sopra-fs23-group-41/Server/issues/126) [#131](https://github.com/sopra-fs23-group-41/Server/issues/131) [#132](https://github.com/sopra-fs23-group-41/Server/issues/132) [#152](https://github.com/sopra-fs23-group-41/Server/issues/152)
