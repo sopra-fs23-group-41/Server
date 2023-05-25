@@ -21,6 +21,7 @@ import java.util.*;
 @Entity
 @Table(name = "GAME")
 @JsonIgnoreProperties(value = "miniGames")
+@Cacheable
 public class Game implements Serializable {
 
     @Serial

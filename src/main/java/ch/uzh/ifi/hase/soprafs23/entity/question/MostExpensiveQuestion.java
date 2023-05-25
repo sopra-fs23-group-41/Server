@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.entity.question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import java.util.Objects;
 
 @Entity
 @DiscriminatorValue("ME")
+@Cacheable
 public class MostExpensiveQuestion extends Question{
 
     @Column
