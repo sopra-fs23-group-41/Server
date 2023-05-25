@@ -1,5 +1,6 @@
 package ch.uzh.ifi.hase.soprafs23.service;
 
+import ch.uzh.ifi.hase.soprafs23.constant.ProfilePicture;
 import ch.uzh.ifi.hase.soprafs23.constant.UserStatus;
 import ch.uzh.ifi.hase.soprafs23.entity.Player;
 import ch.uzh.ifi.hase.soprafs23.entity.User;
@@ -47,6 +48,7 @@ class UserServiceTest {
       testUser.setStatus(UserStatus.OFFLINE);
       testUser.setBirthdate(LocalDate.of(2002,4,24));
       testUser.setCreationDate(LocalDate.of(2002, 4 ,23));
+      testUser.setProfilePicture(ProfilePicture.ONE);
 
       // when -> any object is being saved in the userRepository -> return the dummy
       // testUser
@@ -66,6 +68,7 @@ class UserServiceTest {
     assertEquals(testUser.getUsername(), createdUser.getUsername());
     assertEquals(testUser.getCreationDate(), createdUser.getCreationDate());
     assertEquals(testUser.getBirthdate(), createdUser.getBirthdate());
+    assertEquals(testUser.getProfilePicture(), createdUser.getProfilePicture());
     assertNotNull(createdUser.getToken());
     assertEquals(UserStatus.ONLINE, createdUser.getStatus());
   }
