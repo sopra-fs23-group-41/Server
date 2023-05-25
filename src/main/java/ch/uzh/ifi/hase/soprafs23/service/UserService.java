@@ -93,6 +93,7 @@ public class UserService {
       convertedUser.setUserId(userId);
       convertedUser.setGameId(lobbyId);
       convertedUser.setProfilePicture(userToConvert.getProfilePicture());
+      convertedUser.setLastActivityTimestamp(System.currentTimeMillis());
 
       Player addedPlayer = playerRepository.save(convertedUser);
       playerRepository.flush();
