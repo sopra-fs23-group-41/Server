@@ -123,12 +123,12 @@ public class UserService {
 
     public User loginUser(String loginUsername, String password) {
         User userToLogin = userRepository.findByUsername(loginUsername);
-        Player exist = playerRepository.findByUserId(userToLogin.getId());
         if (userToLogin == null || !passwordEncoder.matches(password, userToLogin.getPassword()))  {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid login credentials, make sure that username and password are correct.");
         }
         if (userToLogin.getStatus() == UserStatus.ONLINE) {
             long now = System.currentTimeMillis();
+            Player exist = playerRepository.findByUserId(userToLogin.getId());
             if (exist == null || (now-exist.getLastActivityTimestamp()) < 50000){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already logged in.");
             }
