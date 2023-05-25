@@ -285,7 +285,7 @@ public class GameService {
         Game game = getGameById(lobbyId);
         List<Player> players = playerRepository.findByGameId(lobbyId);
         for (Player player : players){
-            if ((game.getGameTimeStamp()-player.getLastActivityTimestamp()) >= 20000){
+            if ((game.getGameTimeStamp()-player.getLastActivityTimestamp()) >= 40000){
                 playerRepository.deleteByPlayerId(player.getPlayerId());
                 User user = userRepository.findById(player.getUserId());
                 user.setStatus(UserStatus.OFFLINE);
