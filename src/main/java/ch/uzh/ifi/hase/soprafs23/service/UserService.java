@@ -127,8 +127,8 @@ public class UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid login credentials, make sure that username and password are correct.");
         }
         if (userToLogin.getStatus() == UserStatus.ONLINE) {
-            Player exist = playerRepository.findByUserId(userToLogin.getId());
             long now = System.currentTimeMillis();
+            Player exist = playerRepository.findByUserId(userToLogin.getId());
             if (exist == null || (now-exist.getLastActivityTimestamp()) < 50000){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already logged in.");
             }
@@ -148,6 +148,11 @@ public class UserService {
       User user = getUserById(id);
       if (user == null || user.getStatus() == UserStatus.OFFLINE){
           throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "No user found!");
+      }
+
+      Player exist = playerRepository.findByUserId(user.getId());
+      if (exist != null){
+          playerRepository.deleteByPlayerId(exist.getPlayerId());
       }
 
       user.setStatus(UserStatus.OFFLINE);
