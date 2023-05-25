@@ -7,7 +7,7 @@ env: flex
 automatic_scaling:
      max_num_instances: 1
 
-instance_class: F4
+instance_class: F2
 env_variables:
   API_KEY: ${API_KEY}
 
