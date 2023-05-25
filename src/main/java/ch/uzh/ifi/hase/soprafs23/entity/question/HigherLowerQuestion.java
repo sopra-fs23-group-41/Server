@@ -2,6 +2,7 @@ package ch.uzh.ifi.hase.soprafs23.entity.question;
 
 import ch.uzh.ifi.hase.soprafs23.entity.Article;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -9,6 +10,7 @@ import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("HOL")
+@Cacheable
 public class HigherLowerQuestion extends Question{
 
     @Column

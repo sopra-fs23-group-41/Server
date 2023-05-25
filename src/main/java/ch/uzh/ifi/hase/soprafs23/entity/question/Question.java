@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "questionType", discriminatorType = DiscriminatorType.STRING)
+@Cacheable
 public abstract class Question implements Serializable {
 
     @Serial
