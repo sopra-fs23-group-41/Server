@@ -146,13 +146,13 @@ public class GameService {
         if (currentPlayer == null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No such player exist!");
         }
-
-        currentPlayer.setAnswers(answer);
-        Player updatedPlayer = calculatePlayerPoints(currentPlayer, currentPlayer.getGameId());
-        updatedPlayer.setLastActivityTimestamp(System.currentTimeMillis());
-        playerRepository.save(updatedPlayer);
-        playerRepository.flush();
-
+        if(currentPlayer.getAnswers().size() < getGameById(currentPlayer.getGameId()).getCurrentRound()){
+            currentPlayer.setAnswers(answer);
+            Player updatedPlayer = calculatePlayerPoints(currentPlayer, currentPlayer.getGameId());
+            updatedPlayer.setLastActivityTimestamp(System.currentTimeMillis());
+            playerRepository.save(updatedPlayer);
+            playerRepository.flush();
+        }
         logger.debug("The answer of player with ID: {} has been saved!", playerId);
     }
 
