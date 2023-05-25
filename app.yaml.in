@@ -2,15 +2,15 @@
 # https://cloud.google.com/appengine/docs/standard
 
 runtime: java
-env:flex
+env: flex
 
 automatic_scaling:
-    max_num_instances:1
+     max_num_instances: 1
 
 instance_class: F4
 env_variables:
   API_KEY: ${API_KEY}
 
 runtime_config:
-    operating_system:"ubuntu22"
-    runtime_version: "17"
+     operating_system: "ubuntu22"
+     runtime_version: "17"
