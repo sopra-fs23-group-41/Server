@@ -203,7 +203,12 @@ public class GameController {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void clearLobby(@PathVariable long lobbyId,@PathVariable long playerId){
-        gameService.clearLobby(lobbyId, playerId);
+        if (isTheGameStarted(lobbyId)){
+            gameService.clearLobby(lobbyId, playerId);
+        }
+        else{
+            gameService.closeLobby(lobbyId, playerId);
+        }
     }
 
     private GameGetDTO addPlayersToGameGetDTO(Game game){

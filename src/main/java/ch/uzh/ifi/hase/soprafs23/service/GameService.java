@@ -257,6 +257,13 @@ public class GameService {
         }
     }
 
+    public void closeLobby(long lobbyId, long playerId){
+        playerRepository.deleteByPlayerId(playerId);
+        if (playerRepository.findByGameId(lobbyId).isEmpty()){
+            gameRepository.deleteByGameId(lobbyId);
+        }
+    }
+
     public boolean nextRoundReady(long lobbyId, long playerId) {
         Game game = gameRepository.findByGameId(lobbyId);
         Player player = playerRepository.findByPlayerId(playerId);
