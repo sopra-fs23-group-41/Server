@@ -58,7 +58,7 @@ Releases can be done via GitHub.
 + Friends feature
 + Permanently store registered users
 
-## Authors and acknowledgment
+## Authors and acknowledgement
 + Eunji Lee ([@EunjiLee-dev](https://github.com/EunjiLee-dev)): Front-end
 + Laurent Le Febve ([@LaurentLeFebve](https://github.com/LaurentLeFebve)): Front-end
 + Tiago Ferreiro Matos ([@tyagos](https://github.com/tyagos)): Front-end
@@ -69,3 +69,5 @@ Releases can be done via GitHub.
 
 ## License
 [Apache License 2.0](LICENSE)
+
+
