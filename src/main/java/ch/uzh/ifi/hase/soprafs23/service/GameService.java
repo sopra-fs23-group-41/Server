@@ -258,6 +258,9 @@ public class GameService {
     }
 
     public void closeLobby(long lobbyId, long playerId){
+        if (gameRepository.findByGameId(lobbyId) == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "The lobby is not there!");
+        }
         playerRepository.deleteByPlayerId(playerId);
         if (playerRepository.findByGameId(lobbyId).isEmpty()){
             gameRepository.deleteByGameId(lobbyId);

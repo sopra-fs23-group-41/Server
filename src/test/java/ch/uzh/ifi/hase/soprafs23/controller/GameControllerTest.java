@@ -575,7 +575,7 @@ class GameControllerTest {
 
     @Test
     void clearLobbyThrowsExceptionTest() throws Exception {
-        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(gameService).clearLobby(Mockito.anyLong(), Mockito.anyLong());
+        Mockito.doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND)).when(gameService).isTheGameStarted(Mockito.anyLong());
         //when
         MockHttpServletRequestBuilder postRequest = post("/lobbies/" + 1 +"/"+ 1 + "/end");
         //then
